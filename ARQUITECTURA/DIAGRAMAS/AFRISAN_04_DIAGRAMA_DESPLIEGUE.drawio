@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="PomRZupQHKTDVf18_W6Z">
+    <mxGraphModel dx="3276" dy="1571" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-31" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9PM5p6swbtdGlZqf1dhv-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-19" parent="1" style="html=1;whiteSpace=wrap;" value="«device»&lt;br/&gt;Dispositivo móvil&lt;br/&gt;Android / iOS&lt;br/&gt;&lt;br/&gt;«artifact»&lt;br/&gt;App móvil AFRISAN&lt;br/&gt;.NET MAUI (.NET 8)&lt;br/&gt;&lt;br/&gt;«database»&lt;br/&gt;SQLite local" vertex="1">
+          <mxGeometry height="200" width="200" x="120" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-30" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9PM5p6swbtdGlZqf1dhv-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-21" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«device»&lt;/div&gt;&lt;div&gt;Computador del usuario&lt;/div&gt;&lt;div&gt;Navegador web&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«artifact»&lt;/div&gt;&lt;div&gt;App web AFRISAN&lt;/div&gt;&lt;div&gt;Blazor WebAssembly (.NET 8)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="200" width="150" x="460" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-22" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«node»&lt;/div&gt;&lt;div&gt;Microsoft Azure App Service&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«artifact»&lt;/div&gt;&lt;div&gt;ASP.NET Core Web API&lt;/div&gt;&lt;div&gt;(.NET 8)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="130" x="320" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-47" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9PM5p6swbtdGlZqf1dhv-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-23" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«node»&lt;/div&gt;&lt;div&gt;Supabase Cloud&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«database»&lt;/div&gt;&lt;div&gt;PostgreSQL 16&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="130" x="330" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-26" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div style=&quot;text-align: left;&quot;&gt;«node»&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;Power BI Service&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;«artifact»&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;Dashboard AFRISAN&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="180" x="580" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-35" parent="1" style="text;whiteSpace=wrap;html=1;" value="&#xa; Consulta de datos / SQL&#xa;&#xa;" vertex="1">
+          <mxGeometry height="40" width="100" x="470" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-36" parent="1" style="text;whiteSpace=wrap;html=1;" value="HTTPS / JSON" vertex="1">
+          <mxGeometry height="40" width="110" x="570" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-37" parent="1" style="text;whiteSpace=wrap;html=1;" value="HTTPS / JSON" vertex="1">
+          <mxGeometry height="40" width="110" x="100" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-39" parent="1" style="text;whiteSpace=wrap;html=1;" value="Sincronización asíncrona" vertex="1">
+          <mxGeometry height="40" width="170" x="70" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-42" parent="1" style="text;whiteSpace=wrap;html=1;" value="SQL / Npgsql" vertex="1">
+          <mxGeometry height="40" width="100" x="410" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-46" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.422;entryY=0.018;entryDx=0;entryDy=0;entryPerimeter=0;" target="9PM5p6swbtdGlZqf1dhv-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

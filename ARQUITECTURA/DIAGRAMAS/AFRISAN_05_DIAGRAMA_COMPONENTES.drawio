@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="EvXCXb73cYrr92nQh5xF">
+    <mxGraphModel dx="1653" dy="783" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-4" parent="1" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Aplicación web&amp;nbsp;&lt;/p&gt;&lt;pre class=&quot;overflow-visible! px-0!&quot;&gt;&lt;div class=&quot;relative w-full mt-4 mb-1&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;contents&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;border border-token-border-light border-radius-3xl corner-superellipse/1.1 rounded-3xl&quot;&gt;&lt;div class=&quot;h-full w-full border-radius-3xl bg-(--code-block-surface) corner-superellipse/1.1 overflow-clip rounded-3xl [--code-block-surface:var(--bg-elevated-secondary)] dark:[--code-block-surface:var(--composer-surface-primary)] lxnfua_clipPathFallback&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;pe-11 pt-3&quot;&gt;&lt;div class=&quot;relative z-0 flex max-w-full&quot;&gt;&lt;div id=&quot;code-block-viewer&quot; dir=&quot;ltr&quot; class=&quot;q9tKkq_viewer cm-editor z-10 light:cm-light dark:cm-light flex h-full w-full flex-col items-stretch ͼs ͼ16&quot;&gt;&lt;div class=&quot;cm-scroller&quot;&gt;&lt;pre class=&quot;cm-content q9tKkq_readonly m-0 PDq2pG_selectionAnchorContainer&quot;&gt;Blazor WebAssembly (.NET 8)&lt;br/&gt;Administración y bodega&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="110" width="180" x="340" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-5" parent="SY6YulRF8UHbbGMBi8Pq-4" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-6" parent="1" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Aplicación móvil AFRISAN&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;.NET MAUI (.NET 8)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;MVVM&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Lectura QR&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;SQLite offline&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="180" x="80" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-7" parent="SY6YulRF8UHbbGMBi8Pq-6" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-8" parent="1" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;API REST / Backend&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;ASP.NET Core Web API (.NET 8)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Entity Framework Core 8&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Autenticación&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Lógica de negocio&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="220" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-9" parent="SY6YulRF8UHbbGMBi8Pq-8" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-10" parent="1" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;PostgreSQL 16&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Supabase Cloud&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Inventario y trazabilidad&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="70" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-11" parent="SY6YulRF8UHbbGMBi8Pq-10" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-40" edge="1" parent="1" source="SY6YulRF8UHbbGMBi8Pq-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="SY6YulRF8UHbbGMBi8Pq-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-12" parent="1" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Power BI&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;Dashboard de inventario,&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;costos y CO₂e&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="370" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-13" parent="SY6YulRF8UHbbGMBi8Pq-12" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-15" edge="1" parent="1" source="SY6YulRF8UHbbGMBi8Pq-6" style="endArrow=classic;html=1;rounded=0;exitX=0.383;exitY=1.033;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.446;entryY=-0.024;entryDx=0;entryDy=0;entryPerimeter=0;" target="SY6YulRF8UHbbGMBi8Pq-8" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="430" as="sourcePoint" />
+            <mxPoint x="150" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-18" edge="1" parent="1" source="SY6YulRF8UHbbGMBi8Pq-4" style="endArrow=classic;html=1;rounded=0;entryX=0.539;entryY=0.013;entryDx=0;entryDy=0;entryPerimeter=0;" target="SY6YulRF8UHbbGMBi8Pq-8" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="440" y="530" as="sourcePoint" />
+            <mxPoint x="430" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-20" parent="1" style="text;whiteSpace=wrap;html=1;" value="&lt;div&gt;HTTPS / JSON&lt;/div&gt;&lt;div&gt;Sincronización asíncrona&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="110" x="60" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-21" parent="1" style="text;whiteSpace=wrap;html=1;" value="HTTPS / JSON" vertex="1">
+          <mxGeometry height="40" width="110" x="405" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-31" edge="1" parent="1" source="SY6YulRF8UHbbGMBi8Pq-8" style="endArrow=classic;html=1;rounded=0;entryX=0.453;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="SY6YulRF8UHbbGMBi8Pq-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="700" as="sourcePoint" />
+            <mxPoint x="460" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-33" parent="1" style="text;whiteSpace=wrap;html=1;" value="SQL" vertex="1">
+          <mxGeometry height="40" width="60" x="120" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-34" parent="1" style="text;whiteSpace=wrap;html=1;" value="Consulta de datos / SQL" vertex="1">
+          <mxGeometry height="40" width="130" x="390" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="SY6YulRF8UHbbGMBi8Pq-35" parent="1" style="text;whiteSpace=wrap;html=1;" value="&lt;h1&gt;Diagrama de Componentes del Sistema AFRISAN&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="40" width="610" x="30" y="230" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
