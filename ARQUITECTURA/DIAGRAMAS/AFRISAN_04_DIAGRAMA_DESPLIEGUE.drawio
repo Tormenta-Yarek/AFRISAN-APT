@@ -1,14 +1,14 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Página-1" id="PomRZupQHKTDVf18_W6Z">
-    <mxGraphModel dx="3276" dy="1571" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2548" dy="1222" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="9PM5p6swbtdGlZqf1dhv-31" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9PM5p6swbtdGlZqf1dhv-22">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-19" parent="1" style="html=1;whiteSpace=wrap;" value="«device»&lt;br/&gt;Dispositivo móvil&lt;br/&gt;Android / iOS&lt;br/&gt;&lt;br/&gt;«artifact»&lt;br/&gt;App móvil AFRISAN&lt;br/&gt;.NET MAUI (.NET 8)&lt;br/&gt;&lt;br/&gt;«database»&lt;br/&gt;SQLite local" vertex="1">
-          <mxGeometry height="200" width="200" x="120" y="220" as="geometry" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-19" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;ul&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;strong&gt;&amp;lt;&amp;lt;device&amp;gt;&amp;gt; Computador del usuario&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Navegador web&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;strong&gt;&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt; AFRISAN Web&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Blazor WebAssembly (.NET 8)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;strong&gt;&amp;lt;&amp;lt;node&amp;gt;&amp;gt; Servidor de aplicación&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ASP.NET Core Web API (.NET 8)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;strong&gt;&amp;lt;&amp;lt;node&amp;gt;&amp;gt; Supabase Cloud&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;PostgreSQL 16&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="310" width="275" x="120" y="110" as="geometry" />
         </mxCell>
         <mxCell id="9PM5p6swbtdGlZqf1dhv-30" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9PM5p6swbtdGlZqf1dhv-22">
           <mxGeometry relative="1" as="geometry">
@@ -17,20 +17,20 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-21" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«device»&lt;/div&gt;&lt;div&gt;Computador del usuario&lt;/div&gt;&lt;div&gt;Navegador web&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«artifact»&lt;/div&gt;&lt;div&gt;App web AFRISAN&lt;/div&gt;&lt;div&gt;Blazor WebAssembly (.NET 8)&lt;/div&gt;" vertex="1">
-          <mxGeometry height="200" width="150" x="460" y="220" as="geometry" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-21" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;Computador del usuario&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;Navegador web&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;AFRISAN Web&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;Blazor WebAssembly (.NET 8)&lt;/code&gt;&lt;/li&gt;" vertex="1">
+          <mxGeometry height="200" width="230" x="460" y="220" as="geometry" />
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-22" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«node»&lt;/div&gt;&lt;div&gt;Microsoft Azure App Service&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«artifact»&lt;/div&gt;&lt;div&gt;ASP.NET Core Web API&lt;/div&gt;&lt;div&gt;(.NET 8)&lt;/div&gt;" vertex="1">
-          <mxGeometry height="140" width="130" x="320" y="530" as="geometry" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-22" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="&lt;ul&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;lt;&amp;lt;node&amp;gt;&amp;gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;Servidor de aplicación&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;AFRISAN API&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;ASP.NET Core Web API (.NET 8)&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;Lógica de negocio y validaciones&lt;/code&gt;&lt;/li&gt;&lt;/ul&gt;" vertex="1">
+          <mxGeometry height="140" width="170" x="315" y="530" as="geometry" />
         </mxCell>
         <mxCell id="9PM5p6swbtdGlZqf1dhv-47" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9PM5p6swbtdGlZqf1dhv-26">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-23" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;«node»&lt;/div&gt;&lt;div&gt;Supabase Cloud&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;«database»&lt;/div&gt;&lt;div&gt;PostgreSQL 16&lt;/div&gt;" vertex="1">
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-23" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="&lt;ul&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;node&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;Supabase Cloud&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;database&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;code dir=&quot;ltr&quot;&gt;PostgreSQL 16&lt;/code&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Persistencia de inventario y trazabilidad&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;" vertex="1">
           <mxGeometry height="150" width="130" x="330" y="750" as="geometry" />
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-26" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div style=&quot;text-align: left;&quot;&gt;«node»&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;Power BI Service&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;«artifact»&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;Dashboard AFRISAN&lt;/div&gt;" vertex="1">
-          <mxGeometry height="150" width="180" x="580" y="750" as="geometry" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-26" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="&lt;div style=&quot;&quot;&gt;&lt;ul&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;node&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;Power BI Service (integración futura)&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&lt;/code&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;code dir=&quot;ltr&quot;&gt;Dashboard AFRISAN (propuesto)&lt;/code&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="180" x="610" y="740" as="geometry" />
         </mxCell>
         <mxCell id="9PM5p6swbtdGlZqf1dhv-35" parent="1" style="text;whiteSpace=wrap;html=1;" value="&#xa; Consulta de datos / SQL&#xa;&#xa;" vertex="1">
           <mxGeometry height="40" width="100" x="470" y="830" as="geometry" />
@@ -41,14 +41,17 @@
         <mxCell id="9PM5p6swbtdGlZqf1dhv-37" parent="1" style="text;whiteSpace=wrap;html=1;" value="HTTPS / JSON" vertex="1">
           <mxGeometry height="40" width="110" x="100" y="480" as="geometry" />
         </mxCell>
-        <mxCell id="9PM5p6swbtdGlZqf1dhv-39" parent="1" style="text;whiteSpace=wrap;html=1;" value="Sincronización asíncrona" vertex="1">
-          <mxGeometry height="40" width="170" x="70" y="510" as="geometry" />
+        <mxCell id="9PM5p6swbtdGlZqf1dhv-39" parent="1" style="text;whiteSpace=wrap;html=1;" value="Sincronización asíncrona&lt;code&gt;(futura)&lt;/code&gt;&lt;div&gt;&lt;code&gt;&lt;br&gt;&lt;/code&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="170" x="71" y="510" as="geometry" />
         </mxCell>
         <mxCell id="9PM5p6swbtdGlZqf1dhv-42" parent="1" style="text;whiteSpace=wrap;html=1;" value="SQL / Npgsql" vertex="1">
           <mxGeometry height="40" width="100" x="410" y="710" as="geometry" />
         </mxCell>
         <mxCell id="9PM5p6swbtdGlZqf1dhv-46" edge="1" parent="1" source="9PM5p6swbtdGlZqf1dhv-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.422;entryY=0.018;entryDx=0;entryDy=0;entryPerimeter=0;" target="9PM5p6swbtdGlZqf1dhv-23">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="On99NQJWYlqGYRIy6pJg-1" parent="1" style="text;whiteSpace=wrap;html=1;" value="&lt;p&gt;&lt;strong&gt;&lt;span&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Diagrama de Despliegue del Sistema AFRISAN&lt;/font&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="50" width="390" x="250" y="10" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
