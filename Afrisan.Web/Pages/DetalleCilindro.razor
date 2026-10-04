@@ -303,6 +303,10 @@
                                     </th>
 
                                     <th>
+                                        Orden de Trabajo
+                                    </th>
+
+                                    <th>
                                         Peso
                                     </th>
 
@@ -358,6 +362,24 @@
                                         </td>
 
                                         <td>
+
+                                            @if (!string.IsNullOrWhiteSpace(
+                                                movimiento.OrdenTrabajo))
+                                            {
+                                                <span class="badge bg-primary">
+                                                    @movimiento.OrdenTrabajo
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">
+                                                    No aplica
+                                                </span>
+                                            }
+
+                                        </td>
+
+                                        <td>
                                             @movimiento.PesoKg.ToString("0.##") kg
                                         </td>
 
@@ -366,11 +388,14 @@
                                         </td>
 
                                         <td>
-                                            @(movimiento.FechaMovimiento.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                            @(movimiento.FechaMovimiento
+                                                .ToLocalTime()
+                                                .ToString("dd/MM/yyyy HH:mm"))
                                         </td>
 
                                         <td>
-                                            @(string.IsNullOrWhiteSpace(movimiento.Observaciones)
+                                            @(string.IsNullOrWhiteSpace(
+                                                movimiento.Observaciones)
                                                 ? "Sin observaciones"
                                                 : movimiento.Observaciones)
                                         </td>
@@ -453,7 +478,9 @@
                                 </h4>
 
                                 <small class="text-muted">
-                                    @(balance.FechaDespacho.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                    @(balance.FechaDespacho
+                                        .ToLocalTime()
+                                        .ToString("dd/MM/yyyy HH:mm"))
                                 </small>
 
                             </div>
@@ -475,7 +502,9 @@
                                 </h4>
 
                                 <small class="text-muted">
-                                    @(balance.FechaRetorno.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                    @(balance.FechaRetorno
+                                        .ToLocalTime()
+                                        .ToString("dd/MM/yyyy HH:mm"))
                                 </small>
 
                             </div>
@@ -569,7 +598,10 @@
     public string CodigoQr { get; set; } = string.Empty;
 
 
+    // =====================================================
     // DATOS
+    // =====================================================
+
     private CilindroVista? cilindro;
 
     private HistorialVista? historial;
@@ -577,7 +609,10 @@
     private BalanceMasaVista? balance;
 
 
+    // =====================================================
     // ESTADOS
+    // =====================================================
+
     private bool cargando = true;
 
     private string? error;
@@ -587,11 +622,19 @@
     private string? errorBalance;
 
 
+    // =====================================================
+    // INICIALIZACIÓN
+    // =====================================================
+
     protected override async Task OnParametersSetAsync()
     {
         await CargarDetalle();
     }
 
+
+    // =====================================================
+    // CARGAR DETALLE
+    // =====================================================
 
     private async Task CargarDetalle()
     {
@@ -614,38 +657,51 @@
             // VALIDAR CÓDIGO QR
             if (string.IsNullOrWhiteSpace(CodigoQr))
             {
-                error = "No se recibió un código de cilindro.";
+                error =
+                    "No se recibió un código de cilindro.";
+
                 return;
             }
 
 
+            // =====================================================
             // CONSULTAR CILINDROS
+            // =====================================================
+
             var cilindros =
                 await Http.GetFromJsonAsync<List<CilindroVista>>(
                     "api/Cilindros"
                 ) ?? new();
 
 
+            // =====================================================
             // BUSCAR POR CÓDIGO QR
-            cilindro = cilindros.FirstOrDefault(c =>
-                string.Equals(
-                    c.CodigoQr?.Trim(),
-                    CodigoQr.Trim(),
-                    StringComparison.OrdinalIgnoreCase
-                )
-            );
+            // =====================================================
+
+            cilindro =
+                cilindros.FirstOrDefault(c =>
+                    string.Equals(
+                        c.CodigoQr?.Trim(),
+                        CodigoQr.Trim(),
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                );
 
 
             if (cilindro is null)
             {
                 error =
-                    $"No se encontró un cilindro con el código '{CodigoQr}'.";
+                    $"No se encontró un cilindro con el código " +
+                    $"'{CodigoQr}'.";
 
                 return;
             }
 
 
+            // =====================================================
             // HISTORIAL
+            // =====================================================
+
             try
             {
                 historial =
@@ -668,7 +724,10 @@
             }
 
 
+            // =====================================================
             // BALANCE DE MASA
+            // =====================================================
+
             try
             {
                 var respuesta =
@@ -730,57 +789,84 @@
     }
 
 
+    // =====================================================
     // MODELO CILINDRO
+    // =====================================================
+
     private sealed class CilindroVista
     {
         public int Id { get; set; }
 
-        public string CodigoQr { get; set; } = string.Empty;
+        public string CodigoQr { get; set; } =
+            string.Empty;
 
-        public string TipoRefrigerante { get; set; } = string.Empty;
+        public string TipoRefrigerante { get; set; } =
+            string.Empty;
 
         public decimal CapacidadKg { get; set; }
 
         public decimal PesoActualKg { get; set; }
 
-        public string Estado { get; set; } = string.Empty;
+        public string Estado { get; set; } =
+            string.Empty;
 
-        public GasRefrigeranteVista? GasRefrigerante { get; set; }
+        public GasRefrigeranteVista?
+            GasRefrigerante
+        { get; set; }
     }
 
 
+    // =====================================================
     // MODELO GAS
+    // =====================================================
+
     private sealed class GasRefrigeranteVista
     {
-        public string Nombre { get; set; } = string.Empty;
+        public string Nombre { get; set; } =
+            string.Empty;
     }
 
 
+    // =====================================================
     // MODELO HISTORIAL
+    // =====================================================
+
     private sealed class HistorialVista
     {
         public int CilindroId { get; set; }
 
-        public string CodigoQr { get; set; } = string.Empty;
+        public string CodigoQr { get; set; } =
+            string.Empty;
 
-        public string EstadoActual { get; set; } = string.Empty;
+        public string EstadoActual { get; set; } =
+            string.Empty;
 
         public int TotalMovimientos { get; set; }
 
-        public List<MovimientoVista> Movimientos { get; set; } = new();
+        public List<MovimientoVista> Movimientos { get; set; } =
+            new();
     }
 
 
+    // =====================================================
     // MODELO MOVIMIENTO
+    // =====================================================
+
     private sealed class MovimientoVista
     {
         public int Id { get; set; }
 
-        public string TipoMovimiento { get; set; } = string.Empty;
+        public string TipoMovimiento { get; set; } =
+            string.Empty;
+
+        public int? OrdenTrabajoId { get; set; }
+
+        public string? OrdenTrabajo { get; set; }
 
         public decimal PesoKg { get; set; }
 
-        public string Responsable { get; set; } = string.Empty;
+        public string Responsable { get; set; } =
+            string.Empty;
 
         public DateTime FechaMovimiento { get; set; }
 
@@ -788,14 +874,20 @@
     }
 
 
+    // =====================================================
     // MODELO BALANCE
+    // =====================================================
+
     private sealed class BalanceMasaVista
     {
         public int CilindroId { get; set; }
 
-        public string CodigoQr { get; set; } = string.Empty;
+        public string CodigoQr { get; set; } =
+            string.Empty;
 
         public int DespachoId { get; set; }
+
+        public int? OrdenTrabajoId { get; set; }
 
         public decimal PesoDespachoKg { get; set; }
 
@@ -811,13 +903,18 @@
 
         public bool BalanceValido { get; set; }
 
-        public string EstadoBalance { get; set; } = string.Empty;
+        public string EstadoBalance { get; set; } =
+            string.Empty;
     }
 
 
+    // =====================================================
     // MENSAJE DE LA API
+    // =====================================================
+
     private sealed class MensajeApiVista
     {
-        public string Mensaje { get; set; } = string.Empty;
+        public string Mensaje { get; set; } =
+            string.Empty;
     }
 }

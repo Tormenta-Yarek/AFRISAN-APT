@@ -52,7 +52,41 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 3. Validar responsable.
+            // 3. Validar Orden de Trabajo.
+            if (!dto.OrdenTrabajoId.HasValue)
+            {
+                return BadRequest(new
+                {
+                    mensaje =
+                        "Debes seleccionar una Orden de Trabajo."
+                });
+            }
+
+            var ordenTrabajo =
+                await _context.OrdenesTrabajo
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(o =>
+                        o.Id == dto.OrdenTrabajoId.Value);
+
+            if (ordenTrabajo == null)
+            {
+                return BadRequest(new
+                {
+                    mensaje =
+                        "La Orden de Trabajo seleccionada no existe."
+                });
+            }
+
+            if (!ordenTrabajo.Activa)
+            {
+                return BadRequest(new
+                {
+                    mensaje =
+                        "La Orden de Trabajo seleccionada no está activa."
+                });
+            }
+
+            // 4. Validar responsable.
             if (string.IsNullOrWhiteSpace(dto.Responsable))
             {
                 return BadRequest(new
@@ -62,7 +96,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 4. Validar que se haya ingresado un peso.
+            // 5. Validar que se haya ingresado un peso.
             if (!dto.PesoKg.HasValue ||
                 dto.PesoKg.Value < 0)
             {
@@ -73,7 +107,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 5. Validar que el cilindro tenga tara.
+            // 6. Validar que el cilindro tenga tara.
             if (!cilindro.TaraKg.HasValue ||
                 cilindro.TaraKg.Value <= 0)
             {
@@ -91,7 +125,7 @@ namespace Afrisan.Api.Controllers
             var pesoDespacho =
                 dto.PesoKg.Value;
 
-            // 6. El peso bruto debe ser MAYOR que la tara.
+            // 7. El peso bruto debe ser MAYOR que la tara.
             if (pesoDespacho <= tara)
             {
                 return BadRequest(new
@@ -102,7 +136,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 7. El peso bruto no puede superar tara + capacidad.
+            // 8. El peso bruto no puede superar tara + capacidad.
             var pesoBrutoMaximo =
                 tara + cilindro.CapacidadKg;
 
@@ -116,26 +150,34 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 8. Crear movimiento de despacho.
+            // 9. Crear movimiento de despacho.
             var movimiento = new MovimientoInventario
             {
                 CilindroId = cilindro.Id,
+
+                OrdenTrabajoId = ordenTrabajo.Id,
+
                 TipoMovimiento = "Despacho",
+
                 PesoKg = pesoDespacho,
+
                 Responsable = dto.Responsable.Trim(),
+
                 FechaMovimiento = DateTime.UtcNow,
+
                 Observaciones = dto.Observaciones
             };
 
-            // 9. Actualizar cilindro.
+            // 10. Actualizar cilindro.
             cilindro.Estado = "Despachado";
             cilindro.PesoActualKg = pesoDespacho;
 
-            // 10. Guardar movimiento y cambios.
+            // 11. Guardar movimiento y cambios.
             _context.MovimientosInventario.Add(movimiento);
 
             await _context.SaveChangesAsync();
 
+            // 12. Respuesta.
             return Ok(new
             {
                 mensaje =
@@ -146,6 +188,12 @@ namespace Afrisan.Api.Controllers
 
                 codigoQr =
                     cilindro.CodigoQr,
+
+                ordenTrabajoId =
+                    ordenTrabajo.Id,
+
+                ordenTrabajo =
+                    ordenTrabajo.Codigo,
 
                 estado =
                     cilindro.Estado,
@@ -243,10 +291,15 @@ namespace Afrisan.Api.Controllers
             var movimiento = new MovimientoInventario
             {
                 CilindroId = cilindro.Id,
+
                 TipoMovimiento = "Retorno",
+
                 PesoKg = dto.PesoKg.Value,
+
                 Responsable = dto.Responsable.Trim(),
+
                 FechaMovimiento = DateTime.UtcNow,
+
                 Observaciones = dto.Observaciones
             };
 
@@ -323,11 +376,24 @@ namespace Afrisan.Api.Controllers
                     .Select(m => new
                     {
                         m.Id,
+
                         m.TipoMovimiento,
+
                         m.PesoKg,
+
                         m.Responsable,
+
                         m.FechaMovimiento,
-                        m.Observaciones
+
+                        m.Observaciones,
+
+                        ordenTrabajoId =
+                            m.OrdenTrabajoId,
+
+                        ordenTrabajo =
+                            m.OrdenTrabajo != null
+                                ? m.OrdenTrabajo.Codigo
+                                : null
                     })
                     .ToListAsync();
 
@@ -411,8 +477,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 4. Buscar despacho inmediatamente
-            // anterior al retorno.
+            // 4. Buscar despacho inmediatamente anterior al retorno.
             var despacho =
                 movimientos
                     .Where(m =>
@@ -483,6 +548,9 @@ namespace Afrisan.Api.Controllers
 
                 despachoId =
                     despacho.Id,
+
+                ordenTrabajoId =
+                    despacho.OrdenTrabajoId,
 
                 pesoDespachoKg =
                     despacho.PesoKg,

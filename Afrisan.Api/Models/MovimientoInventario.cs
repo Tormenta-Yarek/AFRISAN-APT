@@ -9,6 +9,11 @@
 
         public Cilindro Cilindro { get; set; } = null!;
 
+        // Orden de Trabajo asociada al movimiento
+        public int? OrdenTrabajoId { get; set; }
+
+        public OrdenTrabajo? OrdenTrabajo { get; set; }
+
         // "Despacho" o "Retorno"
         public string TipoMovimiento { get; set; } = string.Empty;
 

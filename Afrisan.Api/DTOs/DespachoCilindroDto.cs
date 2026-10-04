@@ -2,6 +2,8 @@
 {
     public class DespachoCilindroDto
     {
+        public int? OrdenTrabajoId { get; set; }
+
         public string Responsable { get; set; } = string.Empty;
 
         public decimal? PesoKg { get; set; }

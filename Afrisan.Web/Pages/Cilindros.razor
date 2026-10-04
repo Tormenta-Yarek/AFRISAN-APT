@@ -405,6 +405,44 @@
 
                 <div class="row g-3">
 
+                    @if (!esRetorno)
+                    {
+                        <!-- ORDEN DE TRABAJO -->
+                        <div class="col-12">
+
+                            <label class="form-label fw-bold">
+                                Orden de Trabajo *
+                            </label>
+
+                            <select class="form-select"
+                                    @bind="formularioMovimiento.OrdenTrabajoId"
+                                    disabled="@procesandoMovimiento">
+
+                                <option value="">
+                                    Selecciona una Orden de Trabajo
+                                </option>
+
+                                @foreach (var orden in ordenesTrabajo.Where(o => o.Activa))
+                                {
+                                    <option value="@orden.Id">
+                                        @orden.Codigo
+                                        @if (!string.IsNullOrWhiteSpace(orden.Descripcion))
+                                        {
+                                            <text> - @orden.Descripcion</text>
+                                        }
+                                    </option>
+                                }
+
+                            </select>
+
+                            <small class="text-muted d-block mt-1">
+                                Solo puedes despachar un cilindro asociado
+                                a una Orden de Trabajo activa.
+                            </small>
+
+                        </div>
+                    }
+
                     <!-- RESPONSABLE -->
                     <div class="col-12 col-md-6">
 
@@ -493,7 +531,9 @@
 
                     <button type="button"
                             class="btn @(esRetorno ? "btn-success" : "btn-warning")"
-                            disabled="@procesandoMovimiento"
+                            disabled="@(procesandoMovimiento ||
+                                                                (!esRetorno &&
+                                                                 !formularioMovimiento.OrdenTrabajoId.HasValue))"
                             @onclick="GuardarMovimiento">
 
                         @(procesandoMovimiento
@@ -812,6 +852,8 @@
 
     private List<GasRefrigeranteVista> gases = new();
 
+    private List<OrdenTrabajoVista> ordenesTrabajo = new();
+
     private FormularioCilindro formulario = new();
 
     private FormularioMovimiento formularioMovimiento = new();
@@ -826,6 +868,8 @@
     private bool cargando = true;
 
     private bool cargandoGases;
+
+    private bool cargandoOrdenesTrabajo;
 
     private bool guardando;
 
@@ -855,6 +899,7 @@
     private bool Ocupado =>
         cargando ||
         cargandoGases ||
+        cargandoOrdenesTrabajo ||
         guardando ||
         procesandoMovimiento ||
         idEliminando.HasValue;
@@ -972,6 +1017,40 @@
         finally
         {
             cargandoGases = false;
+        }
+    }
+
+
+    // =====================================================
+    // CARGAR ÓRDENES DE TRABAJO ACTIVAS
+    // =====================================================
+
+    private async Task CargarOrdenesTrabajo()
+    {
+        cargandoOrdenesTrabajo = true;
+
+        ordenesTrabajo = new();
+
+        try
+        {
+            ordenesTrabajo =
+                await Http.GetFromJsonAsync<List<OrdenTrabajoVista>>(
+                    "api/OrdenesTrabajo/activas"
+                ) ?? new();
+        }
+        catch (Exception ex)
+        {
+            ordenesTrabajo = new();
+
+            errorOperacion =
+                "No se pudieron cargar las Órdenes de Trabajo activas. " +
+                "Comprueba la conexión con la API.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargandoOrdenesTrabajo = false;
         }
     }
 
@@ -1329,7 +1408,7 @@
     // ABRIR DESPACHO / RETORNO
     // =====================================================
 
-    private void AbrirMovimiento(
+    private async Task AbrirMovimiento(
         CilindroVista cilindro,
         bool retornar)
     {
@@ -1372,6 +1451,36 @@
         }
 
 
+        errorMovimiento = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+        idPorEliminar = null;
+
+
+        // PARA DESPACHAR DEBE EXISTIR AL MENOS UNA OT ACTIVA
+        if (!retornar)
+        {
+            await CargarOrdenesTrabajo();
+
+            if (errorOperacion is not null)
+            {
+                return;
+            }
+
+            if (!ordenesTrabajo.Any(o => o.Activa))
+            {
+                errorOperacion =
+                    "No existen Órdenes de Trabajo activas. " +
+                    "Debes crear una OT antes de despachar un cilindro.";
+
+                return;
+            }
+        }
+
+
         cilindroOperacion =
             cilindro;
 
@@ -1380,14 +1489,6 @@
 
         formularioMovimiento =
             new FormularioMovimiento();
-
-        errorMovimiento = null;
-
-        errorOperacion = null;
-
-        mensajeExito = null;
-
-        idPorEliminar = null;
     }
 
 
@@ -1460,6 +1561,31 @@
         // VALIDACIÓN DE DESPACHO
         if (!esRetorno)
         {
+            if (!formularioMovimiento.OrdenTrabajoId.HasValue)
+            {
+                errorMovimiento =
+                    "Debes seleccionar una Orden de Trabajo.";
+
+                return;
+            }
+
+
+            var ordenSeleccionada =
+                ordenesTrabajo.FirstOrDefault(o =>
+                    o.Id == formularioMovimiento.OrdenTrabajoId.Value &&
+                    o.Activa
+                );
+
+            if (ordenSeleccionada is null)
+            {
+                errorMovimiento =
+                    "La Orden de Trabajo seleccionada no existe " +
+                    "o ya no se encuentra activa.";
+
+                return;
+            }
+
+
             if (!cilindroOperacion.TaraKg.HasValue ||
                 cilindroOperacion.TaraKg.Value <= 0)
             {
@@ -1518,6 +1644,11 @@
 
             var datos = new
             {
+                ordenTrabajoId =
+                    esRetorno
+                        ? (int?)null
+                        : formularioMovimiento.OrdenTrabajoId,
+
                 responsable =
                     formularioMovimiento.Responsable.Trim(),
 
@@ -1785,6 +1916,19 @@
     }
 
 
+    private sealed class OrdenTrabajoVista
+    {
+        public int Id { get; set; }
+
+        public string Codigo { get; set; } =
+            string.Empty;
+
+        public string? Descripcion { get; set; }
+
+        public bool Activa { get; set; }
+    }
+
+
     private sealed class FormularioCilindro
     {
         public string CodigoQr { get; set; } =
@@ -1805,6 +1949,8 @@
 
     private sealed class FormularioMovimiento
     {
+        public int? OrdenTrabajoId { get; set; }
+
         public string Responsable { get; set; } =
             string.Empty;
 
