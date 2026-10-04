@@ -1,0 +1,823 @@
+﻿@page "/cilindros/detalle/{CodigoQr}"
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<PageTitle>Detalle del cilindro | AFRISAN</PageTitle>
+
+<div class="container-fluid py-4">
+
+    <!-- ENCABEZADO -->
+    <div class="p-4 mb-4 rounded-4 text-white"
+         style="background: linear-gradient(120deg, #102c46, #176b91);">
+
+        <h1 class="fw-bold mb-2">
+            Detalle del cilindro
+        </h1>
+
+        <p class="mb-0">
+            Consulta la información, historial de movimientos y balance de masa
+            de un cilindro registrado en AFRISAN.
+        </p>
+
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <div class="mb-4">
+
+        <a class="btn btn-outline-secondary"
+           href="identificacion-qr">
+
+            ← Volver a Identificación QR
+
+        </a>
+
+    </div>
+
+    <!-- CARGANDO -->
+    @if (cargando)
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body p-5 text-center">
+
+                <div class="spinner-border text-primary"
+                     role="status">
+                </div>
+
+                <p class="text-muted mt-3 mb-0">
+                    Cargando información del cilindro...
+                </p>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- ERROR -->
+    @if (!cargando && error is not null)
+    {
+        <div class="alert alert-danger" role="alert">
+
+            <h5 class="fw-bold">
+                No se pudo mostrar el cilindro
+            </h5>
+
+            <p class="mb-3">
+                @error
+            </p>
+
+            <button class="btn btn-outline-danger"
+                    @onclick="CargarDetalle">
+
+                Intentar nuevamente
+
+            </button>
+
+        </div>
+    }
+
+    <!-- CONTENIDO -->
+    @if (!cargando && error is null && cilindro is not null)
+    {
+        <!-- INFORMACIÓN GENERAL -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white p-4">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <div>
+
+                        <h4 class="fw-bold mb-1">
+                            @cilindro.CodigoQr
+                        </h4>
+
+                        <p class="text-muted mb-0">
+                            Información del cilindro registrado en AFRISAN
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        @if (string.Equals(
+                            cilindro.Estado,
+                            "Disponible",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-success fs-6">
+                                Disponible
+                            </span>
+                        }
+                        else if (string.Equals(
+                            cilindro.Estado,
+                            "Despachado",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-warning text-dark fs-6">
+                                Despachado
+                            </span>
+                        }
+                        else if (string.Equals(
+                            cilindro.Estado,
+                            "En uso",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-warning text-dark fs-6">
+                                En uso
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary fs-6">
+                                @cilindro.Estado
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-3">
+                    Información general
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle">
+
+                        <tbody>
+
+                            <tr>
+                                <th style="width: 35%;">
+                                    ID del cilindro
+                                </th>
+
+                                <td>
+                                    @cilindro.Id
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Código QR
+                                </th>
+
+                                <td>
+                                    <strong>
+                                        @cilindro.CodigoQr
+                                    </strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Gas refrigerante
+                                </th>
+
+                                <td>
+                                    @(cilindro.GasRefrigerante?.Nombre
+                                        ?? cilindro.TipoRefrigerante)
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Capacidad
+                                </th>
+
+                                <td>
+                                    @cilindro.CapacidadKg.ToString("0.##") kg
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Peso actual
+                                </th>
+
+                                <td>
+                                    @cilindro.PesoActualKg.ToString("0.##") kg
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Estado
+                                </th>
+
+                                <td>
+                                    @cilindro.Estado
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+
+                    <button class="btn btn-primary"
+                            @onclick="CargarDetalle">
+
+                        Actualizar información
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HISTORIAL -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h5 class="fw-bold mb-1">
+                    Historial de movimientos
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Consulta los despachos y retornos registrados para este cilindro.
+                </p>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                @if (errorHistorial is not null)
+                {
+                    <div class="alert alert-warning mb-0">
+
+                        <strong>
+                            No se pudo cargar el historial.
+                        </strong>
+
+                        <p class="mb-0 mt-2">
+                            @errorHistorial
+                        </p>
+
+                    </div>
+                }
+                else if (historial is null ||
+                         historial.Movimientos.Count == 0)
+                {
+                    <div class="alert alert-info mb-0">
+
+                        Este cilindro todavía no tiene movimientos
+                        de inventario registrados.
+
+                    </div>
+                }
+                else
+                {
+                    <p class="mb-3">
+
+                        <strong>
+                            Total de movimientos:
+                        </strong>
+
+                        @historial.TotalMovimientos
+
+                    </p>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-striped table-bordered align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>
+                                        Movimiento
+                                    </th>
+
+                                    <th>
+                                        Peso
+                                    </th>
+
+                                    <th>
+                                        Responsable
+                                    </th>
+
+                                    <th>
+                                        Fecha y hora
+                                    </th>
+
+                                    <th>
+                                        Observaciones
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var movimiento in historial.Movimientos)
+                                {
+                                    <tr>
+
+                                        <td>
+
+                                            @if (string.Equals(
+                                                movimiento.TipoMovimiento,
+                                                "Despacho",
+                                                StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    Despacho
+                                                </span>
+                                            }
+                                            else if (string.Equals(
+                                                movimiento.TipoMovimiento,
+                                                "Retorno",
+                                                StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="badge bg-success">
+                                                    Retorno
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    @movimiento.TipoMovimiento
+                                                </span>
+                                            }
+
+                                        </td>
+
+                                        <td>
+                                            @movimiento.PesoKg.ToString("0.##") kg
+                                        </td>
+
+                                        <td>
+                                            @movimiento.Responsable
+                                        </td>
+
+                                        <td>
+                                            @(movimiento.FechaMovimiento.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                        </td>
+
+                                        <td>
+                                            @(string.IsNullOrWhiteSpace(movimiento.Observaciones)
+                                                ? "Sin observaciones"
+                                                : movimiento.Observaciones)
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <small class="text-muted">
+                        Las fechas se muestran según la hora local del dispositivo.
+                    </small>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- BALANCE DE MASA -->
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h5 class="fw-bold mb-1">
+                    Balance de masa
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Compara el peso registrado al despacho con
+                    el peso registrado al retorno del cilindro.
+                </p>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                @if (errorBalance is not null)
+                {
+                    <div class="alert alert-info mb-0">
+
+                        <strong>
+                            Balance todavía no disponible.
+                        </strong>
+
+                        <p class="mb-0 mt-2">
+                            @errorBalance
+                        </p>
+
+                    </div>
+                }
+                else if (balance is null)
+                {
+                    <div class="alert alert-info mb-0">
+
+                        No existe información suficiente para
+                        calcular el balance de masa.
+
+                    </div>
+                }
+                else
+                {
+                    <div class="row g-3 mb-4">
+
+                        <!-- PESO DESPACHO -->
+                        <div class="col-12 col-md-4">
+
+                            <div class="border rounded-4 p-3 h-100">
+
+                                <small class="text-muted">
+                                    Peso al despacho
+                                </small>
+
+                                <h4 class="fw-bold mt-2 mb-1">
+                                    @balance.PesoDespachoKg.ToString("0.##") kg
+                                </h4>
+
+                                <small class="text-muted">
+                                    @(balance.FechaDespacho.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PESO RETORNO -->
+                        <div class="col-12 col-md-4">
+
+                            <div class="border rounded-4 p-3 h-100">
+
+                                <small class="text-muted">
+                                    Peso al retorno
+                                </small>
+
+                                <h4 class="fw-bold mt-2 mb-1">
+                                    @balance.PesoRetornoKg.ToString("0.##") kg
+                                </h4>
+
+                                <small class="text-muted">
+                                    @(balance.FechaRetorno.ToLocalTime().ToString("dd/MM/yyyy HH:mm"))
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DIFERENCIA -->
+                        <div class="col-12 col-md-4">
+
+                            <div class="border rounded-4 p-3 h-100">
+
+                                <small class="text-muted">
+
+                                    @(balance.BalanceValido
+                                        ? "Refrigerante utilizado"
+                                        : "Diferencia registrada")
+
+                                </small>
+
+                                <h4 class="fw-bold mt-2 mb-1">
+                                    @balance.DiferenciaKg.ToString("0.##") kg
+                                </h4>
+
+                                <small class="text-muted">
+                                    Despacho − retorno
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (balance.BalanceValido)
+                    {
+                        <div class="alert alert-success mb-0">
+
+                            <strong>
+                                ✓ Balance de masa correcto
+                            </strong>
+
+                            <p class="mb-0 mt-2">
+                                El peso de retorno es igual o menor
+                                que el peso registrado al despacho.
+                            </p>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger mb-0">
+
+                            <strong>
+                                ⚠ Inconsistencia en el balance de masa
+                            </strong>
+
+                            <p class="mb-0 mt-2">
+                                El peso registrado al retorno es mayor
+                                que el peso registrado al despacho.
+                                Revisa los datos ingresados.
+                            </p>
+
+                        </div>
+                    }
+
+                }
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- PIE -->
+    <div class="text-center mt-5 pt-3 border-top">
+
+        <small class="text-muted">
+            AFRISAN | Sistema de gestión de refrigerantes
+        </small>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string CodigoQr { get; set; } = string.Empty;
+
+
+    // DATOS
+    private CilindroVista? cilindro;
+
+    private HistorialVista? historial;
+
+    private BalanceMasaVista? balance;
+
+
+    // ESTADOS
+    private bool cargando = true;
+
+    private string? error;
+
+    private string? errorHistorial;
+
+    private string? errorBalance;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await CargarDetalle();
+    }
+
+
+    private async Task CargarDetalle()
+    {
+        cargando = true;
+
+        error = null;
+
+        errorHistorial = null;
+
+        errorBalance = null;
+
+        cilindro = null;
+
+        historial = null;
+
+        balance = null;
+
+        try
+        {
+            // VALIDAR CÓDIGO QR
+            if (string.IsNullOrWhiteSpace(CodigoQr))
+            {
+                error = "No se recibió un código de cilindro.";
+                return;
+            }
+
+
+            // CONSULTAR CILINDROS
+            var cilindros =
+                await Http.GetFromJsonAsync<List<CilindroVista>>(
+                    "api/Cilindros"
+                ) ?? new();
+
+
+            // BUSCAR POR CÓDIGO QR
+            cilindro = cilindros.FirstOrDefault(c =>
+                string.Equals(
+                    c.CodigoQr?.Trim(),
+                    CodigoQr.Trim(),
+                    StringComparison.OrdinalIgnoreCase
+                )
+            );
+
+
+            if (cilindro is null)
+            {
+                error =
+                    $"No se encontró un cilindro con el código '{CodigoQr}'.";
+
+                return;
+            }
+
+
+            // HISTORIAL
+            try
+            {
+                historial =
+                    await Http.GetFromJsonAsync<HistorialVista>(
+                        $"api/MovimientosInventario/historial/{cilindro.Id}"
+                    );
+
+                if (historial is null)
+                {
+                    errorHistorial =
+                        "La API no devolvió información del historial.";
+                }
+            }
+            catch (Exception ex)
+            {
+                errorHistorial =
+                    "No se pudo cargar el historial de movimientos.";
+
+                Console.WriteLine(ex);
+            }
+
+
+            // BALANCE DE MASA
+            try
+            {
+                var respuesta =
+                    await Http.GetAsync(
+                        $"api/MovimientosInventario/balance/{cilindro.Id}"
+                    );
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    balance =
+                        await respuesta.Content
+                            .ReadFromJsonAsync<BalanceMasaVista>();
+
+                    if (balance is null)
+                    {
+                        errorBalance =
+                            "La API no devolvió información del balance.";
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var mensajeApi =
+                            await respuesta.Content
+                                .ReadFromJsonAsync<MensajeApiVista>();
+
+                        errorBalance =
+                            mensajeApi?.Mensaje ??
+                            "No existe información suficiente para calcular el balance.";
+                    }
+                    catch
+                    {
+                        errorBalance =
+                            "No existe información suficiente para calcular el balance.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorBalance =
+                    "No se pudo consultar el balance de masa.";
+
+                Console.WriteLine(ex);
+            }
+        }
+        catch (Exception ex)
+        {
+            error =
+                "Ocurrió un error al consultar el cilindro. " +
+                "Comprueba que Afrisan.Api esté ejecutándose.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+
+    // MODELO CILINDRO
+    private sealed class CilindroVista
+    {
+        public int Id { get; set; }
+
+        public string CodigoQr { get; set; } = string.Empty;
+
+        public string TipoRefrigerante { get; set; } = string.Empty;
+
+        public decimal CapacidadKg { get; set; }
+
+        public decimal PesoActualKg { get; set; }
+
+        public string Estado { get; set; } = string.Empty;
+
+        public GasRefrigeranteVista? GasRefrigerante { get; set; }
+    }
+
+
+    // MODELO GAS
+    private sealed class GasRefrigeranteVista
+    {
+        public string Nombre { get; set; } = string.Empty;
+    }
+
+
+    // MODELO HISTORIAL
+    private sealed class HistorialVista
+    {
+        public int CilindroId { get; set; }
+
+        public string CodigoQr { get; set; } = string.Empty;
+
+        public string EstadoActual { get; set; } = string.Empty;
+
+        public int TotalMovimientos { get; set; }
+
+        public List<MovimientoVista> Movimientos { get; set; } = new();
+    }
+
+
+    // MODELO MOVIMIENTO
+    private sealed class MovimientoVista
+    {
+        public int Id { get; set; }
+
+        public string TipoMovimiento { get; set; } = string.Empty;
+
+        public decimal PesoKg { get; set; }
+
+        public string Responsable { get; set; } = string.Empty;
+
+        public DateTime FechaMovimiento { get; set; }
+
+        public string? Observaciones { get; set; }
+    }
+
+
+    // MODELO BALANCE
+    private sealed class BalanceMasaVista
+    {
+        public int CilindroId { get; set; }
+
+        public string CodigoQr { get; set; } = string.Empty;
+
+        public int DespachoId { get; set; }
+
+        public decimal PesoDespachoKg { get; set; }
+
+        public DateTime FechaDespacho { get; set; }
+
+        public int RetornoId { get; set; }
+
+        public decimal PesoRetornoKg { get; set; }
+
+        public DateTime FechaRetorno { get; set; }
+
+        public decimal DiferenciaKg { get; set; }
+
+        public bool BalanceValido { get; set; }
+
+        public string EstadoBalance { get; set; } = string.Empty;
+    }
+
+
+    // MENSAJE DE LA API
+    private sealed class MensajeApiVista
+    {
+        public string Mensaje { get; set; } = string.Empty;
+    }
+}

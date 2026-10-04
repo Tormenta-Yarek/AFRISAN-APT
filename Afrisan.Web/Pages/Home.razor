@@ -1,0 +1,369 @@
+﻿@page "/"
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<PageTitle>Inicio | AFRISAN</PageTitle>
+
+<div class="container-fluid py-4">
+
+    <!-- ENCABEZADO PRINCIPAL -->
+    <div class="p-4 mb-4 rounded-4 text-white"
+         style="background: linear-gradient(120deg, #102c46, #176b91);">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+                <h1 class="fw-bold mb-2">AFRISAN</h1>
+
+                <p class="mb-0">
+                    Sistema de gestión de cilindros y gases refrigerantes
+                </p>
+            </div>
+
+            <span class="badge bg-light text-dark p-3">
+                Panel de administración
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- BIENVENIDA -->
+    <div class="mb-4">
+
+        <h3 class="fw-bold">Panel principal</h3>
+
+        <p class="text-muted">
+            Bienvenido al sistema de gestión AFRISAN.
+            Desde aquí podrás administrar los cilindros,
+            consultar su disponibilidad y controlar
+            los gases refrigerantes.
+        </p>
+
+    </div>
+
+    <!-- AVISO DE ERROR DE CONEXIÓN -->
+    @if (error is not null)
+    {
+        <div class="alert alert-danger mb-4" role="alert">
+            <strong>Error de conexión:</strong> @error
+
+            <p class="mb-0 mt-2">
+                Comprueba que Afrisan.Api esté ejecutándose
+                y que la dirección HTTPS sea correcta.
+            </p>
+        </div>
+    }
+
+    <!-- TARJETAS DEL INVENTARIO -->
+    <div class="row g-3 mb-4">
+
+        <!-- TOTAL DE CILINDROS -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Total de cilindros
+                    </h6>
+
+                    <h2 class="fw-bold text-primary">
+                        @TotalCilindros
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros registrados en el sistema
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CILINDROS DISPONIBLES -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Cilindros disponibles
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        @CilindrosDisponibles
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros disponibles para utilizar
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CILINDROS EN USO -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Cilindros en uso
+                    </h6>
+
+                    <h2 class="fw-bold text-warning">
+                        @CilindrosEnUso
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros utilizados actualmente
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TIPOS DE GASES REFRIGERANTES -->
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Tipos de gases refrigerantes
+                    </h6>
+
+                    <h2 class="fw-bold text-info">
+                        @TotalGases
+                    </h2>
+
+                    <small class="text-muted">
+                        Gases registrados en el sistema
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODULOS DEL SISTEMA -->
+    <h4 class="fw-bold mb-3">
+        Módulos del sistema
+    </h4>
+
+    <div class="row g-3">
+
+        <!-- GESTIÓN DE CILINDROS -->
+        <div class="col-12 col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <h2 class="mb-3">📦</h2>
+
+                    <h5 class="fw-bold">
+                        Gestión de cilindros
+                    </h5>
+
+                    <p class="text-muted">
+                        Registra y consulta cilindros,
+                        modifica sus datos y controla
+                        su disponibilidad.
+                    </p>
+
+                    <span class="badge bg-primary">
+                        Próximamente
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- GASES REFRIGERANTES -->
+        <div class="col-12 col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <h2 class="mb-3">❄️</h2>
+
+                    <h5 class="fw-bold">
+                        Gases refrigerantes
+                    </h5>
+
+                    <p class="text-muted">
+                        Administra los tipos de gases
+                        refrigerantes asociados a
+                        los cilindros de la empresa.
+                    </p>
+
+                    <span class="badge bg-primary">
+                        Próximamente
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- IDENTIFICACIÓN QR -->
+        <div class="col-12 col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <h2 class="mb-3">📱</h2>
+
+                    <h5 class="fw-bold">
+                        Identificación QR
+                    </h5>
+
+                    <p class="text-muted">
+                        Identifica cada cilindro
+                        mediante su código QR
+                        y consulta su información.
+                    </p>
+
+                    <span class="badge bg-secondary">
+                        Pendiente de desarrollo
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <div class="text-center mt-5 pt-3 border-top">
+
+        <small class="text-muted">
+            AFRISAN | Sistema de gestión de refrigerantes
+        </small>
+
+    </div>
+
+</div>
+
+@code {
+
+    // =====================================================
+    // LISTAS DE DATOS OBTENIDOS DESDE LA API
+    // =====================================================
+
+    private List<CilindroResumen> cilindros = new();
+
+    private List<GasResumen> gases = new();
+
+
+    // =====================================================
+    // ESTADO DE CARGA Y ERRORES
+    // =====================================================
+
+    private bool cargando = true;
+
+    private string? error;
+
+
+    // =====================================================
+    // CONTADORES DEL PANEL PRINCIPAL
+    // =====================================================
+
+    private string TotalCilindros =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count.ToString();
+
+
+    private string CilindrosDisponibles =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count(c =>
+            string.Equals(
+                c.Estado?.Trim(),
+                "Disponible",
+                StringComparison.OrdinalIgnoreCase
+            )
+        ).ToString();
+
+
+    private string CilindrosEnUso =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count(c =>
+            string.Equals(
+                c.Estado?.Trim(),
+                "En uso",
+                StringComparison.OrdinalIgnoreCase
+            )
+        ).ToString();
+
+
+    private string TotalGases =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        gases.Count.ToString();
+
+
+    // =====================================================
+    // CONSULTAR LA API AL CARGAR LA PÁGINA
+    // =====================================================
+
+    protected override async Task OnInitializedAsync()
+    {
+        cargando = true;
+        error = null;
+
+        try
+        {
+            // Consultar todos los cilindros registrados.
+
+            cilindros =
+                await Http.GetFromJsonAsync<List<CilindroResumen>>(
+                    "api/Cilindros"
+                ) ?? new();
+
+            // Consultar todos los gases refrigerantes.
+
+            gases =
+                await Http.GetFromJsonAsync<List<GasResumen>>(
+                    "api/GasRefrigerantes"
+                ) ?? new();
+        }
+        catch (Exception ex)
+        {
+            error = "No se pudieron obtener los datos del sistema.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+
+    // =====================================================
+    // MODELOS PARA LEER LAS RESPUESTAS DE LA API
+    // =====================================================
+
+    private sealed class CilindroResumen
+    {
+        public int Id { get; set; }
+
+        public string Estado { get; set; } = string.Empty;
+    }
+
+
+    private sealed class GasResumen
+    {
+        public int Id { get; set; }
+    }
+
+}

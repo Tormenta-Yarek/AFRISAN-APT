@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "AMBOS",
+    "Projects": [
+      {
+        "Path": "Afrisan.Api\\Afrisan.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "RedLocal"
+      },
+      {
+        "Path": "Afrisan.Web\\Afrisan.Web.csproj",
+        "Action": "Start",
+        "DebugTarget": "RedLocal"
+      }
+    ]
+  }
+]

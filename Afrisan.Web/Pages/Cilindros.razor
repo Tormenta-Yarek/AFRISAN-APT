@@ -1,0 +1,1815 @@
+﻿@page "/cilindros"
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient Http
+
+<PageTitle>Gestión de cilindros | AFRISAN</PageTitle>
+
+<div class="container-fluid py-4">
+
+    <!-- ENCABEZADO -->
+    <div class="p-4 mb-4 rounded-4 text-white"
+         style="background: linear-gradient(120deg, #102c46, #176b91);">
+
+        <h1 class="fw-bold mb-2">
+            Gestión de cilindros
+        </h1>
+
+        <p class="mb-0">
+            Registra y administra cilindros, despachos y retornos
+            de gases refrigerantes de AFRISAN.
+        </p>
+
+    </div>
+
+
+    <!-- RESUMEN -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Total de cilindros
+                    </h6>
+
+                    <h2 class="fw-bold text-primary">
+                        @TotalCilindros
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros registrados en el sistema
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Cilindros disponibles
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        @CilindrosDisponibles
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros disponibles para utilizar
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <h6 class="text-muted">
+                        Cilindros despachados o en uso
+                    </h6>
+
+                    <h2 class="fw-bold text-warning">
+                        @CilindrosEnUso
+                    </h2>
+
+                    <small class="text-muted">
+                        Cilindros que no están disponibles en bodega
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- MENSAJES -->
+    @if (mensajeExito is not null)
+    {
+        <div class="alert alert-success mb-4" role="status">
+            @mensajeExito
+        </div>
+    }
+
+    @if (errorOperacion is not null)
+    {
+        <div class="alert alert-danger mb-4" role="alert">
+            @errorOperacion
+        </div>
+    }
+
+
+    <!-- FORMULARIO REGISTRO / EDICIÓN -->
+    @if (mostrarFormulario)
+    {
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h4 class="fw-bold mb-1">
+                    @(idEditando.HasValue
+                        ? "Editar cilindro"
+                        : "Registrar nuevo cilindro")
+                </h4>
+
+                <p class="text-muted mb-0">
+                    @(idEditando.HasValue
+                        ? "Modifica los datos técnicos permitidos."
+                        : "Completa los datos. AFRISAN generará el código automáticamente.")
+                </p>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+                @if (errorFormulario is not null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @errorFormulario
+                    </div>
+                }
+
+                @if (cargandoGases)
+                {
+                    <div class="text-center py-4">
+
+                        <div class="spinner-border text-primary"
+                             role="status">
+                        </div>
+
+                        <p class="mt-2">
+                            Cargando gases refrigerantes...
+                        </p>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="row g-3">
+
+                        <!-- CÓDIGO -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-bold">
+                                Código del cilindro
+                            </label>
+
+                            @if (idEditando.HasValue)
+                            {
+                                <input type="text"
+                                       class="form-control"
+                                       value="@formulario.CodigoQr"
+                                       disabled />
+
+                                <small class="text-muted">
+                                    Este código no se puede modificar.
+                                </small>
+                            }
+                            else
+                            {
+                                <input type="text"
+                                       class="form-control"
+                                       value="Se generará automáticamente"
+                                       disabled />
+
+                                <small class="text-muted">
+                                    AFRISAN asignará un código como
+                                    CIL-0001, CIL-0002 o CIL-0003.
+                                </small>
+                            }
+
+                        </div>
+
+
+                        <!-- GAS -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-bold">
+                                Gas refrigerante *
+                            </label>
+
+                            <select class="form-select"
+                                    @bind="formulario.GasRefrigeranteId"
+                                    disabled="@guardando">
+
+                                <option value="">
+                                    Selecciona un refrigerante
+                                </option>
+
+                                @foreach (var gas in gases.Where(g => g.Activo))
+                                {
+                                    <option value="@gas.Id">
+                                        @gas.Nombre (@gas.Codigo)
+                                    </option>
+                                }
+
+                            </select>
+
+                            <small class="text-muted d-block mt-1">
+                                Solo puedes elegir un gas del catálogo.
+                            </small>
+
+                        </div>
+
+
+                        <!-- CAPACIDAD -->
+                        <div class="col-12 col-md-4">
+
+                            <label class="form-label fw-bold">
+                                Capacidad refrigerante (kg) *
+                            </label>
+
+                            <input type="number"
+                                   class="form-control"
+                                   min="0.01"
+                                   max="1000000"
+                                   step="0.01"
+                                   @bind="formulario.CapacidadKg"
+                                   disabled="@guardando" />
+
+                            <small class="text-muted">
+                                Capacidad máxima de refrigerante.
+                            </small>
+
+                        </div>
+
+
+                        <!-- TARA -->
+                        <div class="col-12 col-md-4">
+
+                            <label class="form-label fw-bold">
+                                Tara del cilindro (kg) *
+                            </label>
+
+                            <input type="number"
+                                   class="form-control"
+                                   min="0.01"
+                                   max="1000000"
+                                   step="0.01"
+                                   @bind="formulario.TaraKg"
+                                   disabled="@guardando" />
+
+                            <small class="text-muted">
+                                Peso del cilindro completamente vacío.
+                            </small>
+
+                        </div>
+
+
+                        <!-- PESO BRUTO ACTUAL -->
+                        <div class="col-12 col-md-4">
+
+                            <label class="form-label fw-bold">
+                                Peso bruto actual (kg) *
+                            </label>
+
+                            @if (idEditando.HasValue)
+                            {
+                                <input type="text"
+                                       class="form-control"
+                                       value="@($"{formulario.PesoActualKg:0.##} kg")"
+                                       disabled />
+
+                                <small class="text-muted">
+                                    El peso actual solo cambia mediante
+                                    operaciones de inventario.
+                                </small>
+                            }
+                            else
+                            {
+                                <input type="number"
+                                       class="form-control"
+                                       min="0"
+                                       max="1000000"
+                                       step="0.01"
+                                       @bind="formulario.PesoActualKg"
+                                       disabled="@guardando" />
+
+                                <small class="text-muted">
+                                    Peso total medido: cilindro + refrigerante.
+                                </small>
+                            }
+
+                        </div>
+
+
+                        <!-- ESTADO -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-bold">
+                                Estado del cilindro
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="@(idEditando.HasValue
+                                                                   ? formulario.Estado
+                                                                   : "Disponible")"
+                                   disabled />
+
+                            <small class="text-muted">
+                                El estado se administra automáticamente.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                disabled="@guardando"
+                                @onclick="CancelarFormulario">
+                            Cancelar
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-success"
+                                disabled="@(guardando || cargandoGases || !gases.Any(g => g.Activo))"
+                                @onclick="GuardarCilindro">
+
+                            @(guardando
+                                ? "Guardando..."
+                                : idEditando.HasValue
+                                    ? "Guardar cambios"
+                                    : "Registrar cilindro")
+
+                        </button>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- FORMULARIO DESPACHO / RETORNO -->
+    @if (cilindroOperacion is not null)
+    {
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h4 class="fw-bold mb-1">
+                    @(esRetorno
+                        ? "Registrar retorno del cilindro"
+                        : "Registrar despacho del cilindro")
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Código QR:
+                    <strong>@cilindroOperacion.CodigoQr</strong>
+                </p>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                @if (errorMovimiento is not null)
+                {
+                    <div class="alert alert-danger">
+                        @errorMovimiento
+                    </div>
+                }
+
+                <div class="alert alert-info">
+
+                    @if (esRetorno)
+                    {
+                        <span>
+                            Registra el peso bruto medido cuando el cilindro
+                            regresa a bodega.
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            Registra el peso bruto medido antes de que el
+                            cilindro salga de bodega.
+                        </span>
+                    }
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <!-- RESPONSABLE -->
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label fw-bold">
+                            Responsable *
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               maxlength="150"
+                               placeholder="Nombre de la persona responsable"
+                               @bind="formularioMovimiento.Responsable"
+                               disabled="@procesandoMovimiento" />
+
+                    </div>
+
+
+                    <!-- PESO -->
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label fw-bold">
+                            @(esRetorno
+                                ? "Peso de retorno (kg) *"
+                                : "Peso bruto de despacho (kg) *")
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               min="0"
+                               step="0.01"
+                               placeholder="Ingresa el peso medido"
+                               @bind="formularioMovimiento.PesoKg"
+                               disabled="@procesandoMovimiento" />
+
+                        <small class="text-muted d-block mt-1">
+                            Peso actual:
+                            @cilindroOperacion.PesoActualKg.ToString("0.##") kg
+                        </small>
+
+                        <small class="text-muted d-block">
+                            Tara:
+                            @(cilindroOperacion.TaraKg.HasValue
+                                ? $"{cilindroOperacion.TaraKg.Value:0.##} kg"
+                                : "Sin registrar")
+                        </small>
+
+                        @if (!esRetorno && cilindroOperacion.TaraKg.HasValue)
+                        {
+                            <small class="text-primary d-block mt-1">
+                                Para despachar, el peso bruto debe ser mayor
+                                que @cilindroOperacion.TaraKg.Value.ToString("0.##") kg.
+                            </small>
+                        }
+
+                    </div>
+
+
+                    <!-- OBSERVACIONES -->
+                    <div class="col-12">
+
+                        <label class="form-label fw-bold">
+                            Observaciones
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="3"
+                                  maxlength="500"
+                                  placeholder="Observaciones del movimiento"
+                                  @bind="formularioMovimiento.Observaciones"
+                                  disabled="@procesandoMovimiento">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            disabled="@procesandoMovimiento"
+                            @onclick="CancelarMovimiento">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn @(esRetorno ? "btn-success" : "btn-warning")"
+                            disabled="@procesandoMovimiento"
+                            @onclick="GuardarMovimiento">
+
+                        @(procesandoMovimiento
+                            ? "Guardando movimiento..."
+                            : esRetorno
+                                ? "Confirmar retorno"
+                                : "Confirmar despacho")
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- INVENTARIO -->
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 p-4">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                <div>
+
+                    <h4 class="fw-bold mb-1">
+                        Inventario de cilindros
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Consulta y administra los cilindros registrados.
+                    </p>
+
+                </div>
+
+
+                <div class="d-flex gap-2 flex-wrap">
+
+                    <button class="btn btn-success"
+                            disabled="@(mostrarFormulario || cilindroOperacion is not null || Ocupado)"
+                            @onclick="AbrirFormularioNuevo">
+                        + Registrar cilindro
+                    </button>
+
+                    <button class="btn btn-primary"
+                            disabled="@Ocupado"
+                            @onclick="CargarCilindros">
+                        Actualizar listado
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            @if (cargando)
+            {
+                <div class="text-center py-5">
+
+                    <div class="spinner-border text-primary"
+                         role="status">
+                    </div>
+
+                    <p class="mt-3 text-muted">
+                        Cargando cilindros...
+                    </p>
+
+                </div>
+            }
+
+
+            @if (!cargando && error is not null)
+            {
+                <div class="alert alert-danger">
+
+                    <strong>
+                        No se pudieron cargar los cilindros.
+                    </strong>
+
+                    <p class="mb-0 mt-2">
+                        @error
+                    </p>
+
+                </div>
+            }
+
+
+            @if (!cargando && error is null && cilindros.Count == 0)
+            {
+                <div class="alert alert-info">
+                    No existen cilindros registrados.
+                </div>
+            }
+
+
+            @if (!cargando && error is null && cilindros.Count > 0)
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Código QR</th>
+                                <th>Gas refrigerante</th>
+                                <th>Capacidad</th>
+                                <th>Tara</th>
+                                <th>Peso actual</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var cilindro in cilindros)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @cilindro.Id
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @cilindro.CodigoQr
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @(cilindro.GasRefrigerante?.Nombre
+                                            ?? cilindro.TipoRefrigerante)
+                                    </td>
+
+                                    <td>
+                                        @cilindro.CapacidadKg.ToString("0.##") kg
+                                    </td>
+
+                                    <td>
+
+                                        @if (cilindro.TaraKg.HasValue)
+                                        {
+                                            @($"{cilindro.TaraKg.Value:0.##} kg")
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+                                                Sin registrar
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @cilindro.PesoActualKg.ToString("0.##") kg
+                                    </td>
+
+                                    <td>
+
+                                        @if (EsEstado(cilindro.Estado, "Disponible"))
+                                        {
+                                            <span class="badge bg-success">
+                                                Disponible
+                                            </span>
+                                        }
+                                        else if (EsEstado(cilindro.Estado, "Despachado"))
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Despachado
+                                            </span>
+                                        }
+                                        else if (EsEstado(cilindro.Estado, "En uso"))
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                En uso
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @cilindro.Estado
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="d-flex gap-2 flex-wrap">
+
+                                            @if (EsEstado(cilindro.Estado, "Disponible"))
+                                            {
+                                                <button class="btn btn-sm btn-warning"
+                                                        disabled="@(mostrarFormulario || cilindroOperacion is not null || Ocupado)"
+                                                        @onclick="() => AbrirMovimiento(cilindro, false)">
+                                                    Despachar
+                                                </button>
+                                            }
+
+                                            @if (EsEstado(cilindro.Estado, "Despachado"))
+                                            {
+                                                <button class="btn btn-sm btn-success"
+                                                        disabled="@(mostrarFormulario || cilindroOperacion is not null || Ocupado)"
+                                                        @onclick="() => AbrirMovimiento(cilindro, true)">
+                                                    Registrar retorno
+                                                </button>
+                                            }
+
+                                            <a class="btn btn-sm btn-outline-secondary"
+                                               href="@($"cilindros/detalle/{Uri.EscapeDataString(cilindro.CodigoQr.Trim())}")">
+                                                Ver ficha
+                                            </a>
+
+                                            <button class="btn btn-sm btn-outline-primary"
+                                                    disabled="@(mostrarFormulario || cilindroOperacion is not null || Ocupado)"
+                                                    @onclick="() => AbrirFormularioEdicion(cilindro)">
+                                                Editar
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    disabled="@(mostrarFormulario || cilindroOperacion is not null || Ocupado)"
+                                                    @onclick="() => SolicitarEliminacion(cilindro.Id)">
+                                                Eliminar
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+
+                                @if (idPorEliminar == cilindro.Id)
+                                {
+                                    <tr>
+
+                                        <td colspan="8">
+
+                                            <div class="alert alert-warning mb-0">
+
+                                                <strong>
+                                                    ¿Eliminar el cilindro
+                                                    @cilindro.CodigoQr?
+                                                </strong>
+
+                                                <p class="mb-3 mt-2">
+                                                    Los cilindros con movimientos
+                                                    asociados no pueden eliminarse.
+                                                </p>
+
+                                                <div class="d-flex gap-2">
+
+                                                    <button class="btn btn-danger btn-sm"
+                                                            disabled="@Ocupado"
+                                                            @onclick="() => EliminarCilindro(cilindro.Id)">
+                                                        Confirmar eliminación
+                                                    </button>
+
+                                                    <button class="btn btn-secondary btn-sm"
+                                                            disabled="@Ocupado"
+                                                            @onclick="CancelarEliminacion">
+                                                        Cancelar
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <div class="text-center mt-5 pt-3 border-top">
+
+        <small class="text-muted">
+            AFRISAN | Sistema de gestión de refrigerantes
+        </small>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    private List<CilindroVista> cilindros = new();
+
+    private List<GasRefrigeranteVista> gases = new();
+
+    private FormularioCilindro formulario = new();
+
+    private FormularioMovimiento formularioMovimiento = new();
+
+    private CilindroVista? cilindroOperacion;
+
+
+    // =====================================================
+    // ESTADOS
+    // =====================================================
+
+    private bool cargando = true;
+
+    private bool cargandoGases;
+
+    private bool guardando;
+
+    private bool mostrarFormulario;
+
+    private bool procesandoMovimiento;
+
+    private bool esRetorno;
+
+    private int? idEditando;
+
+    private int? idPorEliminar;
+
+    private int? idEliminando;
+
+    private string? error;
+
+    private string? errorFormulario;
+
+    private string? errorOperacion;
+
+    private string? errorMovimiento;
+
+    private string? mensajeExito;
+
+
+    private bool Ocupado =>
+        cargando ||
+        cargandoGases ||
+        guardando ||
+        procesandoMovimiento ||
+        idEliminando.HasValue;
+
+
+    // =====================================================
+    // CONTADORES
+    // =====================================================
+
+    private string TotalCilindros =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count.ToString();
+
+
+    private string CilindrosDisponibles =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count(c =>
+            EsEstado(c.Estado, "Disponible")
+        ).ToString();
+
+
+    private string CilindrosEnUso =>
+        cargando ? "..." :
+        error is not null ? "--" :
+        cilindros.Count(c =>
+            EsEstado(c.Estado, "En uso") ||
+            EsEstado(c.Estado, "Despachado")
+        ).ToString();
+
+
+    private static bool EsEstado(
+        string? actual,
+        string esperado)
+    {
+        return string.Equals(
+            actual?.Trim(),
+            esperado,
+            StringComparison.OrdinalIgnoreCase
+        );
+    }
+
+
+    // =====================================================
+    // INICIALIZACIÓN
+    // =====================================================
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCilindros();
+    }
+
+
+    // =====================================================
+    // CARGAR CILINDROS
+    // =====================================================
+
+    private async Task CargarCilindros()
+    {
+        cargando = true;
+
+        error = null;
+
+        try
+        {
+            cilindros =
+                await Http.GetFromJsonAsync<List<CilindroVista>>(
+                    "api/Cilindros"
+                ) ?? new();
+        }
+        catch (Exception ex)
+        {
+            cilindros = new();
+
+            error =
+                "Comprueba que Afrisan.Api esté ejecutándose " +
+                "y que la conexión con el servidor funcione.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+
+    // =====================================================
+    // CARGAR GASES
+    // =====================================================
+
+    private async Task CargarGases()
+    {
+        cargandoGases = true;
+
+        errorFormulario = null;
+
+        try
+        {
+            gases =
+                await Http.GetFromJsonAsync<List<GasRefrigeranteVista>>(
+                    "api/GasRefrigerantes"
+                ) ?? new();
+        }
+        catch (Exception ex)
+        {
+            gases = new();
+
+            errorFormulario =
+                "No se pudieron cargar los gases refrigerantes.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargandoGases = false;
+        }
+    }
+
+
+    // =====================================================
+    // NUEVO CILINDRO
+    // =====================================================
+
+    private async Task AbrirFormularioNuevo()
+    {
+        if (Ocupado ||
+            mostrarFormulario ||
+            cilindroOperacion is not null)
+        {
+            return;
+        }
+
+        idEditando = null;
+
+        idPorEliminar = null;
+
+        errorFormulario = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+        formulario = new FormularioCilindro();
+
+        mostrarFormulario = true;
+
+        await CargarGases();
+    }
+
+
+    // =====================================================
+    // EDITAR
+    // =====================================================
+
+    private async Task AbrirFormularioEdicion(
+        CilindroVista cilindro)
+    {
+        if (Ocupado ||
+            mostrarFormulario ||
+            cilindroOperacion is not null)
+        {
+            return;
+        }
+
+        idEditando = cilindro.Id;
+
+        idPorEliminar = null;
+
+        errorFormulario = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+        formulario = new FormularioCilindro
+        {
+            CodigoQr = cilindro.CodigoQr,
+
+            GasRefrigeranteId =
+                cilindro.GasRefrigeranteId,
+
+            CapacidadKg =
+                cilindro.CapacidadKg,
+
+            TaraKg =
+                cilindro.TaraKg,
+
+            PesoActualKg =
+                cilindro.PesoActualKg,
+
+            Estado =
+                cilindro.Estado
+        };
+
+        mostrarFormulario = true;
+
+        await CargarGases();
+    }
+
+
+    // =====================================================
+    // CANCELAR
+    // =====================================================
+
+    private void CancelarFormulario()
+    {
+        if (guardando)
+        {
+            return;
+        }
+
+        mostrarFormulario = false;
+
+        idEditando = null;
+
+        errorFormulario = null;
+
+        formulario =
+            new FormularioCilindro();
+    }
+
+
+    // =====================================================
+    // GUARDAR CILINDRO
+    // =====================================================
+
+    private async Task GuardarCilindro()
+    {
+        if (Ocupado || !mostrarFormulario)
+        {
+            return;
+        }
+
+        errorFormulario = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+
+        // GAS
+        if (!formulario.GasRefrigeranteId.HasValue)
+        {
+            errorFormulario =
+                "Debes seleccionar un gas refrigerante.";
+
+            return;
+        }
+
+
+        var gasSeleccionado =
+            gases.FirstOrDefault(g =>
+                g.Id ==
+                formulario.GasRefrigeranteId.Value &&
+                g.Activo
+            );
+
+        if (gasSeleccionado is null)
+        {
+            errorFormulario =
+                "El gas seleccionado no existe o no está activo.";
+
+            return;
+        }
+
+
+        // CAPACIDAD
+        if (formulario.CapacidadKg <= 0 ||
+            formulario.CapacidadKg > 1000000)
+        {
+            errorFormulario =
+                "La capacidad debe ser mayor que cero " +
+                "y no superar 1.000.000 kg.";
+
+            return;
+        }
+
+
+        // TARA
+        if (!formulario.TaraKg.HasValue ||
+            formulario.TaraKg.Value <= 0 ||
+            formulario.TaraKg.Value > 1000000)
+        {
+            errorFormulario =
+                "Debes ingresar una tara válida mayor que cero.";
+
+            return;
+        }
+
+
+        var tara =
+            formulario.TaraKg.Value;
+
+
+        // PESO BRUTO ACTUAL
+        if (formulario.PesoActualKg < 0 ||
+            formulario.PesoActualKg > 1000000)
+        {
+            errorFormulario =
+                "El peso bruto actual debe estar entre " +
+                "0 y 1.000.000 kg.";
+
+            return;
+        }
+
+
+        if (formulario.PesoActualKg < tara)
+        {
+            errorFormulario =
+                "El peso bruto actual no puede ser menor " +
+                "que la tara del cilindro.";
+
+            return;
+        }
+
+
+        var pesoBrutoMaximo =
+            tara + formulario.CapacidadKg;
+
+
+        if (formulario.PesoActualKg > pesoBrutoMaximo)
+        {
+            errorFormulario =
+                $"El peso bruto actual no puede superar " +
+                $"tara + capacidad ({pesoBrutoMaximo:0.##} kg).";
+
+            return;
+        }
+
+
+        guardando = true;
+
+        try
+        {
+            if (idEditando.HasValue)
+            {
+                var datosEdicion = new
+                {
+                    codigoQr =
+                        formulario.CodigoQr,
+
+                    tipoRefrigerante =
+                        gasSeleccionado.Codigo,
+
+                    capacidadKg =
+                        formulario.CapacidadKg,
+
+                    taraKg =
+                        tara,
+
+                    pesoActualKg =
+                        formulario.PesoActualKg,
+
+                    estado =
+                        formulario.Estado,
+
+                    gasRefrigeranteId =
+                        formulario.GasRefrigeranteId.Value
+                };
+
+
+                using var respuesta =
+                    await Http.PutAsJsonAsync(
+                        $"api/Cilindros/{idEditando.Value}",
+                        datosEdicion
+                    );
+
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    errorFormulario =
+                        await LeerErrorApi(
+                            respuesta,
+                            "No se pudo actualizar el cilindro."
+                        );
+
+                    return;
+                }
+
+
+                mostrarFormulario = false;
+
+                idEditando = null;
+
+                formulario =
+                    new FormularioCilindro();
+
+
+                mensajeExito =
+                    "El cilindro se actualizó correctamente.";
+            }
+            else
+            {
+                var datosRegistro = new
+                {
+                    gasRefrigeranteId =
+                        formulario.GasRefrigeranteId.Value,
+
+                    capacidadKg =
+                        formulario.CapacidadKg,
+
+                    taraKg =
+                        tara,
+
+                    pesoActualKg =
+                        formulario.PesoActualKg
+                };
+
+
+                using var respuesta =
+                    await Http.PostAsJsonAsync(
+                        "api/Cilindros",
+                        datosRegistro
+                    );
+
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    errorFormulario =
+                        await LeerErrorApi(
+                            respuesta,
+                            "No se pudo registrar el cilindro."
+                        );
+
+                    return;
+                }
+
+
+                var cilindroCreado =
+                    await respuesta.Content
+                        .ReadFromJsonAsync<CilindroVista>();
+
+
+                mostrarFormulario = false;
+
+                idEditando = null;
+
+                formulario =
+                    new FormularioCilindro();
+
+
+                mensajeExito =
+                    cilindroCreado is not null &&
+                    !string.IsNullOrWhiteSpace(
+                        cilindroCreado.CodigoQr)
+                        ? $"El cilindro {cilindroCreado.CodigoQr} " +
+                          "se registró correctamente."
+                        : "El cilindro se registró correctamente.";
+            }
+
+
+            await CargarCilindros();
+        }
+        catch (Exception ex)
+        {
+            errorFormulario =
+                "Ocurrió un error al guardar el cilindro. " +
+                "Comprueba la conexión con la API.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            guardando = false;
+        }
+    }
+
+
+    // =====================================================
+    // ABRIR DESPACHO / RETORNO
+    // =====================================================
+
+    private void AbrirMovimiento(
+        CilindroVista cilindro,
+        bool retornar)
+    {
+        if (Ocupado ||
+            mostrarFormulario ||
+            cilindroOperacion is not null)
+        {
+            return;
+        }
+
+
+        if (retornar &&
+            !EsEstado(
+                cilindro.Estado,
+                "Despachado"))
+        {
+            return;
+        }
+
+
+        if (!retornar &&
+            !EsEstado(
+                cilindro.Estado,
+                "Disponible"))
+        {
+            return;
+        }
+
+
+        // NO PERMITIR DESPACHO SIN TARA
+        if (!retornar &&
+            (!cilindro.TaraKg.HasValue ||
+             cilindro.TaraKg.Value <= 0))
+        {
+            errorOperacion =
+                $"El cilindro {cilindro.CodigoQr} no tiene una tara registrada. " +
+                "Debes editar el cilindro y registrar su tara antes de despacharlo.";
+
+            return;
+        }
+
+
+        cilindroOperacion =
+            cilindro;
+
+        esRetorno =
+            retornar;
+
+        formularioMovimiento =
+            new FormularioMovimiento();
+
+        errorMovimiento = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+        idPorEliminar = null;
+    }
+
+
+    // =====================================================
+    // CANCELAR MOVIMIENTO
+    // =====================================================
+
+    private void CancelarMovimiento()
+    {
+        if (procesandoMovimiento)
+        {
+            return;
+        }
+
+        cilindroOperacion = null;
+
+        formularioMovimiento =
+            new FormularioMovimiento();
+
+        errorMovimiento = null;
+    }
+
+
+    // =====================================================
+    // GUARDAR MOVIMIENTO
+    // =====================================================
+
+    private async Task GuardarMovimiento()
+    {
+        if (procesandoMovimiento ||
+            cilindroOperacion is null)
+        {
+            return;
+        }
+
+
+        errorMovimiento = null;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+
+        // RESPONSABLE
+        if (string.IsNullOrWhiteSpace(
+            formularioMovimiento.Responsable))
+        {
+            errorMovimiento =
+                "Debes ingresar el nombre del responsable.";
+
+            return;
+        }
+
+
+        // PESO
+        if (!formularioMovimiento.PesoKg.HasValue ||
+            formularioMovimiento.PesoKg.Value < 0)
+        {
+            errorMovimiento =
+                "Debes ingresar un peso válido.";
+
+            return;
+        }
+
+
+        var pesoMovimiento =
+            formularioMovimiento.PesoKg.Value;
+
+
+        // VALIDACIÓN DE DESPACHO
+        if (!esRetorno)
+        {
+            if (!cilindroOperacion.TaraKg.HasValue ||
+                cilindroOperacion.TaraKg.Value <= 0)
+            {
+                errorMovimiento =
+                    "El cilindro no tiene una tara registrada.";
+
+                return;
+            }
+
+
+            var tara =
+                cilindroOperacion.TaraKg.Value;
+
+
+            if (pesoMovimiento <= tara)
+            {
+                errorMovimiento =
+                    $"El peso bruto de despacho debe ser mayor " +
+                    $"que la tara del cilindro ({tara:0.##} kg).";
+
+                return;
+            }
+
+
+            var pesoMaximo =
+                tara +
+                cilindroOperacion.CapacidadKg;
+
+
+            if (pesoMovimiento > pesoMaximo)
+            {
+                errorMovimiento =
+                    $"El peso bruto de despacho no puede superar " +
+                    $"tara + capacidad ({pesoMaximo:0.##} kg).";
+
+                return;
+            }
+        }
+
+
+        procesandoMovimiento = true;
+
+        try
+        {
+            var cilindroId =
+                cilindroOperacion.Id;
+
+            var codigoQr =
+                cilindroOperacion.CodigoQr;
+
+            var tipoMovimiento =
+                esRetorno
+                    ? "retorno"
+                    : "despacho";
+
+
+            var datos = new
+            {
+                responsable =
+                    formularioMovimiento.Responsable.Trim(),
+
+                pesoKg =
+                    pesoMovimiento,
+
+                observaciones =
+                    formularioMovimiento.Observaciones
+            };
+
+
+            using var respuesta =
+                await Http.PostAsJsonAsync(
+                    $"api/MovimientosInventario/{tipoMovimiento}/{cilindroId}",
+                    datos
+                );
+
+
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                errorMovimiento =
+                    await LeerErrorApi(
+                        respuesta,
+                        "No se pudo registrar el movimiento."
+                    );
+
+                return;
+            }
+
+
+            var eraRetorno =
+                esRetorno;
+
+
+            cilindroOperacion = null;
+
+            formularioMovimiento =
+                new FormularioMovimiento();
+
+
+            mensajeExito =
+                eraRetorno
+                    ? $"El retorno del cilindro {codigoQr} " +
+                      "se registró correctamente."
+                    : $"El despacho del cilindro {codigoQr} " +
+                      "se registró correctamente.";
+
+
+            await CargarCilindros();
+        }
+        catch (Exception ex)
+        {
+            errorMovimiento =
+                "Ocurrió un error al registrar el movimiento. " +
+                "Comprueba que Afrisan.Api esté ejecutándose.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            procesandoMovimiento = false;
+        }
+    }
+
+
+    // =====================================================
+    // ELIMINACIÓN
+    // =====================================================
+
+    private void SolicitarEliminacion(int id)
+    {
+        idPorEliminar = id;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+    }
+
+
+    private void CancelarEliminacion()
+    {
+        idPorEliminar = null;
+    }
+
+
+    private async Task EliminarCilindro(int id)
+    {
+        if (Ocupado ||
+            idPorEliminar != id)
+        {
+            return;
+        }
+
+
+        idEliminando = id;
+
+        errorOperacion = null;
+
+        mensajeExito = null;
+
+
+        try
+        {
+            using var respuesta =
+                await Http.DeleteAsync(
+                    $"api/Cilindros/{id}"
+                );
+
+
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                errorOperacion =
+                    await LeerErrorApi(
+                        respuesta,
+                        "No se pudo eliminar el cilindro."
+                    );
+
+                return;
+            }
+
+
+            idPorEliminar = null;
+
+            mensajeExito =
+                "El cilindro se eliminó correctamente.";
+
+
+            await CargarCilindros();
+        }
+        catch (Exception ex)
+        {
+            errorOperacion =
+                "Ocurrió un error al eliminar el cilindro.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            idEliminando = null;
+        }
+    }
+
+
+    // =====================================================
+    // LEER ERROR API
+    // =====================================================
+
+    private static async Task<string> LeerErrorApi(
+        HttpResponseMessage respuesta,
+        string mensajePredeterminado)
+    {
+        try
+        {
+            var contenido =
+                await respuesta.Content
+                    .ReadAsStringAsync();
+
+
+            using var documento =
+                JsonDocument.Parse(contenido);
+
+
+            var raiz =
+                documento.RootElement;
+
+
+            if (raiz.ValueKind ==
+                JsonValueKind.Object)
+            {
+                if (raiz.TryGetProperty(
+                        "mensaje",
+                        out var mensaje) &&
+                    mensaje.ValueKind ==
+                    JsonValueKind.String)
+                {
+                    return mensaje.GetString()
+                           ?? mensajePredeterminado;
+                }
+
+
+                if (raiz.TryGetProperty(
+                        "errors",
+                        out var errores) &&
+                    errores.ValueKind ==
+                    JsonValueKind.Object)
+                {
+                    foreach (
+                        var campo
+                        in errores.EnumerateObject())
+                    {
+                        if (campo.Value.ValueKind ==
+                            JsonValueKind.Array)
+                        {
+                            foreach (
+                                var errorCampo
+                                in campo.Value.EnumerateArray())
+                            {
+                                if (errorCampo.ValueKind ==
+                                    JsonValueKind.String)
+                                {
+                                    return errorCampo.GetString()
+                                           ?? mensajePredeterminado;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+        }
+
+
+        return $"{mensajePredeterminado} " +
+               $"Código HTTP: {(int)respuesta.StatusCode}.";
+    }
+
+
+    // =====================================================
+    // MODELOS
+    // =====================================================
+
+    private sealed class CilindroVista
+    {
+        public int Id { get; set; }
+
+        public string CodigoQr { get; set; } =
+            string.Empty;
+
+        public string TipoRefrigerante { get; set; } =
+            string.Empty;
+
+        public decimal CapacidadKg { get; set; }
+
+        public decimal? TaraKg { get; set; }
+
+        public decimal PesoActualKg { get; set; }
+
+        public string Estado { get; set; } =
+            string.Empty;
+
+        public int? GasRefrigeranteId { get; set; }
+
+        public GasRefrigeranteVista?
+            GasRefrigerante
+        { get; set; }
+    }
+
+
+    private sealed class GasRefrigeranteVista
+    {
+        public int Id { get; set; }
+
+        public string Nombre { get; set; } =
+            string.Empty;
+
+        public string Codigo { get; set; } =
+            string.Empty;
+
+        public string Descripcion { get; set; } =
+            string.Empty;
+
+        public bool Activo { get; set; }
+    }
+
+
+    private sealed class FormularioCilindro
+    {
+        public string CodigoQr { get; set; } =
+            string.Empty;
+
+        public int? GasRefrigeranteId { get; set; }
+
+        public decimal CapacidadKg { get; set; }
+
+        public decimal? TaraKg { get; set; }
+
+        public decimal PesoActualKg { get; set; }
+
+        public string Estado { get; set; } =
+            "Disponible";
+    }
+
+
+    private sealed class FormularioMovimiento
+    {
+        public string Responsable { get; set; } =
+            string.Empty;
+
+        public decimal? PesoKg { get; set; }
+
+        public string? Observaciones { get; set; }
+    }
+}

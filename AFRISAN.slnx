@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Afrisan.Api/Afrisan.Api.csproj" />
+  <Project Path="Afrisan.Web/Afrisan.Web.csproj" Id="d0f2d9c7-5c7d-48b5-a8d3-4d167b2c0ccc" />
+</Solution>

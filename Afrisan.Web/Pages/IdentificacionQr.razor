@@ -1,0 +1,487 @@
+﻿@page "/identificacion-qr"
+@using System.Net.Http.Json
+@using QRCoder
+@inject HttpClient Http
+@inject NavigationManager Navegacion
+
+<PageTitle>Identificación QR | AFRISAN</PageTitle>
+
+<div class="container-fluid py-4">
+
+    <!-- ENCABEZADO -->
+    <div class="p-4 mb-4 rounded-4 text-white"
+         style="background: linear-gradient(120deg, #102c46, #176b91);">
+
+        <h1 class="fw-bold mb-2">
+            Identificación QR
+        </h1>
+
+        <p class="mb-0">
+            Genera y visualiza los códigos QR de los cilindros
+            registrados en AFRISAN.
+        </p>
+
+    </div>
+
+    <!-- MENSAJE DE ERROR -->
+    @if (error is not null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @error
+        </div>
+    }
+
+    <!-- CARGANDO CILINDROS -->
+    @if (cargando)
+    {
+        <div class="text-center py-5">
+
+            <div class="spinner-border text-primary"
+                 role="status">
+            </div>
+
+            <p class="text-muted mt-3">
+                Cargando cilindros...
+            </p>
+
+        </div>
+    }
+
+    <!-- SIN CILINDROS -->
+    @if (!cargando && error is null && cilindros.Count == 0)
+    {
+        <div class="alert alert-info">
+            No existen cilindros registrados para generar códigos QR.
+        </div>
+    }
+
+    <!-- LISTADO DE CILINDROS -->
+    @if (!cargando && error is null && cilindros.Count > 0)
+    {
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h4 class="fw-bold mb-1">
+                    Seleccionar cilindro
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Presiona «Ver QR» para generar el código
+                    del cilindro seleccionado.
+                </p>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Código QR</th>
+                                <th>Gas refrigerante</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var cilindro in cilindros)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @cilindro.Id
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @cilindro.CodigoQr
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @(cilindro.GasRefrigerante?.Nombre
+                                            ?? cilindro.TipoRefrigerante)
+                                    </td>
+
+                                    <td>
+                                        @if (string.Equals(
+                                            cilindro.Estado,
+                                            "Disponible",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-success">
+                                                Disponible
+                                            </span>
+                                        }
+                                        else if (string.Equals(
+                                            cilindro.Estado,
+                                            "En uso",
+                                            StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                En uso
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @cilindro.Estado
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary"
+                                                @onclick="() => MostrarQr(cilindro)">
+
+                                            Ver QR
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- QR GENERADO -->
+    @if (cilindroSeleccionado is not null &&
+         codigoQrSvg is not null &&
+         enlaceDetalle is not null)
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-header bg-white p-4">
+
+                <h4 class="fw-bold mb-1">
+                    Código QR del cilindro
+                </h4>
+
+                <p class="text-muted mb-0">
+                    @cilindroSeleccionado.CodigoQr
+                </p>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="row g-4 align-items-center">
+
+                    <!-- IMAGEN DEL QR -->
+                    <div class="col-12 col-md-5 text-center">
+
+                        <div class="bg-white border rounded-4 p-4 d-inline-block"
+                             style="max-width: 100%;">
+
+                            @((MarkupString)codigoQrSvg)
+
+                        </div>
+
+                        <p class="fw-bold mt-3 mb-1">
+                            @cilindroSeleccionado.CodigoQr
+                        </p>
+
+                        <small class="text-muted d-block mb-3">
+                            Escanea el código con la cámara de tu celular.
+                        </small>
+
+                        <!-- ENLACE PARA PROBAR DESDE EL COMPUTADOR -->
+                        <a class="btn btn-outline-primary"
+                           href="@enlaceDetalle">
+
+                            Abrir ficha del cilindro
+
+                        </a>
+
+                    </div>
+
+                    <!-- INFORMACIÓN DEL CILINDRO -->
+                    <div class="col-12 col-md-7">
+
+                        <h5 class="fw-bold mb-3">
+                            Información del cilindro
+                        </h5>
+
+                        <table class="table">
+
+                            <tbody>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <td>
+                                        @cilindroSeleccionado.Id
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Código QR</th>
+                                    <td>
+                                        @cilindroSeleccionado.CodigoQr
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Gas refrigerante</th>
+                                    <td>
+                                        @(cilindroSeleccionado.GasRefrigerante?.Nombre
+                                            ?? cilindroSeleccionado.TipoRefrigerante)
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Capacidad</th>
+                                    <td>
+                                        @cilindroSeleccionado.CapacidadKg.ToString("0.##") kg
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Peso actual</th>
+                                    <td>
+                                        @cilindroSeleccionado.PesoActualKg.ToString("0.##") kg
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Estado</th>
+                                    <td>
+                                        @cilindroSeleccionado.Estado
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- ENLACE GENERADO -->
+                        <div class="alert alert-info mb-0">
+
+                            <strong>
+                                Enlace guardado en el código QR:
+                            </strong>
+
+                            <p class="mt-2 mb-2 text-break">
+                                @enlaceDetalle
+                            </p>
+
+                            <small>
+                                Por ahora, este enlace utiliza la dirección
+                                local del computador. Configuraremos el acceso
+                                desde el celular en el siguiente paso.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- PIE DE PÁGINA -->
+    <div class="text-center mt-5 pt-3 border-top">
+
+        <small class="text-muted">
+            AFRISAN | Sistema de gestión de refrigerantes
+        </small>
+
+    </div>
+
+</div>
+
+@code {
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    private List<CilindroVista> cilindros = new();
+
+    private CilindroVista? cilindroSeleccionado;
+
+    private string? codigoQrSvg;
+
+    private string? enlaceDetalle;
+
+
+    // =====================================================
+    // ESTADOS
+    // =====================================================
+
+    private bool cargando = true;
+
+    private string? error;
+
+
+    // =====================================================
+    // CARGAR CILINDROS AL ABRIR LA PÁGINA
+    // =====================================================
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCilindros();
+    }
+
+
+    // =====================================================
+    // CONSULTAR CILINDROS DESDE LA API
+    // =====================================================
+
+    private async Task CargarCilindros()
+    {
+        cargando = true;
+
+        error = null;
+
+        try
+        {
+            cilindros =
+                await Http.GetFromJsonAsync<List<CilindroVista>>(
+                    "api/Cilindros"
+                ) ?? new();
+        }
+        catch (Exception ex)
+        {
+            cilindros = new();
+
+            error =
+                "No se pudieron cargar los cilindros. " +
+                "Comprueba que Afrisan.Api esté ejecutándose.";
+
+            Console.WriteLine(ex);
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+
+    // =====================================================
+    // GENERAR QR CON EL ENLACE A LA FICHA DEL CILINDRO
+    // =====================================================
+
+    private void MostrarQr(CilindroVista cilindro)
+    {
+        codigoQrSvg = null;
+
+        cilindroSeleccionado = null;
+
+        enlaceDetalle = null;
+
+        if (string.IsNullOrWhiteSpace(cilindro.CodigoQr))
+        {
+            error =
+                "El cilindro seleccionado no tiene un código QR.";
+
+            return;
+        }
+
+        try
+        {
+            error = null;
+
+            // Preparar el código para utilizarlo en una dirección web.
+
+            string codigo = Uri.EscapeDataString(
+                cilindro.CodigoQr.Trim()
+            );
+
+            // Construir el enlace a la ficha del cilindro.
+            // Ejemplo:
+            // https://localhost:7083/cilindros/detalle/CIL-0002
+
+            string direccionFicha =
+                Navegacion.ToAbsoluteUri(
+                    $"cilindros/detalle/{codigo}"
+                ).AbsoluteUri;
+
+            // Generar el QR utilizando el enlace completo.
+
+            using var generador = new QRCodeGenerator();
+
+            using var datosQr = generador.CreateQrCode(
+                direccionFicha,
+                QRCodeGenerator.ECCLevel.Q
+            );
+
+            using var codigoQr = new SvgQRCode(datosQr);
+
+            codigoQrSvg = codigoQr.GetGraphic(6);
+
+            // Mostrar los datos y el enlace generado.
+
+            enlaceDetalle = direccionFicha;
+
+            cilindroSeleccionado = cilindro;
+        }
+        catch (Exception ex)
+        {
+            codigoQrSvg = null;
+
+            enlaceDetalle = null;
+
+            cilindroSeleccionado = null;
+
+            error =
+                "No se pudo generar el código QR del cilindro.";
+
+            Console.WriteLine(ex);
+        }
+    }
+
+
+    // =====================================================
+    // MODELO DEL CILINDRO
+    // =====================================================
+
+    private sealed class CilindroVista
+    {
+        public int Id { get; set; }
+
+        public string CodigoQr { get; set; } = string.Empty;
+
+        public string TipoRefrigerante { get; set; } = string.Empty;
+
+        public decimal CapacidadKg { get; set; }
+
+        public decimal PesoActualKg { get; set; }
+
+        public string Estado { get; set; } = string.Empty;
+
+        public GasRefrigeranteVista? GasRefrigerante { get; set; }
+    }
+
+
+    // =====================================================
+    // MODELO DEL GAS REFRIGERANTE
+    // =====================================================
+
+    private sealed class GasRefrigeranteVista
+    {
+        public string Nombre { get; set; } = string.Empty;
+    }
+
+}
