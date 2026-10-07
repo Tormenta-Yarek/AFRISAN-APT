@@ -1,4 +1,6 @@
 using Afrisan.Api.Data;
+using Afrisan.Api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Sockets;
@@ -7,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Permitir que la API escuche desde el computador
 // y desde otros dispositivos de la red local.
-// Esta configuración se aplica durante el desarrollo.
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
@@ -16,7 +17,10 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
-// Conexión con PostgreSQL / Supabase
+// =====================================================
+// BASE DE DATOS
+// =====================================================
+
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -32,8 +36,36 @@ builder.Services.AddDbContext<AfrisanDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
 
-// Permitir que Afrisan.Web consulte la API
-// desde localhost o desde una IP de red privada.
+// =====================================================
+// ASP.NET CORE IDENTITY
+// =====================================================
+
+builder.Services
+    .AddIdentity<Usuario, IdentityRole>(options =>
+    {
+        // Cada usuario deberá tener un correo único.
+        options.User.RequireUniqueEmail = true;
+
+        // Reglas de contraseña.
+        options.Password.RequiredLength = 8;
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+
+        // Bloqueo después de intentos fallidos.
+        options.Lockout.AllowedForNewUsers = true;
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.DefaultLockoutTimeSpan =
+            TimeSpan.FromMinutes(15);
+    })
+    .AddEntityFrameworkStores<AfrisanDbContext>()
+    .AddDefaultTokenProviders();
+
+// =====================================================
+// CORS
+// =====================================================
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AfrisanWeb", policy =>
@@ -48,7 +80,6 @@ builder.Services.AddCors(options =>
                 return false;
             }
 
-            // Puertos utilizados por Afrisan.Web
             bool puertoPermitido =
                 (uri.Scheme == "http" && uri.Port == 5226) ||
                 (uri.Scheme == "https" && uri.Port == 7083);
@@ -58,7 +89,7 @@ builder.Services.AddCors(options =>
                 return false;
             }
 
-            // Acceso desde el propio computador
+            // Acceso desde localhost
             if (uri.Host.Equals(
                 "localhost",
                 StringComparison.OrdinalIgnoreCase))
@@ -66,19 +97,19 @@ builder.Services.AddCors(options =>
                 return true;
             }
 
-            // Acceso desde una dirección IP
+            // Acceso desde IP
             if (!IPAddress.TryParse(uri.Host, out var ip))
             {
                 return false;
             }
 
-            // Permitir direcciones de loopback
+            // Loopback
             if (IPAddress.IsLoopback(ip))
             {
                 return true;
             }
 
-            // Comprobar que sea una dirección IPv4
+            // Solo IPv4
             if (ip.AddressFamily != AddressFamily.InterNetwork)
             {
                 return false;
@@ -86,7 +117,7 @@ builder.Services.AddCors(options =>
 
             byte[] bytes = ip.GetAddressBytes();
 
-            // Permitir direcciones IPv4 privadas:
+            // Redes privadas:
             // 10.0.0.0/8
             // 172.16.0.0/12
             // 192.168.0.0/16
@@ -103,14 +134,28 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Controladores
+// =====================================================
+// CONTROLADORES
+// =====================================================
+
 builder.Services.AddControllers();
 
-// Swagger
+// =====================================================
+// SWAGGER
+// =====================================================
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// =====================================================
+// CONSTRUIR APLICACIÓN
+// =====================================================
+
 var app = builder.Build();
+
+// =====================================================
+// PIPELINE HTTP
+// =====================================================
 
 if (app.Environment.IsDevelopment())
 {
@@ -124,11 +169,29 @@ else
 
 app.UseRouting();
 
-// Habilitar comunicación con Afrisan.Web
+// Permitir comunicación con Afrisan.Web
 app.UseCors("AfrisanWeb");
 
+// Primero autenticación, después autorización.
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Controladores de la API
 app.MapControllers();
 
-app.Run();  
+// =====================================================
+// CREAR ROLES Y ADMINISTRADOR INICIAL
+// =====================================================
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.InicializarAsync(
+        scope.ServiceProvider,
+        app.Configuration);
+}
+
+// =====================================================
+// INICIAR API
+// =====================================================
+
+app.Run();
