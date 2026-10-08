@@ -1,17 +1,25 @@
 using Afrisan.Web;
+using Afrisan.Web.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-// Configuración de Blazor WebAssembly
+// =====================================================
+// BLAZOR
+// =====================================================
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Dirección desde la que se abrió AFRISAN
-var direccionWeb = new Uri(builder.HostEnvironment.BaseAddress);
+// =====================================================
+// DIRECCIÓN DE AFRISAN.API
+// =====================================================
 
-// Dirección de la API
+var direccionWeb =
+    new Uri(builder.HostEnvironment.BaseAddress);
+
 string direccionApi;
 
 if (direccionWeb.Scheme == "https" &&
@@ -19,19 +27,43 @@ if (direccionWeb.Scheme == "https" &&
         "localhost",
         StringComparison.OrdinalIgnoreCase))
 {
-    // Conserva el acceso HTTPS que tenías configurado en el PC
     direccionApi = "https://localhost:7290/";
 }
 else
 {
-    // Usa automáticamente el mismo nombre o IP con que se abrió la web
-    direccionApi = $"http://{direccionWeb.Host}:5141/";
+    direccionApi =
+        $"http://{direccionWeb.Host}:5141/";
 }
 
-// Registrar HttpClient para consultar la API
-builder.Services.AddScoped(sp => new HttpClient
-{
-    BaseAddress = new Uri(direccionApi)
-});
+// =====================================================
+// HTTP CLIENT
+// =====================================================
+
+builder.Services.AddScoped(
+    sp => new HttpClient
+    {
+        BaseAddress =
+            new Uri(direccionApi)
+    });
+
+// =====================================================
+// AUTENTICACIÓN Y AUTORIZACIÓN
+// =====================================================
+
+builder.Services.AddAuthorizationCore();
+
+builder.Services.AddScoped<
+    JwtAuthenticationStateProvider>();
+
+builder.Services.AddScoped<
+    AuthenticationStateProvider>(
+        sp => sp.GetRequiredService<
+            JwtAuthenticationStateProvider>());
+
+builder.Services.AddScoped<AuthService>();
+
+// =====================================================
+// EJECUTAR APLICACIÓN
+// =====================================================
 
 await builder.Build().RunAsync();

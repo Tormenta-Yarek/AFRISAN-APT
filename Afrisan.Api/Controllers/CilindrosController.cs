@@ -1,6 +1,7 @@
 ﻿using Afrisan.Api.Data;
 using Afrisan.Api.DTOs;
 using Afrisan.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ namespace Afrisan.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CilindrosController : ControllerBase
     {
         private readonly AfrisanDbContext _context;
@@ -20,8 +22,11 @@ namespace Afrisan.Api.Controllers
 
         // =========================================================
         // GET: api/Cilindros
+        // Administrador / Jefatura / Bodega
         // =========================================================
+
         [HttpGet]
+        [Authorize(Roles = "Administrador,Jefatura,Bodega")]
         public async Task<ActionResult<IEnumerable<Cilindro>>> GetCilindros()
         {
             var cilindros = await _context.Cilindros
@@ -33,11 +38,13 @@ namespace Afrisan.Api.Controllers
             return Ok(cilindros);
         }
 
-
         // =========================================================
         // GET: api/Cilindros/1
+        // Todos los roles autenticados
         // =========================================================
+
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Administrador,Jefatura,Bodega,Tecnico")]
         public async Task<ActionResult<Cilindro>> GetCilindro(int id)
         {
             var cilindro = await _context.Cilindros
@@ -56,17 +63,61 @@ namespace Afrisan.Api.Controllers
             return Ok(cilindro);
         }
 
+        // =========================================================
+        // GET: api/Cilindros/qr/CIL-0003
+        // Todos los roles autenticados
+        // Consulta un único cilindro por código QR
+        // =========================================================
+
+        [HttpGet("qr/{codigoQr}")]
+        [Authorize(Roles = "Administrador,Jefatura,Bodega,Tecnico")]
+        public async Task<ActionResult<Cilindro>> GetCilindroPorQr(
+            string codigoQr)
+        {
+            if (string.IsNullOrWhiteSpace(codigoQr))
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Debes ingresar un código QR."
+                });
+            }
+
+            var codigoNormalizado =
+                codigoQr.Trim().ToUpperInvariant();
+
+            var cilindro = await _context.Cilindros
+                .AsNoTracking()
+                .Include(c => c.GasRefrigerante)
+                .FirstOrDefaultAsync(c =>
+                    c.CodigoQr == codigoNormalizado);
+
+            if (cilindro is null)
+            {
+                return NotFound(new
+                {
+                    mensaje =
+                        $"No se encontró un cilindro con el código QR " +
+                        $"'{codigoNormalizado}'."
+                });
+            }
+
+            return Ok(cilindro);
+        }
 
         // =========================================================
         // POST: api/Cilindros
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPost]
+        [Authorize(Roles = "Administrador,Bodega")]
         public async Task<ActionResult<Cilindro>> CrearCilindro(
             [FromBody] CrearCilindroDto dto)
         {
             // -----------------------------------------------------
             // 1. VALIDAR GAS
             // -----------------------------------------------------
+
             if (!dto.GasRefrigeranteId.HasValue)
             {
                 return BadRequest(new
@@ -89,10 +140,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // 2. VALIDAR CAPACIDAD
             // -----------------------------------------------------
+
             if (!dto.CapacidadKg.HasValue ||
                 dto.CapacidadKg.Value <= 0)
             {
@@ -102,10 +153,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // 3. VALIDAR TARA
             // -----------------------------------------------------
+
             if (!dto.TaraKg.HasValue ||
                 dto.TaraKg.Value <= 0)
             {
@@ -115,10 +166,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // 4. VALIDAR PESO BRUTO ACTUAL
             // -----------------------------------------------------
+
             if (!dto.PesoActualKg.HasValue ||
                 dto.PesoActualKg.Value < 0)
             {
@@ -152,10 +203,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // 5. GENERAR CÓDIGO QR OFICIAL
             // -----------------------------------------------------
+
             await using var transaccion =
                 await _context.Database.BeginTransactionAsync();
 
@@ -179,12 +230,16 @@ namespace Afrisan.Api.Controllers
                     continue;
                 }
 
-                var numeroTexto = codigo!.Substring(4);
+                var numeroTexto =
+                    codigo!.Substring(4);
 
-                if (int.TryParse(numeroTexto, out int numero) &&
+                if (int.TryParse(
+                    numeroTexto,
+                    out int numero) &&
                     numero > ultimoNumero)
                 {
-                    ultimoNumero = numero;
+                    ultimoNumero =
+                        numero;
                 }
             }
 
@@ -200,66 +255,86 @@ namespace Afrisan.Api.Controllers
             var nuevoCodigo =
                 $"CIL-{ultimoNumero + 1:D4}";
 
-
             // -----------------------------------------------------
             // 6. CREAR CILINDRO
             // -----------------------------------------------------
-            var cilindro = new Cilindro
-            {
-                CodigoQr = nuevoCodigo,
 
-                TipoRefrigerante = gas.Codigo,
+            var cilindro =
+                new Cilindro
+                {
+                    CodigoQr =
+                        nuevoCodigo,
 
-                GasRefrigeranteId = gas.Id,
+                    TipoRefrigerante =
+                        gas.Codigo,
 
-                CapacidadKg = dto.CapacidadKg.Value,
+                    GasRefrigeranteId =
+                        gas.Id,
 
-                TaraKg = dto.TaraKg.Value,
+                    CapacidadKg =
+                        dto.CapacidadKg.Value,
 
-                PesoActualKg = dto.PesoActualKg.Value,
+                    TaraKg =
+                        dto.TaraKg.Value,
 
-                Estado = "Disponible",
+                    PesoActualKg =
+                        dto.PesoActualKg.Value,
 
-                FechaRegistro = DateTime.UtcNow
-            };
+                    Estado =
+                        "Disponible",
 
-            _context.Cilindros.Add(cilindro);
+                    FechaRegistro =
+                        DateTime.UtcNow
+                };
 
-            await _context.SaveChangesAsync();
+            _context.Cilindros
+                .Add(cilindro);
 
-            await transaccion.CommitAsync();
+            await _context
+                .SaveChangesAsync();
+
+            await transaccion
+                .CommitAsync();
 
             return CreatedAtAction(
                 nameof(GetCilindro),
-                new { id = cilindro.Id },
+                new
+                {
+                    id = cilindro.Id
+                },
                 cilindro
             );
         }
 
-
         // =========================================================
         // PUT: api/Cilindros/1
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Administrador,Bodega")]
         public async Task<IActionResult> ActualizarCilindro(
             int id,
             [FromBody] CilindroDto dto)
         {
-            var cilindro = await _context.Cilindros
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var cilindro =
+                await _context.Cilindros
+                    .FirstOrDefaultAsync(
+                        c => c.Id == id);
 
             if (cilindro is null)
             {
                 return NotFound(new
                 {
-                    mensaje = $"No se encontró el cilindro con ID {id}."
+                    mensaje =
+                        $"No se encontró el cilindro con ID {id}."
                 });
             }
-
 
             // -----------------------------------------------------
             // CÓDIGO QR NO EDITABLE
             // -----------------------------------------------------
+
             if (!string.Equals(
                 cilindro.CodigoQr,
                 dto.CodigoQr,
@@ -272,10 +347,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // ESTADO SOLO MEDIANTE MOVIMIENTOS
             // -----------------------------------------------------
+
             if (!string.Equals(
                 cilindro.Estado,
                 dto.Estado,
@@ -289,10 +364,10 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // PESO ACTUAL SOLO MEDIANTE MOVIMIENTOS
             // -----------------------------------------------------
+
             if (cilindro.PesoActualKg != dto.PesoActualKg)
             {
                 return BadRequest(new
@@ -303,65 +378,74 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // VALIDAR GAS
             // -----------------------------------------------------
+
             if (!dto.GasRefrigeranteId.HasValue)
             {
                 return BadRequest(new
                 {
-                    mensaje = "Debes seleccionar un gas refrigerante."
+                    mensaje =
+                        "Debes seleccionar un gas refrigerante."
                 });
             }
 
-            var gas = await _context.GasesRefrigerantes
-                .AsNoTracking()
-                .FirstOrDefaultAsync(
-                    g => g.Id == dto.GasRefrigeranteId.Value
-                );
+            var gas =
+                await _context.GasesRefrigerantes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        g =>
+                            g.Id ==
+                            dto.GasRefrigeranteId.Value
+                    );
 
-            if (gas is null || !gas.Activo)
+            if (gas is null ||
+                !gas.Activo)
             {
                 return BadRequest(new
                 {
-                    mensaje = "El gas refrigerante no existe o no está activo."
+                    mensaje =
+                        "El gas refrigerante no existe o no está activo."
                 });
             }
-
 
             // -----------------------------------------------------
             // VALIDAR CAPACIDAD
             // -----------------------------------------------------
+
             if (dto.CapacidadKg <= 0)
             {
                 return BadRequest(new
                 {
-                    mensaje = "La capacidad debe ser mayor que cero."
+                    mensaje =
+                        "La capacidad debe ser mayor que cero."
                 });
             }
-
 
             // -----------------------------------------------------
             // VALIDAR TARA
             // -----------------------------------------------------
+
             if (!dto.TaraKg.HasValue ||
                 dto.TaraKg.Value <= 0)
             {
                 return BadRequest(new
                 {
-                    mensaje = "Debes ingresar una tara válida mayor que cero."
+                    mensaje =
+                        "Debes ingresar una tara válida mayor que cero."
                 });
             }
 
             var nuevaTara =
                 dto.TaraKg.Value;
 
-
             // -----------------------------------------------------
             // VALIDAR PESO ACTUAL CONTRA TARA
             // -----------------------------------------------------
-            if (cilindro.PesoActualKg < nuevaTara)
+
+            if (cilindro.PesoActualKg <
+                nuevaTara)
             {
                 return BadRequest(new
                 {
@@ -372,9 +456,11 @@ namespace Afrisan.Api.Controllers
             }
 
             var pesoBrutoMaximo =
-                nuevaTara + dto.CapacidadKg;
+                nuevaTara +
+                dto.CapacidadKg;
 
-            if (cilindro.PesoActualKg > pesoBrutoMaximo)
+            if (cilindro.PesoActualKg >
+                pesoBrutoMaximo)
             {
                 return BadRequest(new
                 {
@@ -385,31 +471,40 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-
             // -----------------------------------------------------
             // COMPROBAR MOVIMIENTOS EXISTENTES
             // -----------------------------------------------------
+
             var tieneMovimientos =
-                await _context.MovimientosInventario
-                    .AnyAsync(m => m.CilindroId == cilindro.Id);
+                await _context
+                    .MovimientosInventario
+                    .AnyAsync(
+                        m =>
+                            m.CilindroId ==
+                            cilindro.Id
+                    );
 
             var cambiaGas =
-                cilindro.GasRefrigeranteId != gas.Id;
+                cilindro.GasRefrigeranteId !=
+                gas.Id;
 
             var cambiaCapacidad =
-                cilindro.CapacidadKg != dto.CapacidadKg;
+                cilindro.CapacidadKg !=
+                dto.CapacidadKg;
 
             var cambiaTara =
-                cilindro.TaraKg != nuevaTara;
-
+                cilindro.TaraKg !=
+                nuevaTara;
 
             // Si ya tiene movimientos:
             // - no se cambia gas;
             // - no se cambia capacidad;
             // - la tara puede asignarse una sola vez si estaba en null.
+
             if (tieneMovimientos)
             {
-                if (cambiaGas || cambiaCapacidad)
+                if (cambiaGas ||
+                    cambiaCapacidad)
                 {
                     return Conflict(new
                     {
@@ -432,44 +527,60 @@ namespace Afrisan.Api.Controllers
                 }
             }
 
-
             // -----------------------------------------------------
             // ACTUALIZAR DATOS TÉCNICOS
             // -----------------------------------------------------
-            cilindro.GasRefrigeranteId = gas.Id;
 
-            cilindro.TipoRefrigerante = gas.Codigo;
+            cilindro.GasRefrigeranteId =
+                gas.Id;
 
-            cilindro.CapacidadKg = dto.CapacidadKg;
+            cilindro.TipoRefrigerante =
+                gas.Codigo;
 
-            cilindro.TaraKg = nuevaTara;
+            cilindro.CapacidadKg =
+                dto.CapacidadKg;
 
-            await _context.SaveChangesAsync();
+            cilindro.TaraKg =
+                nuevaTara;
+
+            await _context
+                .SaveChangesAsync();
 
             return Ok(cilindro);
         }
 
-
         // =========================================================
         // DELETE: api/Cilindros/1
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> EliminarCilindro(int id)
+        [Authorize(Roles = "Administrador,Bodega")]
+        public async Task<IActionResult> EliminarCilindro(
+            int id)
         {
-            var cilindro = await _context.Cilindros
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var cilindro =
+                await _context.Cilindros
+                    .FirstOrDefaultAsync(
+                        c => c.Id == id);
 
             if (cilindro is null)
             {
                 return NotFound(new
                 {
-                    mensaje = $"No se encontró el cilindro con ID {id}."
+                    mensaje =
+                        $"No se encontró el cilindro con ID {id}."
                 });
             }
 
             var tieneMovimientos =
-                await _context.MovimientosInventario
-                    .AnyAsync(m => m.CilindroId == id);
+                await _context
+                    .MovimientosInventario
+                    .AnyAsync(
+                        m =>
+                            m.CilindroId ==
+                            id
+                    );
 
             if (tieneMovimientos)
             {
@@ -481,9 +592,11 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            _context.Cilindros.Remove(cilindro);
+            _context.Cilindros
+                .Remove(cilindro);
 
-            await _context.SaveChangesAsync();
+            await _context
+                .SaveChangesAsync();
 
             return Ok(new
             {

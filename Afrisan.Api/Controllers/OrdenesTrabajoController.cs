@@ -1,6 +1,7 @@
 ﻿using Afrisan.Api.Data;
 using Afrisan.Api.DTOs;
 using Afrisan.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,26 +9,34 @@ namespace Afrisan.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class OrdenesTrabajoController : ControllerBase
     {
         private readonly AfrisanDbContext _context;
 
-        public OrdenesTrabajoController(AfrisanDbContext context)
+        public OrdenesTrabajoController(
+            AfrisanDbContext context)
         {
             _context = context;
         }
 
         // =========================================================
-        // LISTAR ÓRDENES DE TRABAJO
+        // LISTAR TODAS LAS ÓRDENES DE TRABAJO
         // GET: api/OrdenesTrabajo
+        // Administrador / Jefatura / Bodega
         // =========================================================
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrdenTrabajo>>> ObtenerOrdenes()
+        [Authorize(Roles = "Administrador,Jefatura,Bodega")]
+        public async Task<
+            ActionResult<IEnumerable<OrdenTrabajo>>>
+            ObtenerOrdenes()
         {
-            var ordenes = await _context.OrdenesTrabajo
-                .AsNoTracking()
-                .OrderByDescending(o => o.Id)
-                .ToListAsync();
+            var ordenes =
+                await _context.OrdenesTrabajo
+                    .AsNoTracking()
+                    .OrderByDescending(o => o.Id)
+                    .ToListAsync();
 
             return Ok(ordenes);
         }
@@ -35,15 +44,21 @@ namespace Afrisan.Api.Controllers
         // =========================================================
         // LISTAR ÓRDENES DE TRABAJO ACTIVAS
         // GET: api/OrdenesTrabajo/activas
+        // Administrador / Jefatura / Bodega
         // =========================================================
+
         [HttpGet("activas")]
-        public async Task<ActionResult<IEnumerable<OrdenTrabajo>>> ObtenerActivas()
+        [Authorize(Roles = "Administrador,Jefatura,Bodega")]
+        public async Task<
+            ActionResult<IEnumerable<OrdenTrabajo>>>
+            ObtenerActivas()
         {
-            var ordenes = await _context.OrdenesTrabajo
-                .AsNoTracking()
-                .Where(o => o.Activa)
-                .OrderBy(o => o.Codigo)
-                .ToListAsync();
+            var ordenes =
+                await _context.OrdenesTrabajo
+                    .AsNoTracking()
+                    .Where(o => o.Activa)
+                    .OrderBy(o => o.Codigo)
+                    .ToListAsync();
 
             return Ok(ordenes);
         }
@@ -51,13 +66,21 @@ namespace Afrisan.Api.Controllers
         // =========================================================
         // OBTENER ORDEN DE TRABAJO POR ID
         // GET: api/OrdenesTrabajo/1
+        // Todos los roles
         // =========================================================
+
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<OrdenTrabajo>> ObtenerPorId(int id)
+        [Authorize(
+            Roles =
+                "Administrador,Jefatura,Bodega,Tecnico")]
+        public async Task<ActionResult<OrdenTrabajo>>
+            ObtenerPorId(int id)
         {
-            var orden = await _context.OrdenesTrabajo
-                .AsNoTracking()
-                .FirstOrDefaultAsync(o => o.Id == id);
+            var orden =
+                await _context.OrdenesTrabajo
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        o => o.Id == id);
 
             if (orden == null)
             {
@@ -74,49 +97,67 @@ namespace Afrisan.Api.Controllers
         // =========================================================
         // CREAR ORDEN DE TRABAJO
         // POST: api/OrdenesTrabajo
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPost]
-        public async Task<ActionResult<OrdenTrabajo>> CrearOrden(
-            [FromBody] CrearOrdenTrabajoDto dto)
+        [Authorize(Roles = "Administrador,Bodega")]
+        public async Task<ActionResult<OrdenTrabajo>>
+            CrearOrden(
+                [FromBody] CrearOrdenTrabajoDto dto)
         {
             await using var transaccion =
-                await _context.Database.BeginTransactionAsync();
+                await _context.Database
+                    .BeginTransactionAsync();
 
             try
             {
                 // El código se genera automáticamente.
                 // El usuario no puede inventarlo manualmente.
-                var ultimoId = await _context.OrdenesTrabajo
-                    .MaxAsync(o => (int?)o.Id) ?? 0;
 
-                var siguienteNumero = ultimoId + 1;
+                var ultimoId =
+                    await _context.OrdenesTrabajo
+                        .MaxAsync(o => (int?)o.Id)
+                    ?? 0;
+
+                var siguienteNumero =
+                    ultimoId + 1;
 
                 string codigo;
 
                 do
                 {
-                    codigo = $"OT-{siguienteNumero:D6}";
+                    codigo =
+                        $"OT-{siguienteNumero:D6}";
 
                     siguienteNumero++;
                 }
-                while (await _context.OrdenesTrabajo
-                    .AnyAsync(o => o.Codigo == codigo));
+                while (
+                    await _context.OrdenesTrabajo
+                        .AnyAsync(
+                            o => o.Codigo == codigo));
 
-                var orden = new OrdenTrabajo
-                {
-                    Codigo = codigo,
+                var orden =
+                    new OrdenTrabajo
+                    {
+                        Codigo =
+                            codigo,
 
-                    Descripcion =
-                        string.IsNullOrWhiteSpace(dto.Descripcion)
-                            ? null
-                            : dto.Descripcion.Trim(),
+                        Descripcion =
+                            string.IsNullOrWhiteSpace(
+                                dto.Descripcion)
+                                ? null
+                                : dto.Descripcion.Trim(),
 
-                    Activa = true,
+                        Activa =
+                            true,
 
-                    FechaCreacion = DateTime.UtcNow
-                };
+                        FechaCreacion =
+                            DateTime.UtcNow
+                    };
 
-                _context.OrdenesTrabajo.Add(orden);
+                _context.OrdenesTrabajo
+                    .Add(orden);
 
                 await _context.SaveChangesAsync();
 
@@ -124,9 +165,11 @@ namespace Afrisan.Api.Controllers
 
                 return CreatedAtAction(
                     nameof(ObtenerPorId),
-                    new { id = orden.Id },
-                    orden
-                );
+                    new
+                    {
+                        id = orden.Id
+                    },
+                    orden);
             }
             catch
             {
@@ -139,12 +182,18 @@ namespace Afrisan.Api.Controllers
         // =========================================================
         // DESACTIVAR ORDEN DE TRABAJO
         // PUT: api/OrdenesTrabajo/1/desactivar
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPut("{id:int}/desactivar")]
-        public async Task<IActionResult> DesactivarOrden(int id)
+        [Authorize(Roles = "Administrador,Bodega")]
+        public async Task<IActionResult>
+            DesactivarOrden(int id)
         {
-            var orden = await _context.OrdenesTrabajo
-                .FirstOrDefaultAsync(o => o.Id == id);
+            var orden =
+                await _context.OrdenesTrabajo
+                    .FirstOrDefaultAsync(
+                        o => o.Id == id);
 
             if (orden == null)
             {

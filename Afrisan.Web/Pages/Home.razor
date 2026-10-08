@@ -1,12 +1,20 @@
 ﻿@page "/"
+
 @using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Inicio | AFRISAN</PageTitle>
 
 <div class="container-fluid py-4">
 
-    <!-- ENCABEZADO PRINCIPAL -->
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+
     <div class="p-4 mb-4 rounded-4 text-white"
          style="background: linear-gradient(120deg, #102c46, #176b91);">
 
@@ -20,227 +28,516 @@
                 </p>
             </div>
 
-            <span class="badge bg-light text-dark p-3">
-                Panel de administración
-            </span>
+            @if (esAdministrador)
+            {
+                <span class="badge bg-light text-dark p-3">
+                    Panel de administración
+                </span>
+            }
+            else if (esJefatura)
+            {
+                <span class="badge bg-light text-dark p-3">
+                    Panel de supervisión
+                </span>
+            }
+            else if (esBodega)
+            {
+                <span class="badge bg-light text-dark p-3">
+                    Panel de bodega
+                </span>
+            }
+            else if (esTecnico)
+            {
+                <span class="badge bg-light text-dark p-3">
+                    Panel técnico
+                </span>
+            }
 
         </div>
 
     </div>
 
-    <!-- BIENVENIDA -->
+    <!-- =====================================================
+         BIENVENIDA SEGÚN ROL
+         ===================================================== -->
+
     <div class="mb-4">
 
         <h3 class="fw-bold">Panel principal</h3>
 
-        <p class="text-muted">
-            Bienvenido al sistema de gestión AFRISAN.
-            Desde aquí podrás administrar los cilindros,
-            consultar su disponibilidad y controlar
-            los gases refrigerantes.
-        </p>
+        @if (esAdministrador)
+        {
+            <p class="text-muted">
+                Bienvenido al panel de administración de AFRISAN.
+                Desde aquí puedes supervisar el sistema y acceder
+                a sus principales módulos.
+            </p>
+        }
+        else if (esJefatura)
+        {
+            <p class="text-muted">
+                Bienvenido al panel de supervisión de AFRISAN.
+                Desde aquí puedes consultar información general
+                del inventario y realizar seguimiento de la operación.
+            </p>
+        }
+        else if (esBodega)
+        {
+            <p class="text-muted">
+                Bienvenido al área de bodega de AFRISAN.
+                Desde aquí puedes gestionar cilindros, refrigerantes
+                y operaciones asociadas al inventario.
+            </p>
+        }
+        else if (esTecnico)
+        {
+            <p class="text-muted">
+                Bienvenido al área técnica de AFRISAN.
+                Desde aquí puedes identificar cilindros y acceder
+                a las funciones relacionadas con trabajo en terreno.
+            </p>
+        }
 
     </div>
 
-    <!-- AVISO DE ERROR DE CONEXIÓN -->
+    <!-- =====================================================
+         ERROR
+         ===================================================== -->
+
     @if (error is not null)
     {
-        <div class="alert alert-danger mb-4" role="alert">
-            <strong>Error de conexión:</strong> @error
+        <div class="alert alert-danger mb-4"
+             role="alert">
+
+            <strong>Error de conexión:</strong>
+            @error
 
             <p class="mb-0 mt-2">
-                Comprueba que Afrisan.Api esté ejecutándose
-                y que la dirección HTTPS sea correcta.
+                Comprueba que Afrisan.Api esté ejecutándose.
             </p>
+
         </div>
     }
 
-    <!-- TARJETAS DEL INVENTARIO -->
-    <div class="row g-3 mb-4">
+    <!-- =====================================================
+         RESUMEN DE INVENTARIO
+         ADMINISTRADOR / JEFATURA / BODEGA
+         ===================================================== -->
 
-        <!-- TOTAL DE CILINDROS -->
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4">
-                <div class="card-body p-4">
+    @if (esAdministrador || esJefatura || esBodega)
+    {
+        <div class="row g-3 mb-4">
 
-                    <h6 class="text-muted">
-                        Total de cilindros
-                    </h6>
+            <!-- TOTAL -->
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <h2 class="fw-bold text-primary">
-                        @TotalCilindros
-                    </h2>
+                <div class="card border-0 shadow-sm h-100 rounded-4">
 
-                    <small class="text-muted">
-                        Cilindros registrados en el sistema
-                    </small>
+                    <div class="card-body p-4">
 
-                </div>
-            </div>
-        </div>
+                        <h6 class="text-muted">
+                            Total de cilindros
+                        </h6>
 
-        <!-- CILINDROS DISPONIBLES -->
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4">
-                <div class="card-body p-4">
+                        <h2 class="fw-bold text-primary">
+                            @TotalCilindros
+                        </h2>
 
-                    <h6 class="text-muted">
-                        Cilindros disponibles
-                    </h6>
+                        <small class="text-muted">
+                            Cilindros registrados en el sistema
+                        </small>
 
-                    <h2 class="fw-bold text-success">
-                        @CilindrosDisponibles
-                    </h2>
-
-                    <small class="text-muted">
-                        Cilindros disponibles para utilizar
-                    </small>
+                    </div>
 
                 </div>
+
             </div>
-        </div>
 
-        <!-- CILINDROS EN USO -->
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4">
-                <div class="card-body p-4">
+            <!-- DISPONIBLES -->
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <h6 class="text-muted">
-                        Cilindros en uso
-                    </h6>
+                <div class="card border-0 shadow-sm h-100 rounded-4">
 
-                    <h2 class="fw-bold text-warning">
-                        @CilindrosEnUso
-                    </h2>
+                    <div class="card-body p-4">
 
-                    <small class="text-muted">
-                        Cilindros utilizados actualmente
-                    </small>
+                        <h6 class="text-muted">
+                            Cilindros disponibles
+                        </h6>
+
+                        <h2 class="fw-bold text-success">
+                            @CilindrosDisponibles
+                        </h2>
+
+                        <small class="text-muted">
+                            Cilindros disponibles para utilizar
+                        </small>
+
+                    </div>
 
                 </div>
+
             </div>
-        </div>
 
-        <!-- TIPOS DE GASES REFRIGERANTES -->
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4">
-                <div class="card-body p-4">
+            <!-- EN USO -->
+            <div class="col-12 col-md-6 col-xl-3">
 
-                    <h6 class="text-muted">
-                        Tipos de gases refrigerantes
-                    </h6>
+                <div class="card border-0 shadow-sm h-100 rounded-4">
 
-                    <h2 class="fw-bold text-info">
-                        @TotalGases
-                    </h2>
+                    <div class="card-body p-4">
 
-                    <small class="text-muted">
-                        Gases registrados en el sistema
-                    </small>
+                        <h6 class="text-muted">
+                            Cilindros en uso
+                        </h6>
+
+                        <h2 class="fw-bold text-warning">
+                            @CilindrosEnUso
+                        </h2>
+
+                        <small class="text-muted">
+                            Cilindros utilizados actualmente
+                        </small>
+
+                    </div>
 
                 </div>
+
             </div>
-        </div>
 
-    </div>
+            <!-- GASES -->
+            <div class="col-12 col-md-6 col-xl-3">
 
-    <!-- MODULOS DEL SISTEMA -->
-    <h4 class="fw-bold mb-3">
-        Módulos del sistema
-    </h4>
+                <div class="card border-0 shadow-sm h-100 rounded-4">
 
-    <div class="row g-3">
+                    <div class="card-body p-4">
 
-        <!-- GESTIÓN DE CILINDROS -->
-        <div class="col-12 col-md-6 col-xl-4">
+                        <h6 class="text-muted">
+                            Tipos de gases refrigerantes
+                        </h6>
 
-            <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <h2 class="fw-bold text-info">
+                            @TotalGases
+                        </h2>
 
-                <div class="card-body p-4">
+                        <small class="text-muted">
+                            Gases registrados en el sistema
+                        </small>
 
-                    <h2 class="mb-3">📦</h2>
-
-                    <h5 class="fw-bold">
-                        Gestión de cilindros
-                    </h5>
-
-                    <p class="text-muted">
-                        Registra y consulta cilindros,
-                        modifica sus datos y controla
-                        su disponibilidad.
-                    </p>
-
-                    <span class="badge bg-primary">
-                        Próximamente
-                    </span>
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+    }
 
-        <!-- GASES REFRIGERANTES -->
-        <div class="col-12 col-md-6 col-xl-4">
+    <!-- =====================================================
+         ADMINISTRADOR
+         ===================================================== -->
 
-            <div class="card border-0 shadow-sm rounded-4 h-100">
+    @if (esAdministrador)
+    {
+        <h4 class="fw-bold mb-3">
+            Módulos de administración
+        </h4>
 
-                <div class="card-body p-4">
+        <div class="row g-3">
 
-                    <h2 class="mb-3">❄️</h2>
+            <div class="col-12 col-md-6 col-xl-4">
 
-                    <h5 class="fw-bold">
-                        Gases refrigerantes
-                    </h5>
+                <div class="card border-0 shadow-sm rounded-4 h-100">
 
-                    <p class="text-muted">
-                        Administra los tipos de gases
-                        refrigerantes asociados a
-                        los cilindros de la empresa.
-                    </p>
+                    <div class="card-body p-4">
 
-                    <span class="badge bg-primary">
-                        Próximamente
-                    </span>
+                        <h2 class="mb-3">📦</h2>
+
+                        <h5 class="fw-bold">
+                            Gestión de cilindros
+                        </h5>
+
+                        <p class="text-muted">
+                            Administra los cilindros registrados
+                            y consulta su disponibilidad.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">❄️</h2>
+
+                        <h5 class="fw-bold">
+                            Gases refrigerantes
+                        </h5>
+
+                        <p class="text-muted">
+                            Administra el catálogo de refrigerantes
+                            utilizados por AFRISAN.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">👥</h2>
+
+                        <h5 class="fw-bold">
+                            Gestión de usuarios
+                        </h5>
+
+                        <p class="text-muted">
+                            Crea usuarios, asigna roles
+                            y administra sus accesos.
+                        </p>
+
+                        <span class="badge bg-secondary">
+                            En desarrollo
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+    }
 
-        <!-- IDENTIFICACIÓN QR -->
-        <div class="col-12 col-md-6 col-xl-4">
+    <!-- =====================================================
+         BODEGA
+         ===================================================== -->
 
-            <div class="card border-0 shadow-sm rounded-4 h-100">
+    @if (esBodega)
+    {
+        <h4 class="fw-bold mb-3">
+            Operaciones de bodega
+        </h4>
 
-                <div class="card-body p-4">
+        <div class="row g-3">
 
-                    <h2 class="mb-3">📱</h2>
+            <div class="col-12 col-md-6 col-xl-4">
 
-                    <h5 class="fw-bold">
-                        Identificación QR
-                    </h5>
+                <div class="card border-0 shadow-sm rounded-4 h-100">
 
-                    <p class="text-muted">
-                        Identifica cada cilindro
-                        mediante su código QR
-                        y consulta su información.
-                    </p>
+                    <div class="card-body p-4">
 
-                    <span class="badge bg-secondary">
-                        Pendiente de desarrollo
-                    </span>
+                        <h2 class="mb-3">📦</h2>
+
+                        <h5 class="fw-bold">
+                            Gestión de cilindros
+                        </h5>
+
+                        <p class="text-muted">
+                            Consulta cilindros y realiza
+                            operaciones asociadas a bodega.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">❄️</h2>
+
+                        <h5 class="fw-bold">
+                            Gases refrigerantes
+                        </h5>
+
+                        <p class="text-muted">
+                            Consulta los refrigerantes
+                            asociados a los cilindros.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">📱</h2>
+
+                        <h5 class="fw-bold">
+                            Identificación QR
+                        </h5>
+
+                        <p class="text-muted">
+                            Identifica cilindros mediante
+                            su código QR.
+                        </p>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+    }
 
-    </div>
+    <!-- =====================================================
+         JEFATURA
+         ===================================================== -->
 
-    <!-- PIE DE PÁGINA -->
+    @if (esJefatura)
+    {
+        <h4 class="fw-bold mb-3">
+            Supervisión
+        </h4>
+
+        <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">📊</h2>
+
+                        <h5 class="fw-bold">
+                            Supervisión operacional
+                        </h5>
+
+                        <p class="text-muted">
+                            Consulta el estado general
+                            de cilindros y refrigerantes.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">📈</h2>
+
+                        <h5 class="fw-bold">
+                            Dashboard e indicadores
+                        </h5>
+
+                        <p class="text-muted">
+                            Visualización de indicadores
+                            y emisiones GEI.
+                        </p>
+
+                        <span class="badge bg-secondary">
+                            Próximo desarrollo
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- =====================================================
+         TÉCNICO
+         ===================================================== -->
+
+    @if (esTecnico)
+    {
+        <h4 class="fw-bold mb-3">
+            Trabajo en terreno
+        </h4>
+
+        <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">📱</h2>
+
+                        <h5 class="fw-bold">
+                            Identificación QR
+                        </h5>
+
+                        <p class="text-muted">
+                            Identifica un cilindro mediante
+                            su código QR y consulta
+                            su información.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <h2 class="mb-3">🛠️</h2>
+
+                        <h5 class="fw-bold">
+                            Intervenciones en terreno
+                        </h5>
+
+                        <p class="text-muted">
+                            Registro de intervenciones,
+                            cargas y fallas en terreno.
+                        </p>
+
+                        <span class="badge bg-secondary">
+                            Próximo desarrollo
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- =====================================================
+         PIE DE PÁGINA
+         ===================================================== -->
+
     <div class="text-center mt-5 pt-3 border-top">
 
         <small class="text-muted">
@@ -253,33 +550,23 @@
 
 @code {
 
-    // =====================================================
-    // LISTAS DE DATOS OBTENIDOS DESDE LA API
-    // =====================================================
+    private bool esAdministrador;
+    private bool esJefatura;
+    private bool esBodega;
+    private bool esTecnico;
 
     private List<CilindroResumen> cilindros = new();
 
     private List<GasResumen> gases = new();
 
-
-    // =====================================================
-    // ESTADO DE CARGA Y ERRORES
-    // =====================================================
-
     private bool cargando = true;
 
     private string? error;
-
-
-    // =====================================================
-    // CONTADORES DEL PANEL PRINCIPAL
-    // =====================================================
 
     private string TotalCilindros =>
         cargando ? "..." :
         error is not null ? "--" :
         cilindros.Count.ToString();
-
 
     private string CilindrosDisponibles =>
         cargando ? "..." :
@@ -292,7 +579,6 @@
             )
         ).ToString();
 
-
     private string CilindrosEnUso =>
         cargando ? "..." :
         error is not null ? "--" :
@@ -301,44 +587,69 @@
                 c.Estado?.Trim(),
                 "En uso",
                 StringComparison.OrdinalIgnoreCase
+            ) ||
+            string.Equals(
+                c.Estado?.Trim(),
+                "Despachado",
+                StringComparison.OrdinalIgnoreCase
             )
         ).ToString();
-
 
     private string TotalGases =>
         cargando ? "..." :
         error is not null ? "--" :
         gases.Count.ToString();
 
-
-    // =====================================================
-    // CONSULTAR LA API AL CARGAR LA PÁGINA
-    // =====================================================
-
     protected override async Task OnInitializedAsync()
     {
+        var estado =
+            await AuthStateProvider
+                .GetAuthenticationStateAsync();
+
+        var usuario =
+            estado.User;
+
+        esAdministrador =
+            usuario.IsInRole("Administrador");
+
+        esJefatura =
+            usuario.IsInRole("Jefatura");
+
+        esBodega =
+            usuario.IsInRole("Bodega");
+
+        esTecnico =
+            usuario.IsInRole("Tecnico");
+
+        // El técnico no necesita consultar
+        // todo el inventario desde este panel.
+        if (esTecnico)
+        {
+            cargando = false;
+            return;
+        }
+
         cargando = true;
         error = null;
 
         try
         {
-            // Consultar todos los cilindros registrados.
-
             cilindros =
-                await Http.GetFromJsonAsync<List<CilindroResumen>>(
+                await Http.GetFromJsonAsync<
+                    List<CilindroResumen>>(
                     "api/Cilindros"
                 ) ?? new();
 
-            // Consultar todos los gases refrigerantes.
-
             gases =
-                await Http.GetFromJsonAsync<List<GasResumen>>(
+                await Http.GetFromJsonAsync<
+                    List<GasResumen>>(
                     "api/GasRefrigerantes"
                 ) ?? new();
         }
         catch (Exception ex)
         {
-            error = "No se pudieron obtener los datos del sistema.";
+            error =
+                "No se pudieron obtener los datos del sistema.";
 
             Console.WriteLine(ex);
         }
@@ -348,22 +659,16 @@
         }
     }
 
-
-    // =====================================================
-    // MODELOS PARA LEER LAS RESPUESTAS DE LA API
-    // =====================================================
-
     private sealed class CilindroResumen
     {
         public int Id { get; set; }
 
-        public string Estado { get; set; } = string.Empty;
+        public string Estado { get; set; }
+            = string.Empty;
     }
-
 
     private sealed class GasResumen
     {
         public int Id { get; set; }
     }
-
 }

@@ -1,12 +1,77 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿<CascadingAuthenticationState>
+
+    <Router AppAssembly="@typeof(App).Assembly">
+
+        <Found Context="routeData">
+
+            @if (routeData.PageType == typeof(Afrisan.Web.Pages.Login))
+            {
+                <RouteView RouteData="@routeData" />
+            }
+            else
+            {
+                <AuthorizeRouteView RouteData="@routeData"
+                                    DefaultLayout="@typeof(MainLayout)">
+
+                    <NotAuthorized Context="authState">
+
+                        @if (authState.User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="container-fluid py-4">
+
+                                <div class="alert alert-danger"
+                                     role="alert">
+
+                                    <h4 class="alert-heading">
+                                        Acceso denegado
+                                    </h4>
+
+                                    <p class="mb-0">
+                                        Tu usuario no tiene permisos
+                                        para acceder a esta sección
+                                        de AFRISAN.
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <RedirectToLogin />
+                        }
+
+                    </NotAuthorized>
+
+                </AuthorizeRouteView>
+            }
+
+            <FocusOnNavigate RouteData="@routeData"
+                             Selector="h1" />
+
+        </Found>
+
+        <NotFound>
+
+            <PageTitle>No encontrado</PageTitle>
+
+            <LayoutView Layout="@typeof(MainLayout)">
+
+                <div class="container-fluid py-4">
+
+                    <div class="alert alert-warning"
+                         role="alert">
+
+                        No se encontró esta página.
+
+                    </div>
+
+                </div>
+
+            </LayoutView>
+
+        </NotFound>
+
+    </Router>
+
+</CascadingAuthenticationState>

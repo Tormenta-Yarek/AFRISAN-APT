@@ -1,6 +1,7 @@
 ﻿using Afrisan.Api.Data;
 using Afrisan.Api.DTOs;
 using Afrisan.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +9,13 @@ namespace Afrisan.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MovimientosInventarioController : ControllerBase
     {
         private readonly AfrisanDbContext _context;
 
-        public MovimientosInventarioController(AfrisanDbContext context)
+        public MovimientosInventarioController(
+            AfrisanDbContext context)
         {
             _context = context;
         }
@@ -20,15 +23,19 @@ namespace Afrisan.Api.Controllers
         // =========================================================
         // DESPACHO DE CILINDRO
         // POST: api/MovimientosInventario/despacho/6
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPost("despacho/{cilindroId:int}")]
+        [Authorize(Roles = "Administrador,Bodega")]
         public async Task<IActionResult> DespacharCilindro(
             int cilindroId,
             [FromBody] DespachoCilindroDto dto)
         {
             // 1. Buscar el cilindro.
             var cilindro = await _context.Cilindros
-                .FirstOrDefaultAsync(c => c.Id == cilindroId);
+                .FirstOrDefaultAsync(
+                    c => c.Id == cilindroId);
 
             if (cilindro == null)
             {
@@ -87,7 +94,8 @@ namespace Afrisan.Api.Controllers
             }
 
             // 4. Validar responsable.
-            if (string.IsNullOrWhiteSpace(dto.Responsable))
+            if (string.IsNullOrWhiteSpace(
+                dto.Responsable))
             {
                 return BadRequest(new
                 {
@@ -96,7 +104,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 5. Validar que se haya ingresado un peso.
+            // 5. Validar peso.
             if (!dto.PesoKg.HasValue ||
                 dto.PesoKg.Value < 0)
             {
@@ -107,7 +115,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 6. Validar que el cilindro tenga tara.
+            // 6. Validar tara.
             if (!cilindro.TaraKg.HasValue ||
                 cilindro.TaraKg.Value <= 0)
             {
@@ -125,7 +133,7 @@ namespace Afrisan.Api.Controllers
             var pesoDespacho =
                 dto.PesoKg.Value;
 
-            // 7. El peso bruto debe ser MAYOR que la tara.
+            // 7. Peso debe ser mayor que tara.
             if (pesoDespacho <= tara)
             {
                 return BadRequest(new
@@ -136,11 +144,12 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 8. El peso bruto no puede superar tara + capacidad.
+            // 8. Peso máximo.
             var pesoBrutoMaximo =
                 tara + cilindro.CapacidadKg;
 
-            if (pesoDespacho > pesoBrutoMaximo)
+            if (pesoDespacho >
+                pesoBrutoMaximo)
             {
                 return BadRequest(new
                 {
@@ -150,30 +159,42 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 9. Crear movimiento de despacho.
-            var movimiento = new MovimientoInventario
-            {
-                CilindroId = cilindro.Id,
+            // 9. Crear movimiento.
+            var movimiento =
+                new MovimientoInventario
+                {
+                    CilindroId =
+                        cilindro.Id,
 
-                OrdenTrabajoId = ordenTrabajo.Id,
+                    OrdenTrabajoId =
+                        ordenTrabajo.Id,
 
-                TipoMovimiento = "Despacho",
+                    TipoMovimiento =
+                        "Despacho",
 
-                PesoKg = pesoDespacho,
+                    PesoKg =
+                        pesoDespacho,
 
-                Responsable = dto.Responsable.Trim(),
+                    Responsable =
+                        dto.Responsable.Trim(),
 
-                FechaMovimiento = DateTime.UtcNow,
+                    FechaMovimiento =
+                        DateTime.UtcNow,
 
-                Observaciones = dto.Observaciones
-            };
+                    Observaciones =
+                        dto.Observaciones
+                };
 
             // 10. Actualizar cilindro.
-            cilindro.Estado = "Despachado";
-            cilindro.PesoActualKg = pesoDespacho;
+            cilindro.Estado =
+                "Despachado";
 
-            // 11. Guardar movimiento y cambios.
-            _context.MovimientosInventario.Add(movimiento);
+            cilindro.PesoActualKg =
+                pesoDespacho;
+
+            // 11. Guardar.
+            _context.MovimientosInventario
+                .Add(movimiento);
 
             await _context.SaveChangesAsync();
 
@@ -215,19 +236,23 @@ namespace Afrisan.Api.Controllers
             });
         }
 
-
         // =========================================================
         // RETORNO DE CILINDRO
         // POST: api/MovimientosInventario/retorno/6
+        // Solo Administrador / Bodega
         // =========================================================
+
         [HttpPost("retorno/{cilindroId:int}")]
+        [Authorize(Roles = "Administrador,Bodega")]
         public async Task<IActionResult> RetornarCilindro(
             int cilindroId,
             [FromBody] RetornoCilindroDto dto)
         {
             // 1. Buscar cilindro.
-            var cilindro = await _context.Cilindros
-                .FirstOrDefaultAsync(c => c.Id == cilindroId);
+            var cilindro =
+                await _context.Cilindros
+                    .FirstOrDefaultAsync(
+                        c => c.Id == cilindroId);
 
             if (cilindro == null)
             {
@@ -238,7 +263,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 2. Comprobar que esté despachado.
+            // 2. Comprobar estado.
             if (!string.Equals(
                     cilindro.Estado?.Trim(),
                     "Despachado",
@@ -251,8 +276,9 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 3. Validar responsable.
-            if (string.IsNullOrWhiteSpace(dto.Responsable))
+            // 3. Responsable.
+            if (string.IsNullOrWhiteSpace(
+                dto.Responsable))
             {
                 return BadRequest(new
                 {
@@ -261,7 +287,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 4. Validar peso.
+            // 4. Peso.
             if (!dto.PesoKg.HasValue ||
                 dto.PesoKg.Value < 0)
             {
@@ -272,11 +298,11 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 5. Si existe tara, el peso de retorno
-            // no puede ser menor que la tara.
+            // 5. Peso retorno >= tara.
             if (cilindro.TaraKg.HasValue &&
                 cilindro.TaraKg.Value > 0 &&
-                dto.PesoKg.Value < cilindro.TaraKg.Value)
+                dto.PesoKg.Value <
+                cilindro.TaraKg.Value)
             {
                 return BadRequest(new
                 {
@@ -287,28 +313,39 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 6. Crear movimiento de retorno.
-            var movimiento = new MovimientoInventario
-            {
-                CilindroId = cilindro.Id,
+            // 6. Crear movimiento.
+            var movimiento =
+                new MovimientoInventario
+                {
+                    CilindroId =
+                        cilindro.Id,
 
-                TipoMovimiento = "Retorno",
+                    TipoMovimiento =
+                        "Retorno",
 
-                PesoKg = dto.PesoKg.Value,
+                    PesoKg =
+                        dto.PesoKg.Value,
 
-                Responsable = dto.Responsable.Trim(),
+                    Responsable =
+                        dto.Responsable.Trim(),
 
-                FechaMovimiento = DateTime.UtcNow,
+                    FechaMovimiento =
+                        DateTime.UtcNow,
 
-                Observaciones = dto.Observaciones
-            };
+                    Observaciones =
+                        dto.Observaciones
+                };
 
             // 7. Actualizar cilindro.
-            cilindro.Estado = "Disponible";
-            cilindro.PesoActualKg = dto.PesoKg.Value;
+            cilindro.Estado =
+                "Disponible";
+
+            cilindro.PesoActualKg =
+                dto.PesoKg.Value;
 
             // 8. Guardar.
-            _context.MovimientosInventario.Add(movimiento);
+            _context.MovimientosInventario
+                .Add(movimiento);
 
             await _context.SaveChangesAsync();
 
@@ -340,19 +377,25 @@ namespace Afrisan.Api.Controllers
             });
         }
 
-
         // =========================================================
         // HISTORIAL DE MOVIMIENTOS
         // GET: api/MovimientosInventario/historial/6
+        // Todos los roles
         // =========================================================
+
         [HttpGet("historial/{cilindroId:int}")]
+        [Authorize(
+            Roles =
+                "Administrador,Jefatura,Bodega,Tecnico")]
         public async Task<IActionResult> ObtenerHistorial(
             int cilindroId)
         {
             // 1. Comprobar cilindro.
-            var cilindro = await _context.Cilindros
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == cilindroId);
+            var cilindro =
+                await _context.Cilindros
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        c => c.Id == cilindroId);
 
             if (cilindro == null)
             {
@@ -368,7 +411,8 @@ namespace Afrisan.Api.Controllers
                 await _context.MovimientosInventario
                     .AsNoTracking()
                     .Where(m =>
-                        m.CilindroId == cilindroId)
+                        m.CilindroId ==
+                        cilindroId)
                     .OrderByDescending(m =>
                         m.FechaMovimiento)
                     .ThenByDescending(m =>
@@ -419,20 +463,25 @@ namespace Afrisan.Api.Controllers
             });
         }
 
-
         // =========================================================
         // BALANCE DE MASA
         // GET: api/MovimientosInventario/balance/6
+        // Administrador / Jefatura / Bodega
         // =========================================================
+
         [HttpGet("balance/{cilindroId:int}")]
+        [Authorize(
+            Roles =
+                "Administrador,Jefatura,Bodega")]
         public async Task<IActionResult> ObtenerBalanceMasa(
             int cilindroId)
         {
             // 1. Comprobar cilindro.
-            var cilindro = await _context.Cilindros
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c =>
-                    c.Id == cilindroId);
+            var cilindro =
+                await _context.Cilindros
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c =>
+                        c.Id == cilindroId);
 
             if (cilindro == null)
             {
@@ -443,15 +492,19 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 2. Obtener despachos y retornos.
+            // 2. Obtener movimientos.
             var movimientos =
                 await _context.MovimientosInventario
                     .AsNoTracking()
                     .Where(m =>
-                        m.CilindroId == cilindroId &&
+                        m.CilindroId ==
+                        cilindroId &&
                         (
-                            m.TipoMovimiento == "Despacho" ||
-                            m.TipoMovimiento == "Retorno"
+                            m.TipoMovimiento ==
+                            "Despacho"
+                            ||
+                            m.TipoMovimiento ==
+                            "Retorno"
                         ))
                     .OrderByDescending(m =>
                         m.FechaMovimiento)
@@ -459,14 +512,13 @@ namespace Afrisan.Api.Controllers
                         m.Id)
                     .ToListAsync();
 
-            // 3. Buscar retorno más reciente.
+            // 3. Retorno más reciente.
             var retorno =
                 movimientos.FirstOrDefault(m =>
                     string.Equals(
                         m.TipoMovimiento,
                         "Retorno",
-                        StringComparison.OrdinalIgnoreCase
-                    ));
+                        StringComparison.OrdinalIgnoreCase));
 
             if (retorno == null)
             {
@@ -477,15 +529,14 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 4. Buscar despacho inmediatamente anterior al retorno.
+            // 4. Despacho anterior.
             var despacho =
                 movimientos
                     .Where(m =>
                         string.Equals(
                             m.TipoMovimiento,
                             "Despacho",
-                            StringComparison.OrdinalIgnoreCase
-                        )
+                            StringComparison.OrdinalIgnoreCase)
                         &&
                         (
                             m.FechaMovimiento <
@@ -495,7 +546,8 @@ namespace Afrisan.Api.Controllers
                                 m.FechaMovimiento ==
                                 retorno.FechaMovimiento
                                 &&
-                                m.Id < retorno.Id
+                                m.Id <
+                                retorno.Id
                             )
                         ))
                     .OrderByDescending(m =>
@@ -514,7 +566,7 @@ namespace Afrisan.Api.Controllers
                 });
             }
 
-            // 5. Calcular diferencia.
+            // 5. Diferencia.
             var diferenciaKg =
                 despacho.PesoKg -
                 retorno.PesoKg;
@@ -522,9 +574,10 @@ namespace Afrisan.Api.Controllers
             var balanceValido =
                 diferenciaKg >= 0;
 
-            // 6. Calcular refrigerante disponible
-            // al despacho si existe tara.
-            decimal? refrigeranteDespachoKg = null;
+            // 6. Refrigerante al despacho.
+            decimal?
+                refrigeranteDespachoKg =
+                    null;
 
             if (cilindro.TaraKg.HasValue &&
                 cilindro.TaraKg.Value > 0)

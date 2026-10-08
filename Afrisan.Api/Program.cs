@@ -1,14 +1,20 @@
 using Afrisan.Api.Data;
 using Afrisan.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Permitir que la API escuche desde el computador
-// y desde otros dispositivos de la red local.
+// =====================================================
+// KESTREL
+// =====================================================
+
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
@@ -27,8 +33,7 @@ var connectionString =
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException(
-        "No se encontró la cadena de conexión 'DefaultConnection'. " +
-        "Revisa la configuración de Afrisan.Api."
+        "No se encontró la cadena de conexión 'DefaultConnection'."
     );
 }
 
@@ -37,23 +42,20 @@ builder.Services.AddDbContext<AfrisanDbContext>(options =>
 );
 
 // =====================================================
-// ASP.NET CORE IDENTITY
+// IDENTITY
 // =====================================================
 
 builder.Services
     .AddIdentity<Usuario, IdentityRole>(options =>
     {
-        // Cada usuario deberá tener un correo único.
         options.User.RequireUniqueEmail = true;
 
-        // Reglas de contraseña.
         options.Password.RequiredLength = 8;
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireUppercase = true;
         options.Password.RequireNonAlphanumeric = false;
 
-        // Bloqueo después de intentos fallidos.
         options.Lockout.AllowedForNewUsers = true;
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.DefaultLockoutTimeSpan =
@@ -61,6 +63,54 @@ builder.Services
     })
     .AddEntityFrameworkStores<AfrisanDbContext>()
     .AddDefaultTokenProviders();
+
+// =====================================================
+// JWT
+// =====================================================
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+var jwtKey = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrWhiteSpace(jwtIssuer) ||
+    string.IsNullOrWhiteSpace(jwtAudience) ||
+    string.IsNullOrWhiteSpace(jwtKey))
+{
+    throw new InvalidOperationException(
+        "Falta configurar Jwt:Issuer, Jwt:Audience o Jwt:Key."
+    );
+}
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
+
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtKey)
+                    ),
+
+                ClockSkew = TimeSpan.Zero
+            };
+    });
 
 // =====================================================
 // CORS
@@ -89,7 +139,6 @@ builder.Services.AddCors(options =>
                 return false;
             }
 
-            // Acceso desde localhost
             if (uri.Host.Equals(
                 "localhost",
                 StringComparison.OrdinalIgnoreCase))
@@ -97,19 +146,16 @@ builder.Services.AddCors(options =>
                 return true;
             }
 
-            // Acceso desde IP
             if (!IPAddress.TryParse(uri.Host, out var ip))
             {
                 return false;
             }
 
-            // Loopback
             if (IPAddress.IsLoopback(ip))
             {
                 return true;
             }
 
-            // Solo IPv4
             if (ip.AddressFamily != AddressFamily.InterNetwork)
             {
                 return false;
@@ -117,10 +163,6 @@ builder.Services.AddCors(options =>
 
             byte[] bytes = ip.GetAddressBytes();
 
-            // Redes privadas:
-            // 10.0.0.0/8
-            // 172.16.0.0/12
-            // 192.168.0.0/16
             return
                 bytes[0] == 10 ||
                 (bytes[0] == 172 &&
@@ -141,21 +183,47 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 // =====================================================
-// SWAGGER
+// SWAGGER + JWT
 // =====================================================
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Ingresa el token JWT."
+        });
+
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
 
 // =====================================================
-// CONSTRUIR APLICACIÓN
+// APP
 // =====================================================
 
 var app = builder.Build();
-
-// =====================================================
-// PIPELINE HTTP
-// =====================================================
 
 if (app.Environment.IsDevelopment())
 {
@@ -169,18 +237,16 @@ else
 
 app.UseRouting();
 
-// Permitir comunicación con Afrisan.Web
 app.UseCors("AfrisanWeb");
 
-// Primero autenticación, después autorización.
+// Siempre autenticación antes de autorización.
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Controladores de la API
 app.MapControllers();
 
 // =====================================================
-// CREAR ROLES Y ADMINISTRADOR INICIAL
+// SEED DE ROLES Y ADMINISTRADOR
 // =====================================================
 
 using (var scope = app.Services.CreateScope())
@@ -189,9 +255,5 @@ using (var scope = app.Services.CreateScope())
         scope.ServiceProvider,
         app.Configuration);
 }
-
-// =====================================================
-// INICIAR API
-// =====================================================
 
 app.Run();

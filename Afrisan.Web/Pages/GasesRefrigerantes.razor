@@ -1,12 +1,21 @@
 ﻿@page "/gases-refrigerantes"
+
 @using System.Net.Http.Json
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize(Roles = "Administrador,Jefatura,Bodega")]
+
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Gases refrigerantes | AFRISAN</PageTitle>
 
 <div class="container-fluid py-4">
 
-    <!-- ENCABEZADO PRINCIPAL -->
+    <!-- =====================================================
+         ENCABEZADO PRINCIPAL
+         ===================================================== -->
 
     <div class="p-4 mb-4 rounded-4 text-white"
          style="background: linear-gradient(120deg, #102c46, #176b91);">
@@ -16,19 +25,27 @@
         </h1>
 
         <p class="mb-0">
-            Consulta, registra y administra los tipos de
-            gases refrigerantes utilizados en AFRISAN.
+            Consulta los tipos de gases refrigerantes utilizados en AFRISAN.
+            @if (esAdministrador)
+            {
+                <span>
+                    Puedes registrar, editar y administrar el catálogo.
+                </span>
+            }
         </p>
 
     </div>
 
-    <!-- RESUMEN -->
+    <!-- =====================================================
+         RESUMEN
+         ===================================================== -->
 
     <div class="row g-3 mb-4">
 
         <div class="col-12 col-md-4">
 
             <div class="card border-0 shadow-sm rounded-4 h-100">
+
                 <div class="card-body p-4">
 
                     <h6 class="text-muted">
@@ -44,6 +61,7 @@
                     </small>
 
                 </div>
+
             </div>
 
         </div>
@@ -51,6 +69,7 @@
         <div class="col-12 col-md-4">
 
             <div class="card border-0 shadow-sm rounded-4 h-100">
+
                 <div class="card-body p-4">
 
                     <h6 class="text-muted">
@@ -66,6 +85,7 @@
                     </small>
 
                 </div>
+
             </div>
 
         </div>
@@ -73,6 +93,7 @@
         <div class="col-12 col-md-4">
 
             <div class="card border-0 shadow-sm rounded-4 h-100">
+
                 <div class="card-body p-4">
 
                     <h6 class="text-muted">
@@ -88,38 +109,54 @@
                     </small>
 
                 </div>
+
             </div>
 
         </div>
 
     </div>
 
-    <!-- MENSAJES -->
+    <!-- =====================================================
+         MENSAJES
+         ===================================================== -->
+
     @if (mensajeExito is not null)
     {
-        <div class="alert alert-success mb-4" role="status">
+        <div class="alert alert-success mb-4"
+             role="status">
+
             @mensajeExito
+
         </div>
     }
 
     @if (errorOperacion is not null)
     {
-        <div class="alert alert-danger mb-4" role="alert">
+        <div class="alert alert-danger mb-4"
+             role="alert">
+
             @errorOperacion
+
         </div>
     }
 
-    <!-- FORMULARIO DE REGISTRO Y EDICIÓN -->
-    @if (mostrarFormulario)
+    <!-- =====================================================
+         FORMULARIO
+         SOLO ADMINISTRADOR
+         ===================================================== -->
+
+    @if (esAdministrador && mostrarFormulario)
     {
         <div class="card border-0 shadow-sm rounded-4 mb-4">
 
             <div class="card-header bg-white p-4">
 
                 <h4 class="fw-bold mb-1">
+
                     @(idEditando.HasValue
                         ? "Editar gas refrigerante"
                         : "Registrar nuevo gas refrigerante")
+
                 </h4>
 
                 <p class="text-muted mb-0">
@@ -136,8 +173,11 @@
 
                 @if (errorFormulario is not null)
                 {
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger"
+                         role="alert">
+
                         @errorFormulario
+
                     </div>
                 }
 
@@ -187,6 +227,7 @@
 
                         <textarea class="form-control"
                                   rows="3"
+                                  maxlength="500"
                                   placeholder="Escribe una descripción del refrigerante"
                                   @bind="formulario.Descripcion"
                                   disabled="@guardando">
@@ -196,29 +237,33 @@
 
                     <!-- ESTADO -->
 
-              
-<div class="form-check form-switch mt-2">
+                    <div class="col-12">
 
-    <input class="form-check-input"
-           type="checkbox"
-           role="switch"
-           id="estadoGas"
-           @bind="formulario.Activo"
-           disabled="@guardando" />
+                        <div class="form-check form-switch mt-2">
 
-    <label class="form-check-label fw-bold"
-           for="estadoGas">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   role="switch"
+                                   id="estadoGas"
+                                   @bind="formulario.Activo"
+                                   disabled="@guardando" />
 
-        @(formulario.Activo ? "Activo" : "Inactivo")
+                            <label class="form-check-label fw-bold"
+                                   for="estadoGas">
 
-    </label>
+                                @(formulario.Activo
+                                    ? "Activo"
+                                    : "Inactivo")
 
-</div>
+                            </label>
+
+                        </div>
+
                     </div>
 
-            
+                </div>
 
-                <!-- BOTONES DEL FORMULARIO -->
+                <!-- BOTONES -->
 
                 <div class="d-flex justify-content-end gap-2 mt-4">
 
@@ -245,9 +290,11 @@
                         else
                         {
                             <span>
+
                                 @(idEditando.HasValue
                                     ? "Guardar cambios"
                                     : "Registrar gas")
+
                             </span>
                         }
 
@@ -260,13 +307,18 @@
         </div>
     }
 
-    <!-- INVENTARIO DE GASES -->
+    <!-- =====================================================
+         INVENTARIO DE GASES
+         ===================================================== -->
 
     <div class="card border-0 shadow-sm rounded-4">
 
         <div class="card-header bg-white border-0 p-4">
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex justify-content-between
+                        align-items-center
+                        flex-wrap
+                        gap-3">
 
                 <div>
 
@@ -275,22 +327,36 @@
                     </h4>
 
                     <p class="text-muted mb-0">
-                        Listado de refrigerantes registrados en el sistema.
+
+                        @if (esAdministrador)
+                        {
+                            <span>
+                                Consulta y administra los refrigerantes registrados.
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Consulta de refrigerantes registrados en el sistema.
+                            </span>
+                        }
+
                     </p>
 
                 </div>
 
-                <!-- BOTONES -->
-
                 <div class="d-flex gap-2 flex-wrap">
 
-                    <button class="btn btn-success"
-                            disabled="@(mostrarFormulario || Ocupado)"
-                            @onclick="AbrirFormularioNuevo">
+                    @if (esAdministrador)
+                    {
+                        <button class="btn btn-success"
+                                disabled="@(mostrarFormulario || Ocupado)"
+                                @onclick="AbrirFormularioNuevo">
 
-                        + Registrar gas
+                            + Registrar gas
 
-                    </button>
+                        </button>
+                    }
 
                     <button class="btn btn-primary"
                             disabled="@Ocupado"
@@ -308,7 +374,8 @@
 
         <div class="card-body p-4">
 
-            <!-- ESTADO DE CARGA -->
+            <!-- CARGANDO -->
+
             @if (cargando)
             {
                 <div class="text-center py-5">
@@ -324,10 +391,12 @@
                 </div>
             }
 
-            <!-- ERROR DE CONEXIÓN -->
+            <!-- ERROR -->
+
             @if (!cargando && error is not null)
             {
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger"
+                     role="alert">
 
                     <strong>
                         No se pudieron cargar los gases refrigerantes.
@@ -340,8 +409,11 @@
                 </div>
             }
 
-            <!-- INVENTARIO VACÍO -->
-            @if (!cargando && error is null && gases.Count == 0)
+            <!-- VACÍO -->
+
+            @if (!cargando &&
+                 error is null &&
+                 gases.Count == 0)
             {
                 <div class="alert alert-info">
 
@@ -351,8 +423,11 @@
                 </div>
             }
 
-            <!-- TABLA DE GASES -->
-            @if (!cargando && error is null && gases.Count > 0)
+            <!-- TABLA -->
+
+            @if (!cargando &&
+                 error is null &&
+                 gases.Count > 0)
             {
                 <div class="table-responsive">
 
@@ -361,12 +436,14 @@
                         <thead class="table-light">
 
                             <tr>
+
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Código</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
+
                             </tr>
 
                         </thead>
@@ -382,9 +459,11 @@
                                     </td>
 
                                     <td>
+
                                         <strong>
                                             @gas.Nombre
                                         </strong>
+
                                     </td>
 
                                     <td>
@@ -392,7 +471,19 @@
                                     </td>
 
                                     <td>
-                                        @gas.Descripcion
+
+                                        @if (string.IsNullOrWhiteSpace(
+                                            gas.Descripcion))
+                                        {
+                                            <span class="text-muted">
+                                                Sin descripción
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @gas.Descripcion
+                                        }
+
                                     </td>
 
                                     <td>
@@ -412,63 +503,82 @@
 
                                     </td>
 
-                                    <!-- ACCIONES -->
-
                                     <td>
 
-                                        <div class="d-flex gap-2">
+                                        @if (esAdministrador)
+                                        {
+                                            <div class="d-flex gap-2 flex-wrap">
 
-                                            <button class="btn btn-sm btn-outline-primary"
-                                                    disabled="@(mostrarFormulario || Ocupado)"
-                                                    @onclick="() => AbrirEdicion(gas)">
+                                                <button class="btn btn-sm
+                                                               btn-outline-primary"
+                                                        disabled="@(mostrarFormulario || Ocupado)"
+                                                        @onclick="() => AbrirEdicion(gas)">
 
-                                                Editar
+                                                    Editar
 
-                                            </button>
+                                                </button>
 
-                                            <button class="btn btn-sm btn-outline-danger"
-                                                    disabled="@(mostrarFormulario || Ocupado)"
-                                                    @onclick="() => SolicitarEliminacion(gas.Id)">
+                                                <button class="btn btn-sm
+                                                               btn-outline-danger"
+                                                        disabled="@(mostrarFormulario || Ocupado)"
+                                                        @onclick="() => SolicitarEliminacion(gas.Id)">
 
-                                                Eliminar
+                                                    Eliminar
 
-                                            </button>
+                                                </button>
 
-                                        </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Solo lectura
+                                            </span>
+                                        }
 
                                     </td>
 
                                 </tr>
 
-                                <!-- CONFIRMACIÓN DE ELIMINACIÓN -->
-                                @if (idPorEliminar == gas.Id)
+                                <!-- CONFIRMACIÓN ELIMINACIÓN -->
+
+                                @if (esAdministrador &&
+                                     idPorEliminar == gas.Id)
                                 {
                                     <tr>
 
                                         <td colspan="6">
 
-                                            <div class="alert alert-warning mb-0">
+                                            <div class="alert
+                                                        alert-warning
+                                                        mb-0">
 
                                                 <strong>
+
                                                     ¿Eliminar el refrigerante
                                                     @gas.Nombre?
+
                                                 </strong>
 
                                                 <p class="mb-3 mt-2">
 
-                                                    Esta operación eliminará el
-                                                    registro del gas refrigerante.
+                                                    Esta operación eliminará
+                                                    el registro del gas
+                                                    refrigerante.
 
-                                                    Si existen cilindros asociados,
-                                                    la API puede impedir su eliminación
-                                                    para proteger la información
-                                                    del inventario.
+                                                    Si existen cilindros
+                                                    asociados, la API
+                                                    impedirá la eliminación
+                                                    para proteger la
+                                                    trazabilidad.
 
                                                 </p>
 
                                                 <div class="d-flex gap-2">
 
-                                                    <button class="btn btn-danger btn-sm"
+                                                    <button class="btn
+                                                                   btn-danger
+                                                                   btn-sm"
                                                             disabled="@Ocupado"
                                                             @onclick="() => EliminarGas(gas.Id)">
 
@@ -476,7 +586,9 @@
 
                                                     </button>
 
-                                                    <button class="btn btn-secondary btn-sm"
+                                                    <button class="btn
+                                                                   btn-secondary
+                                                                   btn-sm"
                                                             disabled="@Ocupado"
                                                             @onclick="CancelarEliminacion">
 
@@ -505,12 +617,16 @@
 
     </div>
 
-    <!-- PIE DE PÁGINA -->
+    <!-- =====================================================
+         PIE DE PÁGINA
+         ===================================================== -->
 
     <div class="text-center mt-5 pt-3 border-top">
 
         <small class="text-muted">
+
             AFRISAN | Sistema de gestión de refrigerantes
+
         </small>
 
     </div>
@@ -520,23 +636,32 @@
 @code {
 
     // =====================================================
+    // AUTORIZACIÓN
+    // =====================================================
+
+    private bool esAdministrador;
+
+
+    // =====================================================
     // DATOS
     // =====================================================
 
-    private List<GasRefrigeranteVista> gases = new();
+    private List<GasRefrigeranteVista> gases =
+        new();
 
-    private FormularioGas formulario = new();
+    private FormularioGas formulario =
+        new();
 
 
     // =====================================================
-    // ESTADOS DE LA PÁGINA
+    // ESTADOS
     // =====================================================
 
     private bool cargando = true;
 
-    private bool guardando = false;
+    private bool guardando;
 
-    private bool mostrarFormulario = false;
+    private bool mostrarFormulario;
 
     private int? idEditando;
 
@@ -552,8 +677,11 @@
 
     private string? mensajeExito;
 
+
     private bool Ocupado =>
-        cargando || guardando || idEliminando.HasValue;
+        cargando ||
+        guardando ||
+        idEliminando.HasValue;
 
 
     // =====================================================
@@ -561,35 +689,53 @@
     // =====================================================
 
     private string TotalGases =>
-        cargando ? "..." :
-        error is not null ? "--" :
-        gases.Count.ToString();
+        cargando
+            ? "..."
+            : error is not null
+                ? "--"
+                : gases.Count.ToString();
 
 
     private string GasesActivos =>
-        cargando ? "..." :
-        error is not null ? "--" :
-        gases.Count(g => g.Activo).ToString();
+        cargando
+            ? "..."
+            : error is not null
+                ? "--"
+                : gases.Count(
+                    g => g.Activo
+                ).ToString();
 
 
     private string GasesInactivos =>
-        cargando ? "..." :
-        error is not null ? "--" :
-        gases.Count(g => !g.Activo).ToString();
+        cargando
+            ? "..."
+            : error is not null
+                ? "--"
+                : gases.Count(
+                    g => !g.Activo
+                ).ToString();
 
 
     // =====================================================
-    // CARGAR INVENTARIO AL ABRIR LA PÁGINA
+    // INICIALIZACIÓN
     // =====================================================
 
     protected override async Task OnInitializedAsync()
     {
+        var estado =
+            await AuthStateProvider
+                .GetAuthenticationStateAsync();
+
+        esAdministrador =
+            estado.User.IsInRole(
+                "Administrador");
+
         await CargarGases();
     }
 
 
     // =====================================================
-    // CONSULTAR GASES DESDE LA API
+    // CARGAR GASES
     // =====================================================
 
     private async Task CargarGases()
@@ -601,7 +747,8 @@
         try
         {
             gases =
-                await Http.GetFromJsonAsync<List<GasRefrigeranteVista>>(
+                await Http.GetFromJsonAsync<
+                    List<GasRefrigeranteVista>>(
                     "api/GasRefrigerantes"
                 ) ?? new();
         }
@@ -623,11 +770,17 @@
 
 
     // =====================================================
-    // ABRIR FORMULARIO DE REGISTRO
+    // NUEVO GAS
+    // SOLO ADMINISTRADOR
     // =====================================================
 
     private void AbrirFormularioNuevo()
     {
+        if (!esAdministrador)
+        {
+            return;
+        }
+
         idEditando = null;
 
         idPorEliminar = null;
@@ -638,38 +791,56 @@
 
         mensajeExito = null;
 
-        formulario = new FormularioGas();
+        formulario =
+            new FormularioGas();
 
         mostrarFormulario = true;
     }
 
 
     // =====================================================
-    // ABRIR FORMULARIO DE EDICIÓN
+    // EDITAR GAS
+    // SOLO ADMINISTRADOR
     // =====================================================
 
-    private void AbrirEdicion(GasRefrigeranteVista gas)
+    private void AbrirEdicion(
+        GasRefrigeranteVista gas)
     {
-        idEditando = gas.Id;
-
-        idPorEliminar = null;
-
-        errorFormulario = null;
-
-        errorOperacion = null;
-
-        mensajeExito = null;
-
-        formulario = new FormularioGas
+        if (!esAdministrador)
         {
-            Nombre = gas.Nombre,
+            return;
+        }
 
-            Codigo = gas.Codigo,
+        idEditando =
+            gas.Id;
 
-            Descripcion = gas.Descripcion,
+        idPorEliminar =
+            null;
 
-            Activo = gas.Activo
-        };
+        errorFormulario =
+            null;
+
+        errorOperacion =
+            null;
+
+        mensajeExito =
+            null;
+
+        formulario =
+            new FormularioGas
+            {
+                Nombre =
+                    gas.Nombre,
+
+                Codigo =
+                    gas.Codigo,
+
+                Descripcion =
+                    gas.Descripcion,
+
+                Activo =
+                    gas.Activo
+            };
 
         mostrarFormulario = true;
     }
@@ -681,23 +852,40 @@
 
     private void CancelarFormulario()
     {
-        mostrarFormulario = false;
+        if (guardando)
+        {
+            return;
+        }
 
-        idEditando = null;
+        mostrarFormulario =
+            false;
 
-        errorFormulario = null;
+        idEditando =
+            null;
 
-        formulario = new FormularioGas();
+        errorFormulario =
+            null;
+
+        formulario =
+            new FormularioGas();
     }
 
 
     // =====================================================
-    // GUARDAR GAS: POST O PUT
+    // GUARDAR GAS
+    // POST / PUT
+    // SOLO ADMINISTRADOR
     // =====================================================
 
     private async Task GuardarGas()
     {
-        if (guardando)
+        if (!esAdministrador)
+        {
+            return;
+        }
+
+        if (guardando ||
+            !mostrarFormulario)
         {
             return;
         }
@@ -708,16 +896,25 @@
 
         mensajeExito = null;
 
-        formulario.Nombre = formulario.Nombre.Trim();
 
-        formulario.Codigo = formulario.Codigo.Trim().ToUpperInvariant();
+        formulario.Nombre =
+            formulario.Nombre.Trim();
 
-        formulario.Descripcion = formulario.Descripcion.Trim();
+        formulario.Codigo =
+            formulario.Codigo
+                .Trim()
+                .ToUpperInvariant();
+
+        formulario.Descripcion =
+            formulario.Descripcion.Trim();
 
 
+        // -------------------------------------------------
         // VALIDAR NOMBRE
+        // -------------------------------------------------
 
-        if (string.IsNullOrWhiteSpace(formulario.Nombre))
+        if (string.IsNullOrWhiteSpace(
+            formulario.Nombre))
         {
             errorFormulario =
                 "Debes ingresar el nombre del refrigerante.";
@@ -726,9 +923,12 @@
         }
 
 
+        // -------------------------------------------------
         // VALIDAR CÓDIGO
+        // -------------------------------------------------
 
-        if (string.IsNullOrWhiteSpace(formulario.Codigo))
+        if (string.IsNullOrWhiteSpace(
+            formulario.Codigo))
         {
             errorFormulario =
                 "Debes ingresar el código del refrigerante.";
@@ -737,14 +937,21 @@
         }
 
 
-        // COMPROBAR SI EL CÓDIGO YA EXISTE
+        // -------------------------------------------------
+        // VALIDAR DUPLICADO EN UI
+        // -------------------------------------------------
 
-        if (gases.Any(g =>
-            g.Id != idEditando &&
-            string.Equals(
-                g.Codigo,
-                formulario.Codigo,
-                StringComparison.OrdinalIgnoreCase)))
+        var codigoDuplicado =
+            gases.Any(g =>
+                g.Id != idEditando &&
+                string.Equals(
+                    g.Codigo,
+                    formulario.Codigo,
+                    StringComparison.OrdinalIgnoreCase
+                )
+            );
+
+        if (codigoDuplicado)
         {
             errorFormulario =
                 "Ya existe otro refrigerante con ese código.";
@@ -753,41 +960,46 @@
         }
 
 
-        // ENVIAR DATOS A LA API
-
         guardando = true;
 
         try
         {
-            var datos = new
-            {
-                nombre = formulario.Nombre,
+            var datos =
+                new
+                {
+                    nombre =
+                        formulario.Nombre,
 
-                codigo = formulario.Codigo,
+                    codigo =
+                        formulario.Codigo,
 
-                descripcion = formulario.Descripcion,
+                    descripcion =
+                        formulario.Descripcion,
 
-                activo = formulario.Activo
-            };
-
-
-            // CREAR O ACTUALIZAR
-
-            using var respuesta = idEditando.HasValue
-                ? await Http.PutAsJsonAsync(
-                    $"api/GasRefrigerantes/{idEditando.Value}",
-                    datos)
-                : await Http.PostAsJsonAsync(
-                    "api/GasRefrigerantes",
-                    datos);
+                    activo =
+                        formulario.Activo
+                };
 
 
-            // COMPROBAR RESPUESTA
+            using var respuesta =
+                idEditando.HasValue
+
+                    ? await Http.PutAsJsonAsync(
+                        $"api/GasRefrigerantes/{idEditando.Value}",
+                        datos
+                    )
+
+                    : await Http.PostAsJsonAsync(
+                        "api/GasRefrigerantes",
+                        datos
+                    );
+
 
             if (!respuesta.IsSuccessStatusCode)
             {
                 var detalle =
-                    await respuesta.Content.ReadAsStringAsync();
+                    await respuesta.Content
+                        .ReadAsStringAsync();
 
                 Console.WriteLine(detalle);
 
@@ -799,23 +1011,25 @@
             }
 
 
-            var eraEdicion = idEditando.HasValue;
+            var eraEdicion =
+                idEditando.HasValue;
 
 
-            // CERRAR FORMULARIO
+            mostrarFormulario =
+                false;
 
-            mostrarFormulario = false;
+            idEditando =
+                null;
 
-            idEditando = null;
+            formulario =
+                new FormularioGas();
 
-            formulario = new FormularioGas();
 
+            mensajeExito =
+                eraEdicion
+                    ? "El gas refrigerante se actualizó correctamente."
+                    : "El gas refrigerante se registró correctamente.";
 
-            // ACTUALIZAR INVENTARIO
-
-            mensajeExito = eraEdicion
-                ? "El gas refrigerante se actualizó correctamente."
-                : "El gas refrigerante se registró correctamente.";
 
             await CargarGases();
         }
@@ -836,15 +1050,25 @@
 
     // =====================================================
     // SOLICITAR ELIMINACIÓN
+    // SOLO ADMINISTRADOR
     // =====================================================
 
-    private void SolicitarEliminacion(int id)
+    private void SolicitarEliminacion(
+        int id)
     {
-        idPorEliminar = id;
+        if (!esAdministrador)
+        {
+            return;
+        }
 
-        errorOperacion = null;
+        idPorEliminar =
+            id;
 
-        mensajeExito = null;
+        errorOperacion =
+            null;
+
+        mensajeExito =
+            null;
     }
 
 
@@ -854,26 +1078,43 @@
 
     private void CancelarEliminacion()
     {
-        idPorEliminar = null;
-    }
-
-
-    // =====================================================
-    // ELIMINAR GAS REFRIGERANTE
-    // =====================================================
-
-    private async Task EliminarGas(int id)
-    {
-        if (Ocupado || idPorEliminar != id)
+        if (idEliminando.HasValue)
         {
             return;
         }
 
-        idEliminando = id;
+        idPorEliminar =
+            null;
+    }
 
-        errorOperacion = null;
 
-        mensajeExito = null;
+    // =====================================================
+    // ELIMINAR GAS
+    // SOLO ADMINISTRADOR
+    // =====================================================
+
+    private async Task EliminarGas(
+        int id)
+    {
+        if (!esAdministrador)
+        {
+            return;
+        }
+
+        if (Ocupado ||
+            idPorEliminar != id)
+        {
+            return;
+        }
+
+        idEliminando =
+            id;
+
+        errorOperacion =
+            null;
+
+        mensajeExito =
+            null;
 
         try
         {
@@ -883,12 +1124,11 @@
                 );
 
 
-            // COMPROBAR RESPUESTA
-
             if (!respuesta.IsSuccessStatusCode)
             {
                 var detalle =
-                    await respuesta.Content.ReadAsStringAsync();
+                    await respuesta.Content
+                        .ReadAsStringAsync();
 
                 Console.WriteLine(detalle);
 
@@ -901,13 +1141,12 @@
             }
 
 
-            idPorEliminar = null;
+            idPorEliminar =
+                null;
 
             mensajeExito =
                 "El gas refrigerante se eliminó correctamente.";
 
-
-            // ACTUALIZAR INVENTARIO
 
             await CargarGases();
         }
@@ -920,42 +1159,49 @@
         }
         finally
         {
-            idEliminando = null;
+            idEliminando =
+                null;
         }
     }
 
 
     // =====================================================
-    // MODELO PARA MOSTRAR LOS GASES
+    // MODELO GAS
     // =====================================================
 
     private sealed class GasRefrigeranteVista
     {
         public int Id { get; set; }
 
-        public string Nombre { get; set; } = string.Empty;
+        public string Nombre { get; set; } =
+            string.Empty;
 
-        public string Codigo { get; set; } = string.Empty;
+        public string Codigo { get; set; } =
+            string.Empty;
 
-        public string Descripcion { get; set; } = string.Empty;
+        public string Descripcion { get; set; } =
+            string.Empty;
 
         public bool Activo { get; set; }
     }
 
 
     // =====================================================
-    // MODELO DEL FORMULARIO
+    // FORMULARIO
     // =====================================================
 
     private sealed class FormularioGas
     {
-        public string Nombre { get; set; } = string.Empty;
+        public string Nombre { get; set; } =
+            string.Empty;
 
-        public string Codigo { get; set; } = string.Empty;
+        public string Codigo { get; set; } =
+            string.Empty;
 
-        public string Descripcion { get; set; } = string.Empty;
+        public string Descripcion { get; set; } =
+            string.Empty;
 
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; } =
+            true;
     }
-
 }

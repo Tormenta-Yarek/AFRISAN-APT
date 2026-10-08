@@ -1,5 +1,4 @@
-﻿
-<div class="top-row ps-3 navbar navbar-dark">
+﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
 
         <a class="navbar-brand fw-bold" href="">
@@ -22,7 +21,11 @@
 
     <nav class="flex-column">
 
-        <!-- PANEL PRINCIPAL -->
+        <!-- =====================================================
+             PANEL PRINCIPAL
+             TODOS LOS USUARIOS
+             ===================================================== -->
+
         <div class="nav-item px-3">
 
             <NavLink class="nav-link"
@@ -36,44 +39,128 @@
 
         </div>
 
-        <!-- GESTIÓN DE CILINDROS -->
-        <div class="nav-item px-3">
+        <!-- =====================================================
+             ADMINISTRADOR Y BODEGA
+             ===================================================== -->
 
-            <NavLink class="nav-link"
-                     href="cilindros">
+        <AuthorizeView Roles="Administrador,Bodega">
 
-                <span aria-hidden="true">📦</span>
-                Gestión de cilindros
+            <Authorized>
 
-            </NavLink>
+                <!-- GESTIÓN DE CILINDROS -->
+                <div class="nav-item px-3">
 
-        </div>
+                    <NavLink class="nav-link"
+                             href="cilindros">
 
-        <!-- GASES REFRIGERANTES -->
-        <div class="nav-item px-3">
+                        <span aria-hidden="true">📦</span>
+                        Gestión de cilindros
 
-            <NavLink class="nav-link"
-                     href="gases-refrigerantes">
+                    </NavLink>
 
-                <span aria-hidden="true">❄️</span>
-                Gases refrigerantes
+                </div>
 
-            </NavLink>
+                <!-- GASES REFRIGERANTES -->
+                <div class="nav-item px-3">
 
-        </div>
+                    <NavLink class="nav-link"
+                             href="gases-refrigerantes">
 
-        <!-- IDENTIFICACIÓN QR -->
-        <div class="nav-item px-3">
+                        <span aria-hidden="true">❄️</span>
+                        Gases refrigerantes
 
-            <NavLink class="nav-link"
-                     href="identificacion-qr">
+                    </NavLink>
 
-                <span aria-hidden="true">📱</span>
-                Identificación QR
+                </div>
 
-            </NavLink>
+            </Authorized>
 
-        </div>
+        </AuthorizeView>
+
+        <!-- =====================================================
+             IDENTIFICACIÓN QR
+             TODOS LOS ROLES
+             ===================================================== -->
+
+        <AuthorizeView Roles="Administrador,Jefatura,Bodega,Tecnico">
+
+            <Authorized>
+
+                <div class="nav-item px-3">
+
+                    <NavLink class="nav-link"
+                             href="identificacion-qr">
+
+                        <span aria-hidden="true">📱</span>
+                        Identificación QR
+
+                    </NavLink>
+
+                </div>
+
+            </Authorized>
+
+        </AuthorizeView>
+
+        <!-- =====================================================
+             ADMINISTRADOR
+             ===================================================== -->
+
+        <AuthorizeView Roles="Administrador">
+
+            <Authorized>
+
+                <div class="nav-item px-3">
+
+                    <span class="nav-link text-light opacity-75">
+                        👥 Administración
+                    </span>
+
+                </div>
+
+            </Authorized>
+
+        </AuthorizeView>
+
+        <!-- =====================================================
+             JEFATURA
+             ===================================================== -->
+
+        <AuthorizeView Roles="Jefatura">
+
+            <Authorized>
+
+                <div class="nav-item px-3">
+
+                    <span class="nav-link text-light opacity-75">
+                        📊 Supervisión
+                    </span>
+
+                </div>
+
+            </Authorized>
+
+        </AuthorizeView>
+
+        <!-- =====================================================
+             TÉCNICO
+             ===================================================== -->
+
+        <AuthorizeView Roles="Tecnico">
+
+            <Authorized>
+
+                <div class="nav-item px-3">
+
+                    <span class="nav-link text-light opacity-75">
+                        🛠️ Funciones de terreno
+                    </span>
+
+                </div>
+
+            </Authorized>
+
+        </AuthorizeView>
 
     </nav>
 

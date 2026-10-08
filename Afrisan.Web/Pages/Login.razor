@@ -1,0 +1,179 @@
+﻿@page "/login"
+
+@using System.ComponentModel.DataAnnotations
+@using Afrisan.Web.Services
+
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Iniciar sesión - AFRISAN</PageTitle>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-header">
+            <h1>❄ AFRISAN</h1>
+            <p>Gestión y Trazabilidad de Refrigerantes</p>
+        </div>
+
+        <EditForm Model="@modelo"
+                  OnValidSubmit="@IniciarSesion">
+
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label>Correo electrónico</label>
+
+                <InputText class="form-control"
+                           @bind-Value="modelo.Email"
+                           placeholder="correo@empresa.cl" />
+
+                <ValidationMessage For="@(() => modelo.Email)" />
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+
+                <InputText class="form-control"
+                           type="password"
+                           @bind-Value="modelo.Password"
+                           placeholder="Contraseña" />
+
+                <ValidationMessage For="@(() => modelo.Password)" />
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(mensajeError))
+            {
+                <div class="alert alert-danger">
+                    @mensajeError
+                </div>
+            }
+
+            <button type="submit"
+                    class="btn btn-primary login-button"
+                    disabled="@cargando">
+
+                @if (cargando)
+                {
+                    <span>Ingresando...</span>
+                }
+                else
+                {
+                    <span>Iniciar sesión</span>
+                }
+
+            </button>
+
+        </EditForm>
+
+    </div>
+
+</div>
+
+<style>
+    .login-container {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        padding: 32px;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 4px 18px rgba(0,0,0,.08);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+        .login-header h1 {
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: #6c757d;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+    }
+</style>
+
+@code {
+
+    private LoginFormulario modelo = new();
+
+    private bool cargando;
+
+    private string mensajeError = string.Empty;
+
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    private async Task IniciarSesion()
+    {
+        cargando = true;
+        mensajeError = string.Empty;
+
+        var resultado =
+            await AuthService.LoginAsync(
+                modelo.Email,
+                modelo.Password);
+
+        cargando = false;
+
+        if (!resultado.Exitoso)
+        {
+            mensajeError = resultado.Mensaje;
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(ReturnUrl) &&
+            ReturnUrl.StartsWith("/"))
+        {
+            Navigation.NavigateTo(ReturnUrl);
+        }
+        else
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private class LoginFormulario
+    {
+        [Required(
+            ErrorMessage =
+                "Debes ingresar el correo.")]
+        [EmailAddress(
+            ErrorMessage =
+                "El correo no es válido.")]
+        public string Email { get; set; }
+            = string.Empty;
+
+        [Required(
+            ErrorMessage =
+                "Debes ingresar la contraseña.")]
+        public string Password { get; set; }
+            = string.Empty;
+    }
+}

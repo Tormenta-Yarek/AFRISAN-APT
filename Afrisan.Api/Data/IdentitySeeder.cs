@@ -18,6 +18,7 @@ namespace Afrisan.Api.Data
             string[] roles =
             {
                 "Administrador",
+                "Jefatura",
                 "Bodega",
                 "Tecnico"
             };
