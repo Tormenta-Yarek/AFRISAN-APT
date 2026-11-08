@@ -1,0 +1,5 @@
+@inject NavigationManager Nav
+<p>Abriendo el acceso…</p>
+@code {
+    protected override void OnInitialized() => Nav.NavigateTo("acceso", replace: true);
+}

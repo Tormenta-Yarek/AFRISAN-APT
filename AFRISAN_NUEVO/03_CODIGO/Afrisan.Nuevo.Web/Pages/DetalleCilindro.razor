@@ -1,0 +1,87 @@
+@page "/cilindros/{Codigo}"
+@attribute [Authorize]
+@inject InventarioClient Api
+@inject SesionService Sesion
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<PageTitle>Detalle de cilindro · AFRISAN</PageTitle>
+<a class="back-link" href="@(Sesion.Sesion?.Rol == "Tecnico" ? "identificar" : "inventario")">← Volver a la consulta</a>
+@if (cargando) { <h1>Detalle de cilindro</h1><p class="loading" role="status">Cargando registro…</p> }
+else if (cilindro is null) { <h1>No se pudo abrir el cilindro</h1><div class="notice error" role="alert">@error</div><button class="btn secondary" @onclick="Cargar">Reintentar</button> }
+else
+{
+    <div class="page-heading"><div><span class="eyebrow">FICHA DEL CILINDRO</span><h1>@cilindro.Codigo</h1><p>@cilindro.RefrigeranteCodigo · @cilindro.RefrigeranteNombre</p></div><span class="badge large @Formato.Estilo(cilindro.Estado)">@Formato.Estado(cilindro.Estado)</span></div>
+    @if (error is not null) { <div class="notice error" role="alert">@error</div> }
+    @if (mensaje is not null) { <div class="notice success" role="status">@mensaje</div> }
+    <div class="detail-grid">
+        <section class="panel"><h2>Datos del envase</h2><dl class="detail-list">
+            <dt>Código único</dt><dd>@cilindro.Codigo</dd><dt>Número de serie</dt><dd>@(cilindro.NumeroSerie ?? "Sin registrar")</dd>
+            <dt>Ubicación registrada</dt><dd>@cilindro.Ubicacion @(cilindro.Sucursal ?? cilindro.Tecnico)</dd><dt>Tipo de refrigerante</dt><dd>@cilindro.RefrigeranteCodigo</dd><dt>Capacidad máxima</dt><dd>@Formato.Gramos(cilindro.CapacidadGr)</dd>
+            <dt>Tara</dt><dd>@Formato.Gramos(cilindro.TaraGr)</dd><dt>Fecha de alta</dt><dd>@cilindro.FechaRegistro.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+        </dl></section>
+        <section class="panel calculation"><h2>Último pesaje registrado</h2>
+            <span class="muted">Peso bruto (envase + refrigerante)</span><strong class="weight-value">@Formato.Gramos(cilindro.PesajeRegistrado?.PesoBrutoGr)</strong>
+            <div class="calculation-result"><span>Contenido según pesaje</span><strong>@(cilindro.ContenidoSegunPesajeGr.HasValue ? Formato.Gramos(cilindro.ContenidoSegunPesajeGr) : "—")</strong><small>@Formato.Kg(cilindro.ContenidoSegunPesajeGr)</small></div>
+            @if (cilindro.PesajeRegistrado is { } lectura) { <p class="field-help">@lectura.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @lectura.Usuario</p>@if (!string.IsNullOrWhiteSpace(lectura.Observacion)) { <p>@lectura.Observacion</p> } }
+            else { <p class="field-help">No se supone lleno ni vacío: falta medirlo.</p> }
+        </section>
+        <section class="panel qr-panel"><h2>Identificación QR</h2>
+            @if (qr is not null) { <img src="@qr" alt="@($"Código QR del cilindro {cilindro.Codigo}")" width="170" height="170" /><strong>@cilindro.Codigo</strong><button class="btn secondary" @onclick="DescargarQr">Descargar QR</button> }
+            else { <p class="muted">No se pudo generar el QR. Actualiza la ficha para reintentar.</p> }
+        </section>
+    </div>
+    @if (cilindro.PesajeRegistrado is null && cilindro.Ubicacion == "Bodega" && Sesion.PuedeRegistrar)
+    {
+        <section class="panel mt"><h2>Registrar primer pesaje</h2><p class="muted">Lectura de ingreso. No genera una salida, retorno ni consumo.</p>
+            <EditForm Model="form" OnValidSubmit="GuardarPesaje"><DataAnnotationsValidator /><ValidationSummary />
+                <fieldset disabled="@guardando"><div class="form-grid"><div><label for="peso-inicial">Peso bruto (g)</label><InputNumber id="peso-inicial" @bind-Value="form.PesoBrutoGr" step="1" min="0" /></div><div><label for="observacion-inicial">Observación (opcional)</label><InputText id="observacion-inicial" @bind-Value="form.Observacion" maxlength="1000" /></div></div>
+                    <button class="btn primary" type="submit">@(guardando ? "Guardando…" : "Registrar pesaje inicial")</button></fieldset>
+            </EditForm>
+        </section>
+    }
+    <section class="panel mt"><h2>Historial del registro</h2>
+        <ol class="timeline">@foreach (var evento in historial) { <li><span>@evento.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm") · @evento.Usuario</span><strong>@evento.Accion</strong><p>@evento.Descripcion</p></li> }</ol>
+    </section>
+    <p class="fine-print">La información corresponde a la instancia de revisión. La ubicación y el último pesaje se actualizan al registrar entregas, instalaciones, retiros y recepciones.</p>
+}
+
+@code {
+    [Parameter] public string Codigo { get; set; } = "";
+    private CilindroResponse? cilindro;
+    private EventoResponse[] historial = [];
+    private readonly PesajeForm form = new();
+    private string? qr, error, mensaje;
+    private bool cargando = true, guardando;
+    protected override Task OnParametersSetAsync() => Cargar();
+    private async Task DescargarQr()
+    {
+        if (qr is null || cilindro is null) return;
+        try
+        {
+            await using var modulo = await JS.InvokeAsync<IJSObjectReference>("import", "./js/qr-reader.js");
+            await modulo.InvokeVoidAsync("downloadQr", qr, $"{cilindro.Codigo}.png");
+        }
+        catch (JSException) { error = "El navegador no pudo descargar el QR. Vuelve a intentarlo."; }
+    }
+    private async Task Cargar()
+    {
+        cargando = true; error = null; qr = null; cilindro = null; historial = [];
+        try { cilindro = await Api.CilindroAsync(Codigo); historial = await Api.HistorialAsync(Codigo); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { cargando = false; }
+        if (cilindro is not null)
+        {
+            try { qr = await Api.QrAsync(Codigo); }
+            catch (Exception ex) { error = Formato.Error(ex); }
+        }
+    }
+    private async Task GuardarPesaje()
+    {
+        if (guardando || form.PesoBrutoGr is null) return;
+        guardando = true; error = null; mensaje = null;
+        try { await Api.PesarAsync(Codigo, new() { PesoBrutoGr = form.PesoBrutoGr.Value, Observacion = form.Observacion }); await Cargar(); mensaje = "Pesaje inicial registrado. El historial conserva la lectura y el usuario."; }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { guardando = false; }
+    }
+}

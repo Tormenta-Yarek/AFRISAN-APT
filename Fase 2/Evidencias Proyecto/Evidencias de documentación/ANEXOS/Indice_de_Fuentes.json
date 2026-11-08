@@ -1,0 +1,267 @@
+[
+  {
+    "origen": "2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx",
+    "copia": "ANEXOS/FUENTES/2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx",
+    "sha256": "8b1647ab6c8c4766d0949f6507d79eda92eb9581b3a7e6b6bc4fa566205e1294"
+  },
+  {
+    "origen": "2.5_APT122_Sumativa Avance Fase2.pdf",
+    "copia": "ANEXOS/FUENTES/2.5_APT122_Sumativa Avance Fase2.pdf",
+    "sha256": "6a6acf4c6eafcc20da79646fb7a96bf2588a6db291b0df979cc1bb7a46316cfc"
+  },
+  {
+    "origen": "2.6_GuiaEstudiante_Fase 2_Informe Final Proyecto APT.docx",
+    "copia": "ANEXOS/FUENTES/2.6_GuiaEstudiante_Fase 2_Informe Final Proyecto APT.docx",
+    "sha256": "eae5f6e4f98be24256bad31c12e4a7e4de52dc9218be9303704bab6c7ccf3852"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/00_CONTEXTO_Y_ACUERDOS.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/00_CONTEXTO_Y_ACUERDOS.md",
+    "sha256": "46031481ee86087e29d55d4fe076f46d3ea5c2131f6ef6e4c185150c3f008ca7"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/07_OT_DEFINICION_DANTE.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/07_OT_DEFINICION_DANTE.md",
+    "sha256": "8404f7c9c668b27114f13ce0bdc46aee08c0cf42679bb4a40cb113dac3c936e7"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/08_RESPONSABLES_PROCESOS.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/08_RESPONSABLES_PROCESOS.md",
+    "sha256": "786667dcc5e9047aacece9a93c664fcc141743201b69e258b719f5318ae9990e"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/10_PROCESOS_AUTORIZADOR.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/10_PROCESOS_AUTORIZADOR.md",
+    "sha256": "48fb9c747fa88c4b1fef87e195c56e1226bc2842db70f1b8a389fd4cc32f263c"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/11_MODULO_POWER_BI.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/11_MODULO_POWER_BI.md",
+    "sha256": "b16a3dd8430ab36c5364a605a02b051c6cadcf82ed177c23dd4aae06daffcf5a"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/01_NEGOCIO/12_FLUJO_TERRENO_DESPACHO_Y_REVISION.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/01_NEGOCIO/12_FLUJO_TERRENO_DESPACHO_Y_REVISION.md",
+    "sha256": "898ffd9e045b9aef25062e4a11e3c6689c774b5b6ed1a6fee8755f4b970b12a7"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/02_BASE_DATOS/04_Crear_Afrisan_Contexto_Actual.sql",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/02_BASE_DATOS/04_Crear_Afrisan_Contexto_Actual.sql",
+    "sha256": "3a0054a01b8f33cf95864ee754228680ac203862e1a6704eeaeb3b6b99685edb"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/02_BASE_DATOS/README.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/02_BASE_DATOS/README.md",
+    "sha256": "ae8ad5d9980152f144e33bf2810f14d485fa96cc117b28da3e4de62adab1914e"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Api/Program.cs",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Api/Program.cs",
+    "sha256": "370fecf5db3f9d2e547f8233ec255f65321a6b41c92c60ee75a389a91b35c739"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Api/TrabajoEndpoints.cs",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Api/TrabajoEndpoints.cs",
+    "sha256": "0b1c602d148846da1ea7021ddf8b30e2a1180d918a4e3724eb014d4cb5d4200e"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Contratos/Inventario.cs",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Contratos/Inventario.cs",
+    "sha256": "583b3627951b11c0ed1678c4222636fdf9bd069293af71b16eb86c2b38f23e68"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Contratos/TrabajoTecnico.cs",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Contratos/TrabajoTecnico.cs",
+    "sha256": "dbb4e0c22d174981a499ab4f269ea40337e8903c48a493724eb1f78e130a96c5"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Web/Services/TrabajoLocalService.cs",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Web/Services/TrabajoLocalService.cs",
+    "sha256": "41a1b53b8748157d15302db6e5f886492e58a4accb4006599c560643b4a857a9"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/03_CODIGO/README.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/03_CODIGO/README.md",
+    "sha256": "9be3c7ccc822480ecc3b6269d9527c953f689666d1188f938b61f8fc678c7164"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/AUTORIZADOR_ESPERA_BODEGA.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/AUTORIZADOR_ESPERA_BODEGA.png",
+    "sha256": "d77875f192519957edd7ebb0735277b0a6fe6164604ffda309d8a7b3304a6615"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/AUTORIZADOR_REVISA_FOTOS.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/AUTORIZADOR_REVISA_FOTOS.png",
+    "sha256": "281936fc7cc1d3f4c839fa91498a25837e46b73d2fc0641f992201abe61962f3"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/BODEGA_APRUEBA_ANTES_AUTORIZADOR.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/BODEGA_APRUEBA_ANTES_AUTORIZADOR.png",
+    "sha256": "a5d5a69b97a655e95b78969b8699e256a0e7db8c1ad9140e5b938b84f64bacc4"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/BODEGA_CONFIRMA_PESO_Y_FOTOS.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/BODEGA_CONFIRMA_PESO_Y_FOTOS.png",
+    "sha256": "b80ce190e70c15eb5f2a4e11725d014811e41c8f2b60a2ec4f7260074a4699df"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/CONFIRMACION_REVISIONES.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/CONFIRMACION_REVISIONES.png",
+    "sha256": "ec96272c5050d560d80a932c52ebbb91ee65111b049ac0fb2eb2e85e812f89a1"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/OT_CERRADA_DOS_REVISIONES.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/OT_CERRADA_DOS_REVISIONES.png",
+    "sha256": "9fa645744c61d63a3dd14f18a7930fd6a4e21d52831066562901e739162e4a9d"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/README.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/README.md",
+    "sha256": "63d73e2406d398398261e54ab0279010220d59b1418a8c870ff866345327df4e"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_EN_PROCESO_DESPACHO.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_EN_PROCESO_DESPACHO.png",
+    "sha256": "2640e1d26e909a99d10e59938fa46bb5b112b4f824d9b9adababbac6579581ce"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_PENDIENTE_BODEGA.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_PENDIENTE_BODEGA.png",
+    "sha256": "a7e908187ecec5638d9e315ae0231b1a263dfe212c80f7be61e138a00eb527b8"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_RETIRO_CON_FOTO.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/TECNICO_RETIRO_CON_FOTO.png",
+    "sha256": "6e8ad8d1c44c293d428fd2c78a35db5eb5d3e71d00ed8a0fe3fc96fe26237899"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ejecuciones/20261025-212141-bb482c/resultados.json",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ejecuciones/20261025-212141-bb482c/resultados.json",
+    "sha256": "a66487eafaaa305df6ebf19370760c81d89cee2d49df7e3de630e84d2f5bba0c"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/resultado_recorrido_navegador.json",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/resultado_recorrido_navegador.json",
+    "sha256": "18fd565c2fddd7c37b078dd2241ceb332194abc42977bff186b9202d8c6a2126"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-despacho.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-despacho.png",
+    "sha256": "35d4d85ba1f1d540716213aa5ee2d38c0447d91fcf2af40f61ab115fd511de0e"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-instalado.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-instalado.png",
+    "sha256": "41028c6bfa6649c24280cf5af4492659b559880d37490d08c7b9feb4f3692ce9"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-retirado.png",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/FLUJO_TERRENO_2026_10_25/ui-retirado.png",
+    "sha256": "b60ec564923ba5456f0421454bc6f87167c444d1781c9a07ef843cf5236d4261"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_QR_Y_SELECCION_2026_10_22/README.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_QR_Y_SELECCION_2026_10_22/README.md",
+    "sha256": "36c2d524ac38725fbb3f05081788cfdb5d36cd6bf2214c0c2c5e52055b8ae03d"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_SQL_CONTEXTO_2026_10_25/README.md",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_SQL_CONTEXTO_2026_10_25/README.md",
+    "sha256": "313e5264fc589a3b3c0b166a610a3c37d957daecf814408736995c255717f1d1"
+  },
+  {
+    "origen": "AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_SQL_CONTEXTO_2026_10_25/resultados.json",
+    "copia": "ANEXOS/FUENTES/AFRISAN_NUEVO/04_SEGUIMIENTO/VALIDACION_SQL_CONTEXTO_2026_10_25/resultados.json",
+    "sha256": "9ab6dd74cb492df96a399dedb0d7ae46735180826b70617b12e176c76c91ef71"
+  },
+  {
+    "origen": "ARQUITECTURA/VISTAS_4_1/Actual/02_Arquitectura_4_1.docx",
+    "copia": "ANEXOS/FUENTES/ARQUITECTURA/VISTAS_4_1/Actual/02_Arquitectura_4_1.docx",
+    "sha256": "388aed616fe030a70c2a3d6430c4f9b3350c53e30f69418a59be3288b3e7a523"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/1.4_APT122_FormativaFase1.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/1.4_APT122_FormativaFase1.docx",
+    "sha256": "e48d8ede25357836cdf9df87b3bdb002a2c25bb5868bee923f39db45329c0127"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/1.5_GuiaEstudiante_Fase 1_Definicion Proyecto APT (1).docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/1.5_GuiaEstudiante_Fase 1_Definicion Proyecto APT (1).docx",
+    "sha256": "14966472fddf03875f02624e60e3c5ee8ae0e9007982999cbb5eda7af6197c89"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/00_Acta_de_Constitucion_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/00_Acta_de_Constitucion_AFRISAN_Corregida.docx",
+    "sha256": "f5afb4cf952414682747a0fbaa21cba371519302cdfeb03ce6e23f083bbde0f5"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/01_Product_Backlog_AFRISAN_Corregido.xlsx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/01_Product_Backlog_AFRISAN_Corregido.xlsx",
+    "sha256": "376ff620b13209f39e14d551dbbfbba5ddc96d8db505f52e3cf374e8d8011e4d"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/05_Informe_Fase_1_AFRISAN_Corregido.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/05_Informe_Fase_1_AFRISAN_Corregido.docx",
+    "sha256": "0b3bbef9ef22f8b5c4271fd65eca8c9c78e5e72bd71551d5875df1a4f0aa7b1e"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/06_Plan_de_Comunicacion_AFRISAN_Corregido.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/06_Plan_de_Comunicacion_AFRISAN_Corregido.docx",
+    "sha256": "9eb93e41fdc0c08be8ba960bf810f3ac04a19714b9392100fb531dca5b62ddae"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/07_Pauta_Entrevista_Tecnica_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/07_Pauta_Entrevista_Tecnica_AFRISAN_Corregida.docx",
+    "sha256": "704cbe9f00985fb62739a86ca589b9f3019ae2e446d346b398c317f400f64cd0"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/08_RACI_AFRISAN_Corregido.pdf",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/08_RACI_AFRISAN_Corregido.pdf",
+    "sha256": "6750c6823719c0e20ed2687509ae300045ddb892fd863b964f61c177780b5d56"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/09_Retrospectiva_Semana_1_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/09_Retrospectiva_Semana_1_AFRISAN_Corregida.docx",
+    "sha256": "045ecc484f6d124cb4679f00ec1d8e67da151ea11c2fee9d5bcf0b2cc474e214"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/10_Retrospectiva_Semana_2_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/10_Retrospectiva_Semana_2_AFRISAN_Corregida.docx",
+    "sha256": "98cf5853bd0e2bc74ad01351ecfaddb042e487b88702ab1bc2ea69f17eeaf81a"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/11_Retrospectiva_Semana_3_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/11_Retrospectiva_Semana_3_AFRISAN_Corregida.docx",
+    "sha256": "6c518dff3815306d14fad971b3e0bafd86750f87ed5eb7bff1c8c22924db2a7a"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/12_Retrospectiva_Semana_4_AFRISAN_Corregida.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/Documentación del Proyecto/ACTUAL/12_Retrospectiva_Semana_4_AFRISAN_Corregida.docx",
+    "sha256": "17825668aab6071e60252b3156387d406bbbf34dda3659c6d91d36835ca745ee"
+  },
+  {
+    "origen": "EVIDENCIAS_GRUPALES/EVA_2/01_PLAN_DE_TRABAJO_8_COLUMNAS_FASE_2.md",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_GRUPALES/EVA_2/01_PLAN_DE_TRABAJO_8_COLUMNAS_FASE_2.md",
+    "sha256": "84476d20d6b2fd54d4db0ade4327b24dce3e97da985e93ed5c90ed939884559b"
+  },
+  {
+    "origen": "EVIDENCIAS_INDIVIDUALES/Dante/1.1_APT122_AutoevaluacionCompetenciasFase1.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_INDIVIDUALES/Dante/1.1_APT122_AutoevaluacionCompetenciasFase1.docx",
+    "sha256": "7636527f4dfa166727a61fe7d6856fd5554be5d32d52658e3315366eb401d015"
+  },
+  {
+    "origen": "EVIDENCIAS_INDIVIDUALES/Dante/1.2_APT122_DiarioReflexionFase1.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_INDIVIDUALES/Dante/1.2_APT122_DiarioReflexionFase1.docx",
+    "sha256": "45f69f7e21437cb93346adbef5561fd121cb026fce0d343598ea6c79de039c05"
+  },
+  {
+    "origen": "EVIDENCIAS_INDIVIDUALES/Dante/1.3_APT122_AutoevaluaciónFase1.docx",
+    "copia": "ANEXOS/FUENTES/EVIDENCIAS_INDIVIDUALES/Dante/1.3_APT122_AutoevaluaciónFase1.docx",
+    "sha256": "4e7eb0e5de80f82f453e2684b473ffc5c1180641666c8d73e2f83ae920a69452"
+  },
+  {
+    "origen": "README.md",
+    "copia": "ANEXOS/FUENTES/README.md",
+    "sha256": "599bc5db2b3d7c96ec4e2f55a862f694616cea80dd0249d5c39965a9a479865a"
+  }
+]

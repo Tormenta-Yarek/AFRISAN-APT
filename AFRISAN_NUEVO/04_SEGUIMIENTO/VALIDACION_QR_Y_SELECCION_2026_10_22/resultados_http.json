@@ -1,0 +1,23 @@
+{
+  "fecha": "2026-10-22",
+  "tipo": "Regresión HTTP local con datos simulados",
+  "casos_correctos": [
+    "API rechaza cilindro de Bodega como retiro de sucursal",
+    "Técnico no puede hacer entrega de Bodega",
+    "Entrega de Bodega registrada",
+    "Confirmación sin fotos rechazada",
+    "Borrado de foto con versión antigua rechazado",
+    "Confirmación con versión antigua rechazada",
+    "Reemplazo con sus fotos confirmado",
+    "Reemplazo instalado en sucursal",
+    "Retirado no suma Bodega antes de recepción",
+    "Borrador extra descartado con historial",
+    "Un borrador descartado no se vuelve a guardar ni resucita",
+    "Recepción y término permiten ignorar borrador descartado",
+    "OT anterior cierra aunque su instalado esté ahora retirado por otra OT",
+    "Puede volver a entregar a la misma OT un envase devuelto sin uso",
+    "La OT anterior no puede recibir un envase entregado por otra OT",
+    "Un cilindro instalado no está disponible para entrega",
+    "QR PNG de la API descargado para probar su lectura"
+  ]
+}

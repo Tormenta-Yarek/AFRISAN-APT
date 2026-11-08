@@ -1,0 +1,54 @@
+@page "/refrigerantes"
+@attribute [Authorize(Roles = Roles.Lectura)]
+@inject InventarioClient Api
+@inject SesionService Sesion
+
+<PageTitle>Refrigerantes · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">PN-01 / CATÁLOGO</span><h1>Refrigerantes</h1><p>Registra los tipos de gas antes de asociarlos a un cilindro.</p></div><a class="btn secondary" href="inventario">Consultar inventario</a></div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+@if (mensaje is not null) { <div class="notice success" role="status">@mensaje</div> }
+<div class="split-grid">
+    <section class="panel"><div class="panel-heading"><h2>Catálogo de gases</h2><button class="btn subtle" @onclick="Cargar" disabled="@(cargando || guardando)">Actualizar</button></div>
+        @if (cargando) { <p class="loading" role="status">Cargando refrigerantes…</p> }
+        else if (falloCarga) { <div class="empty-state"><h3>No se pudo cargar el catálogo</h3><button class="btn secondary" @onclick="Cargar">Reintentar</button></div> }
+        else if (items.Length == 0) { <div class="empty-state"><span class="empty-symbol">◈</span><h3>El catálogo está vacío</h3><p>Registra el primer tipo de refrigerante para comenzar.</p></div> }
+        else { <div class="table-wrap"><table><caption>@items.Length tipos registrados</caption><thead><tr><th>Código</th><th>Nombre</th><th>Unidad de inventario</th></tr></thead><tbody>
+            @foreach (var item in items) { <tr @key="item.Id"><td><span class="gas-tag">@item.Codigo</span></td><td>@item.Nombre</td><td>Gramos por cilindro</td></tr> }
+        </tbody></table></div> }
+    </section>
+    @if (Sesion.PuedeCatalogo)
+    {
+        <section class="panel"><span class="eyebrow">NUEVO TIPO DE GAS</span><h2>Registrar refrigerante</h2>
+            <EditForm Model="form" OnValidSubmit="Guardar"><DataAnnotationsValidator /><ValidationSummary />
+                <label for="gas-codigo">Código del refrigerante</label><InputText id="gas-codigo" @bind-Value="form.Codigo" placeholder="Ej.: R-134a" maxlength="40" />
+                <label for="gas-nombre">Nombre o descripción</label><InputText id="gas-nombre" @bind-Value="form.Nombre" maxlength="150" />
+                <p class="field-help">Los kilos no se registran aquí: pertenecen al contenido de cada cilindro.</p>
+                <button type="submit" class="btn primary wide" disabled="@guardando">@(guardando ? "Registrando…" : "Registrar refrigerante")</button>
+            </EditForm>
+        </section>
+    }
+    else { <section class="panel"><span class="eyebrow">ACCESO DE CONSULTA</span><h2>Un catálogo común</h2><p class="muted">Tu perfil puede consultar los tipos registrados. El registro está habilitado para los perfiles de revisión de bodega, jefatura y administración.</p></section> }
+</div>
+
+@code {
+    private RefrigeranteResponse[] items = [];
+    private RefrigeranteForm form = new();
+    private bool cargando, guardando, falloCarga;
+    private string? error, mensaje;
+    protected override Task OnInitializedAsync() => Cargar();
+    private async Task Cargar()
+    {
+        cargando = true; falloCarga = false; error = null;
+        try { items = await Api.RefrigerantesAsync(); }
+        catch (Exception ex) { error = Formato.Error(ex); falloCarga = true; }
+        finally { cargando = false; }
+    }
+    private async Task Guardar()
+    {
+        if (guardando) return;
+        guardando = true; error = null; mensaje = null;
+        try { var item = await Api.CrearRefrigeranteAsync(new() { Codigo = form.Codigo, Nombre = form.Nombre }); form = new(); await Cargar(); mensaje = $"{item.Codigo} registrado. Ya puedes seleccionarlo al crear un cilindro."; }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { guardando = false; }
+    }
+}

@@ -1,0 +1,99 @@
+@page "/ordenes/nueva"
+@attribute [Authorize(Roles = "Autorizador")]
+@inject InventarioClient Api
+@inject SesionService Sesion
+@inject NavigationManager Nav
+
+<PageTitle>Preparar OT · AFRISAN</PageTitle>
+<a href="ordenes" class="back-link">← Órdenes</a><div class="page-heading"><div><span class="eyebrow">AUTORIZADOR / REVISIÓN</span><h1>Preparar una OT</h1><p>Asigna el técnico y registra el pedido por refrigerante.</p></div></div>
+<div class="notice info">Selecciona una sucursal y un técnico, y registra las cantidades solicitadas y autorizadas.</div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+@if (cargando) { <p>Cargando refrigerantes…</p> }
+else if (gases.Length == 0) { <div class="panel"><p>Bodega debe registrar al menos un refrigerante antes de crear una OT.</p></div> }
+else
+{
+    <section class="panel"><EditForm Model="form" OnValidSubmit="Crear"><DataAnnotationsValidator /><ValidationSummary />
+        <fieldset disabled="@ocupado"><div class="form-grid"><div><label for="ot-sucursal">Sucursal</label>
+        @if(Sesion.Entorno?.Modo=="PostgreSQL") { <InputSelect id="ot-sucursal" @bind-Value="form.SucursalId" @bind-Value:after="ElegirSucursal"><option value="">Selecciona sucursal</option>@foreach(var s in sucursales){<option value="@s.Id">@s.Cliente — @s.Nombre</option>}</InputSelect> }
+        else { <InputText id="ot-sucursal" @bind-Value="form.Sucursal" @bind-Value:after="CambiarSucursal" list="sucursales-conocidas" maxlength="200" /> }
+        </div><div><label for="ot-direccion">Dirección</label><InputText id="ot-direccion" @bind-Value="form.Direccion" maxlength="400" disabled="@(Sesion.Entorno?.Modo=="PostgreSQL")" /></div></div>
+        <datalist id="sucursales-conocidas">@foreach (var sucursal in cilindros.Where(c => c.Ubicacion == "Sucursal").Select(c => c.Sucursal).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase)) { <option value="@sucursal"></option> }</datalist>
+        <label for="ot-descripcion">Trabajo solicitado</label><InputText id="ot-descripcion" @bind-Value="form.Descripcion" maxlength="150" />
+        <label for="ot-tecnico">Técnico asignado</label><InputSelect id="ot-tecnico" @bind-Value="form.Tecnico"><option value="">Selecciona técnico</option>@foreach (var cuenta in tecnicos) { <option value="@cuenta.Email">@cuenta.Nombre — @cuenta.Email</option> }</InputSelect>
+        <h2 class="mt">Pedido por refrigerante</h2>
+        @foreach (var linea in lineas)
+        { <div class="linea-pedido" @key="linea"><div><label>Refrigerante</label><InputSelect @bind-Value="linea.RefrigeranteId"><option value="0">Seleccionar</option>@foreach (var g in gases) { <option value="@g.Id">@g.Codigo</option> }</InputSelect></div><div><label>Solicitado (g)</label><InputNumber @bind-Value="linea.Solicitados" min="1" step="1" /></div><div><label>Autorizado (g)</label><InputNumber @bind-Value="linea.Autorizados" min="1" step="1" /></div><button class="btn subtle" type="button" @onclick="() => lineas.Remove(linea)" disabled="@(lineas.Count == 1)">Quitar línea</button></div> }
+        <button type="button" class="btn secondary mt" @onclick="() => lineas.Add(new())" disabled="@(lineas.Count >= 20)">Agregar otro refrigerante</button>
+        <h2 class="mt">Cilindros a retirar de la sucursal</h2>
+        <label class="check-label"><input type="checkbox" checked="@soloAgregados" @onchange="CambiarTipoPedido" /> Solo agregar cilindros, sin retiros</label>
+        @if (!soloAgregados)
+        {
+            <label for="filtrar-retiros">Filtrar lista por refrigerante, serie o código</label><input id="filtrar-retiros" @bind="busqueda" @bind:event="oninput" placeholder="Opcional: filtra la lista" />
+            @if (string.IsNullOrWhiteSpace(form.Sucursal)) { <p class="field-help">Primero elige o escribe la sucursal para consultar sus cilindros.</p> }
+            else if (!Candidatos.Any()) { <p class="notice warning">No hay cilindros instalados que coincidan en esta sucursal. Bodega debe registrar sus existencias con ubicación inicial Sucursal. Los envases disponibles en Bodega se entregan después como reemplazos.</p> }
+            else
+            {
+                <div class="table-wrap"><table><thead><tr><th>Retirar</th><th>Cilindro</th><th>Refrigerante</th><th>Contenido registrado</th><th>Disponibilidad</th></tr></thead><tbody>
+                @foreach (var c in Candidatos)
+                {
+                    <tr @key="c.Id"><td><input type="checkbox" aria-label="@($"Retirar {c.Codigo}")" checked="@seleccionados.Contains(c.Codigo)" disabled="@Reservado(c.Codigo)" @onchange="e => Seleccionar(c.Codigo, e)" /></td><td><strong>@c.Codigo</strong><small class="cell-note">@(c.NumeroSerie ?? "Sin serie")</small></td><td>@c.RefrigeranteCodigo</td><td>@Formato.Gramos(c.ContenidoSegunPesajeGr)</td><td>@(Reservado(c.Codigo) ? "Reservado en otra OT" : "Disponible para retiro")</td></tr>
+                }
+                </tbody></table></div>
+            }
+            <p class="field-help">@seleccionados.Count seleccionados. Elige en el pedido el refrigerante de cada cilindro marcado. Los kilos solicitados y autorizados se registran por separado.</p>
+        }
+        <div class="form-actions"><a class="btn secondary" href="ordenes">Cancelar</a><button class="btn primary" type="submit">@(ocupado ? "Preparando…" : "Autorizar y asignar OT")</button></div>
+        </fieldset>
+    </EditForm></section>
+}
+@code {
+    private readonly OtForm form = new();
+    private readonly List<LineaForm> lineas = [new()];
+    private readonly HashSet<string> seleccionados = new(StringComparer.OrdinalIgnoreCase);
+    private OtResponse[] ordenes = [];
+    private SucursalResponse[] sucursales=[];
+    private CuentaDemoResponse[] tecnicos=[];
+    private void ElegirSucursal() { var s=sucursales.FirstOrDefault(s=>s.Id==form.SucursalId);form.Sucursal=s?.Nombre??"";form.Direccion=s?.Direccion??"";CambiarSucursal(); }
+    private string busqueda = "";
+    private bool soloAgregados;
+    private IEnumerable<CilindroResponse> Candidatos => cilindros.Where(c => c.Ubicacion == "Sucursal" && (Sesion.Entorno?.Modo=="PostgreSQL" ? c.SucursalId==form.SucursalId : string.Equals(c.Sucursal, form.Sucursal.Trim(), StringComparison.OrdinalIgnoreCase))
+        && ($"{c.Codigo} {c.NumeroSerie} {c.RefrigeranteCodigo}".Contains(busqueda.Trim(), StringComparison.OrdinalIgnoreCase))).OrderBy(c => c.RefrigeranteCodigo).ThenBy(c => c.Codigo);
+    private bool Reservado(string codigo) => ordenes.Any(o => o.Estado != "Cerrada" && o.CilindrosARetirar.Contains(codigo));
+    private void Seleccionar(string codigo, ChangeEventArgs e) { if (e.Value is true) seleccionados.Add(codigo); else seleccionados.Remove(codigo); }
+    private void CambiarSucursal() { seleccionados.Clear(); busqueda = ""; }
+    private void CambiarTipoPedido(ChangeEventArgs e) { soloAgregados = e.Value is true; seleccionados.Clear(); }
+    private readonly Guid idOperacion = Guid.NewGuid();
+    private RefrigeranteResponse[] gases = [];
+    private CilindroResponse[] cilindros = [];
+    private bool ocupado, cargando = true;
+    private string? error;
+    protected override async Task OnInitializedAsync() { try { gases = await Api.RefrigerantesAsync(); cilindros = await Api.CilindrosAsync(); ordenes = await Api.OrdenesAsync(); if(Sesion.Entorno?.Modo=="PostgreSQL"){sucursales=await Api.SucursalesAsync();tecnicos=await Api.TecnicosAsync();}else tecnicos=Sesion.Entorno?.Cuentas.Where(c=>c.Rol=="Tecnico").ToArray()??[]; } catch (Exception ex) { error = Formato.Error(ex); } finally { cargando = false; } }
+    private async Task Crear()
+    {
+        if (ocupado) return;
+        ocupado = true; error = null;
+        try
+        {
+            if (!soloAgregados && seleccionados.Count == 0) throw new InvalidOperationException("Selecciona al menos un cilindro de la lista o indica que el pedido es solo de agregados.");
+            if (lineas.Any(l => l.RefrigeranteId <= 0 || l.Solicitados <= 0 || l.Autorizados <= 0) || lineas.Select(l => l.RefrigeranteId).Distinct().Count() != lineas.Count)
+                throw new InvalidOperationException("Completa las cantidades y selecciona un refrigerante diferente en cada línea.");
+            if (cilindros.Any(c => seleccionados.Contains(c.Codigo) && (!lineas.Any(l => l.RefrigeranteId == c.RefrigeranteId) || Reservado(c.Codigo))))
+                throw new InvalidOperationException("Revisa los refrigerantes del pedido y los cilindros reservados antes de autorizar.");
+            var ot = await Api.CrearOtAsync(new() { SucursalId=form.SucursalId, IdOperacion = idOperacion, Sucursal = form.Sucursal, Direccion = form.Direccion,
+                Descripcion = form.Descripcion, TecnicoEmail = form.Tecnico, Detalle = lineas.Select(l => new LineaOtRequest { RefrigeranteId = l.RefrigeranteId, GrSolicitados = l.Solicitados, GrAutorizados = l.Autorizados }).ToArray(),
+                CilindrosARetirar = seleccionados.OrderBy(c => c).ToArray() });
+            Nav.NavigateTo($"ordenes/{ot.Id}");
+        }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+    private sealed class OtForm
+    {
+        public int? SucursalId {get;set;}
+        [Required, StringLength(200)] public string Sucursal { get; set; } = "";
+        [Required, StringLength(400)] public string Direccion { get; set; } = "";
+        [Required, StringLength(150)] public string Descripcion { get; set; } = "";
+        [Required] public string Tecnico { get; set; } = "";
+    }
+    private sealed class LineaForm { public long RefrigeranteId { get; set; } public long Solicitados { get; set; } public long Autorizados { get; set; } }
+}

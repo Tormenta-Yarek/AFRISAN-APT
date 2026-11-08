@@ -1,0 +1,80 @@
+@page "/identificar"
+@attribute [Authorize]
+@implements IAsyncDisposable
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+@inject InventarioClient Api
+@inject NavigationManager Nav
+
+<PageTitle>Identificar cilindro · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">IDENTIFICACIÓN DEL ENVASE</span><h1>Identificar cilindro</h1><p>Escanea el QR con la cámara o selecciona una foto de su etiqueta.</p></div></div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+<div class="split-grid"><section class="panel"><h2>Leer QR</h2>
+    <label for="qr-imagen">Foto o imagen del QR</label><input id="qr-imagen" type="file" accept="image/png,image/jpeg,image/webp" capture="environment" disabled="@(ocupado || camara)" @onchange="LeerImagen" />
+    <p class="field-help">PNG, JPEG o WebP, hasta 12 MiB. Incluye la etiqueta completa y enfocada. La imagen se procesa en este dispositivo.</p>
+    <div class="form-actions"><button class="btn primary" disabled="@(ocupado || camara)" @onclick="LeerCamara">Usar cámara</button>@if (camara) { <button class="btn secondary" @onclick="DetenerCamara">Detener cámara</button> }</div>
+    <video @ref="video" class="qr-camera" hidden="@(!camara)" playsinline muted></video>
+    @if (camara) { <p role="status">Acerca la etiqueta a la cámara. Se abrirá la ficha al reconocer el QR.</p> }
+    @if (ocupado) { <p role="status">Leyendo imagen y consultando el cilindro…</p> }
+    <p class="field-help">La cámara requiere permiso del navegador y HTTPS o localhost. Si no está disponible, utiliza una foto.</p>
+</section><section class="panel"><h2>Consulta por código</h2>
+    <EditForm Model="form" OnValidSubmit="Buscar"><DataAnnotationsValidator /><label for="identificador">Código del cilindro</label><InputText id="identificador" @bind-Value="form.Codigo" placeholder="AFR-000001" autofocus /><ValidationMessage For="() => form.Codigo" />
+        <button class="btn secondary wide mt" disabled="@(ocupado || camara)" type="submit">Consultar cilindro</button>
+    </EditForm>
+    <p class="field-help">También acepta la dirección de una ficha. El Autorizador puede elegir los cilindros desde una lista al preparar la OT.</p>
+</section></div>
+@code {
+    private readonly BuscarForm form = new();
+    private IJSObjectReference? modulo;
+    private ElementReference video;
+    private bool ocupado, camara, disposed;
+    private string? error;
+    private async Task<IJSObjectReference> Modulo() => modulo ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/qr-reader.js");
+    private async Task Abrir(string contenido)
+    {
+        var codigo = contenido.Trim().ToUpperInvariant();
+        if (Uri.TryCreate(contenido.Trim(), UriKind.Absolute, out var uri) && (uri.Scheme == "http" || uri.Scheme == "https"))
+        {
+            var ruta = uri.AbsolutePath.TrimEnd('/');
+            codigo = ruta.StartsWith("/cilindros/", StringComparison.OrdinalIgnoreCase) ? ruta[11..].ToUpperInvariant() : "";
+        }
+        if (!System.Text.RegularExpressions.Regex.IsMatch(codigo, @"\AAFR-[0-9]{6,}\z"))
+            throw new InvalidOperationException("El QR no contiene un identificador de cilindro AFRISAN válido.");
+        var cilindro = await Api.CilindroAsync(codigo);
+        if (!disposed) Nav.NavigateTo($"cilindros/{Uri.EscapeDataString(cilindro.Codigo)}");
+    }
+    private async Task Buscar()
+    {
+        if (ocupado || camara) return;
+        ocupado = true; error = null;
+        try { await Abrir(form.Codigo); } catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+    private async Task LeerImagen(ChangeEventArgs _)
+    {
+        ocupado = true; error = null;
+        try { var contenido = await (await Modulo()).InvokeAsync<string>("readFile", "qr-imagen"); await Abrir(contenido); }
+        catch (JSException ex) { error = ex.Message.Split('\n')[0]; }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+    private async Task LeerCamara()
+    {
+        error = null; camara = true; await InvokeAsync(StateHasChanged);
+        try
+        {
+            var contenido = await (await Modulo()).InvokeAsync<string?>("startCamera", video);
+            if (contenido is not null && !disposed) { camara = false; ocupado = true; await Abrir(contenido); }
+        }
+        catch (JSException ex) { if (!disposed) error = ex.Message.Split('\n')[0]; }
+        catch (Exception ex) { if (!disposed) error = Formato.Error(ex); }
+        finally { camara = false; ocupado = false; }
+    }
+    private async Task DetenerCamara() { if (modulo is not null) await modulo.InvokeVoidAsync("stopCamera"); camara = false; }
+    public async ValueTask DisposeAsync()
+    {
+        disposed = true;
+        if (modulo is not null) { try { await modulo.InvokeVoidAsync("stopCamera"); await modulo.DisposeAsync(); } catch (JSDisconnectedException) { } }
+    }
+    private sealed class BuscarForm { [Required(ErrorMessage = "Ingresa un código."), StringLength(500)] public string Codigo { get; set; } = ""; }
+}

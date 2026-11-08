@@ -1,0 +1,78 @@
+@page "/cilindros/nuevo"
+@attribute [Authorize(Roles = Roles.AltaCilindro)]
+@inject InventarioClient Api
+@inject NavigationManager Nav
+@inject SesionService Sesion
+
+<PageTitle>Registrar cilindro · AFRISAN</PageTitle>
+<a class="back-link" href="inventario">← Volver al inventario</a>
+<div class="page-heading"><div><span class="eyebrow">PN-01 / REGISTRO DEL ENVASE</span><h1>Registrar cilindro</h1><p>Un envase físico, un solo refrigerante y un identificador permanente.</p></div></div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+@if (cargando) { <p class="loading" role="status">Cargando catálogo…</p> }
+else if (falloCarga) { <button class="btn secondary" @onclick="Cargar">Reintentar consulta de refrigerantes</button> }
+else if (gases.Length == 0) { <div class="panel empty-state"><h2>Primero registra un refrigerante</h2><p>El cilindro debe estar asociado a un tipo de gas existente.</p><a class="btn primary" href="refrigerantes">Abrir catálogo</a></div> }
+else
+{
+    <div class="split-grid">
+        <section class="panel">
+            <EditForm Model="form" OnValidSubmit="Guardar"><DataAnnotationsValidator /><ValidationSummary />
+                <fieldset disabled="@guardando"><legend>Identificación del cilindro</legend>
+                    <label for="cil-gas">Refrigerante</label><InputSelect id="cil-gas" @bind-Value="form.RefrigeranteId"><option value="0">Selecciona un refrigerante</option>@foreach (var g in gases) { <option value="@g.Id">@g.Codigo — @g.Nombre</option> }</InputSelect><ValidationMessage For="() => form.RefrigeranteId" />
+                    <label for="cil-ubicacion">Ubicación inicial</label><InputSelect id="cil-ubicacion" @bind-Value="form.UbicacionInicial"><option value="Bodega">Bodega</option><option value="Sucursal">Ya instalado en sucursal</option></InputSelect>
+                    @if (form.UbicacionInicial == "Sucursal") {
+                        <label for="cil-sucursal">Sucursal donde está instalado</label>
+                        @if(Sesion.Entorno?.Modo=="PostgreSQL") { <InputSelect id="cil-sucursal" @bind-Value="form.SucursalId"><option value="">Selecciona sucursal</option>@foreach(var s in sucursales){<option value="@s.Id">@s.Cliente — @s.Nombre</option>}</InputSelect> }
+                        else { <InputText id="cil-sucursal" @bind-Value="form.SucursalInicial" maxlength="200" /> }
+                        <p class="field-help">Registra una existencia inicial en sucursal; no suma stock en Bodega.</p>
+                    }
+                    <label for="cil-serie">Número de serie <span class="optional">Opcional</span></label><InputText id="cil-serie" @bind-Value="form.NumeroSerie" maxlength="120" />
+                    <div class="form-grid"><div><label for="cil-capacidad">Capacidad de gas (g)</label><InputNumber id="cil-capacidad" @bind-Value="form.CapacidadGr" min="1" step="1" /><ValidationMessage For="() => form.CapacidadGr" /></div><div><label for="cil-tara">Tara del envase (g)</label><InputNumber id="cil-tara" @bind-Value="form.TaraGr" min="1" step="1" /><ValidationMessage For="() => form.TaraGr" /></div></div>
+                    <p class="field-help">Ingresa gramos enteros. Ejemplo: 10 kg = 10.000 g. La capacidad no incluye el peso del envase.</p>
+                    <hr /><legend>Primer pesaje</legend>
+                    <label for="cil-peso">Peso bruto inicial (g) <span class="optional">Opcional en revisión</span></label><InputNumber id="cil-peso" @bind-Value="form.PesoInicialGr" min="0" step="1" /><ValidationMessage For="() => form.PesoInicialGr" />
+                    <p class="field-help">Peso real de balanza: envase + gas. Sin lectura quedará pendiente de pesaje; no se asigna un contenido ficticio.</p>
+                    <label for="cil-observacion">Observación del pesaje <span class="optional">Opcional</span></label><InputTextArea id="cil-observacion" @bind-Value="form.Observacion" maxlength="1000" rows="3" />
+                    <div class="form-actions"><a class="btn secondary" href="inventario">Cancelar</a><button class="btn primary" type="submit">@(guardando ? "Registrando…" : "Registrar cilindro")</button></div>
+                </fieldset>
+            </EditForm>
+        </section>
+        <aside>
+            <section class="panel calculation"><span class="eyebrow">PESOS DIFERENCIADOS</span><h2>El gas y su envase</h2>
+                <dl><dt>Capacidad máxima de gas</dt><dd>@Formato.Gramos(form.CapacidadGr)</dd><dt>Tara del envase vacío</dt><dd>@Formato.Gramos(form.TaraGr)</dd><dt>Peso bruto inicial</dt><dd>@Formato.Gramos(form.PesoInicialGr)</dd></dl>
+                <div class="calculation-result"><span>Contenido según pesaje</span><strong>@Contenido</strong></div>
+                <p class="field-help">Contenido = peso bruto − tara. El código y el QR se generan al confirmar el alta.</p>
+            </section>
+            <div class="notice info"><strong>Decisión provisional</strong><p>El ingreso sin pesaje está habilitado para revisar el flujo. La obligatoriedad del pesaje y su fotografía aún deben confirmarse.</p></div>
+        </aside>
+    </div>
+}
+
+@code {
+    private readonly CilindroForm form = new();
+    private RefrigeranteResponse[] gases = [];
+    private SucursalResponse[] sucursales = [];
+    private bool cargando = true, guardando, falloCarga;
+    private string? error;
+    private string Contenido => form.PesoInicialGr is { } p && p >= form.TaraGr ? Formato.Gramos(p - form.TaraGr) : "Sin lectura válida";
+    protected override Task OnInitializedAsync() => Cargar();
+    private async Task Cargar()
+    {
+        cargando = true; falloCarga = false; error = null;
+        try { gases = await Api.RefrigerantesAsync(); if(Sesion.Entorno?.Modo=="PostgreSQL") sucursales=await Api.SucursalesAsync(); }
+        catch (Exception ex) { error = Formato.Error(ex); falloCarga = true; }
+        finally { cargando = false; }
+    }
+    private async Task Guardar()
+    {
+        if (guardando) return;
+        guardando = true; error = null;
+        try
+        {
+            var creado = await Api.CrearCilindroAsync(new() { SucursalId = form.UbicacionInicial=="Sucursal"?form.SucursalId:null, RefrigeranteId = form.RefrigeranteId, NumeroSerie = form.NumeroSerie,
+                CapacidadGr = form.CapacidadGr, TaraGr = form.TaraGr, PesoInicialGr = form.PesoInicialGr, Observacion = form.Observacion, UbicacionInicial = form.UbicacionInicial, SucursalInicial = form.UbicacionInicial == "Sucursal" ? form.SucursalInicial : null });
+            Nav.NavigateTo($"cilindros/{creado.Codigo}");
+        }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { guardando = false; }
+    }
+}

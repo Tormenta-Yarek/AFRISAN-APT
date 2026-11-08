@@ -1,0 +1,2942 @@
+{
+  "ejecucion": "20261025-212141-bb482c",
+  "estado": "CORRECTO",
+  "tipo": "Datos e imágenes sintéticos; API HTTP real",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Solo entorno en memoria sin Supabase"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET entorno",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None POST sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None POST sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None POST sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Técnico no lista inventario global",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET refrigerantes",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST refrigerantes",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: selección limitada a Bodega y gas encargado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/cilindros-disponibles",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000002: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000002",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000002",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/85dce329-0212-4e3c-8db0-68cb45fe6ea6/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/85dce329-0212-4e3c-8db0-68cb45fe6ea6/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000003: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000003",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000003",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/2e0fdcfd-fd74-4c13-bd98-4f29c3a322c9/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/2e0fdcfd-fd74-4c13-bd98-4f29c3a322c9/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: retirados dejan de estar disponibles"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico PUT ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cambio sin foto de terreno rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Adjunta al menos una foto del pesaje del cilindro instalado.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/confirmar?version=1",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/confirmar?version=2",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/confirmar?version=3",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cambio registrado y OT en terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/fotos/eedf7b9d-9adb-4584-b6e0-4448fc7e4476",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega espera devolución informada por Técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar la devolución del cilindro antes de confirmar su recepción.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/informar-entrega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/incidencias",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/incidencias/9d572264-dc7e-44ef-9d4f-bd2014c36ff7/resolver",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Bodega debe aprobar los cilindros y sus pesos antes de la revisión del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no aprueba antes del término técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar el término antes de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/termino-tecnico",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: término enviado primero a Bodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no aprueba con retirado pendiente",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Bodega debe confirmar los envases retirados antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/revision-autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Primero Bodega debe confirmar y aprobar los cilindros y sus pesos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/aprobar-bodega",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: recepción conserva ambos pesos sin sobrescribir terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: peso de recepción confirmado no se sobrescribe",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La recepción ya está confirmada con otro peso. No se sobrescribe.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no aprueba con reserva sin devolver",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Quedan envases de esta OT sin instalar ni devolver. Resuelve sus entregas antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/aprobar-bodega",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que revisaste los cilindros, pesos y fotos antes de aprobar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/aprobar-bodega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: aprobación de Bodega habilita Autorizador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no cierra sin revisión de fotos del Autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Falta la aprobación de Bodega o la revisión de fotos y registro del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: revisión espera resolución de incidencias",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Revisa las incidencias antes de aprobar el registro.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/incidencias/9d572264-dc7e-44ef-9d4f-bd2014c36ff7/resolver",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/operaciones/983e8049-7e37-4ba4-9fbe-44c9ab466c6a/fotos/eedf7b9d-9adb-4584-b6e0-4448fc7e4476",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/85dce329-0212-4e3c-8db0-68cb45fe6ea6/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/entregas/2e0fdcfd-fd74-4c13-bd98-4f29c3a322c9/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/revision-autorizador",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que comparaste las fotografías con los registros de despacho, terreno y Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/revision-autorizador",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: actor y orden de las revisiones correctos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/cerrar",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cierre con las dos revisiones registradas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/d484760a-e61d-4158-80fe-2eb8f354ba05/incidencias",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La OT ya está cerrada.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000001",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000002",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000003",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST refrigerantes",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: selección limitada a Bodega y gas encargado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/cilindros-disponibles",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000005: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000005",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000005",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/630dcf15-a0bc-463b-9534-70b525356778/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/630dcf15-a0bc-463b-9534-70b525356778/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000006: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000006",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000006",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/996d4d18-536d-4151-89a7-ef3a5f79e10e/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/996d4d18-536d-4151-89a7-ef3a5f79e10e/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: retirados dejan de estar disponibles"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico PUT ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cambio sin foto de terreno rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Adjunta al menos una foto del pesaje del cilindro instalado.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/confirmar?version=1",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/confirmar?version=2",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/confirmar?version=3",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cambio registrado y OT en terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/fotos/98c1ce1a-1765-41e2-9f58-5918d0172987",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega espera devolución informada por Técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar la devolución del cilindro antes de confirmar su recepción.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/informar-entrega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/incidencias",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/incidencias/b561d4f4-136b-4c17-84c4-334aedf279e3/resolver",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Bodega debe aprobar los cilindros y sus pesos antes de la revisión del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no aprueba antes del término técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar el término antes de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/termino-tecnico",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: término enviado primero a Bodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no aprueba con retirado pendiente",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Bodega debe confirmar los envases retirados antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/revision-autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Primero Bodega debe confirmar y aprobar los cilindros y sus pesos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/aprobar-bodega",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: recepción conserva ambos pesos sin sobrescribir terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: peso de recepción confirmado no se sobrescribe",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La recepción ya está confirmada con otro peso. No se sobrescribe.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no aprueba con reserva sin devolver",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Quedan envases de esta OT sin instalar ni devolver. Resuelve sus entregas antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/aprobar-bodega",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que revisaste los cilindros, pesos y fotos antes de aprobar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/aprobar-bodega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: aprobación de Bodega habilita Autorizador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no cierra sin revisión de fotos del Autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Falta la aprobación de Bodega o la revisión de fotos y registro del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: revisión espera resolución de incidencias",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Revisa las incidencias antes de aprobar el registro.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/incidencias/b561d4f4-136b-4c17-84c4-334aedf279e3/resolver",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/operaciones/b75c5704-3fa8-4601-b53e-22f85c16bc6d/fotos/98c1ce1a-1765-41e2-9f58-5918d0172987",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/630dcf15-a0bc-463b-9534-70b525356778/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/entregas/996d4d18-536d-4151-89a7-ef3a5f79e10e/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/revision-autorizador",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que comparaste las fotografías con los registros de despacho, terreno y Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/revision-autorizador",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: actor y orden de las revisiones correctos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/cerrar",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cierre con las dos revisiones registradas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/ba1aa72f-2ba6-4729-989b-6e1efa87ef4b/incidencias",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La OT ya está cerrada.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000004",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000005",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000006",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST refrigerantes",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: selección limitada a Bodega y gas encargado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/cilindros-disponibles",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000008: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000008",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000008",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/73555409-47d8-443e-9ca1-8cf9745ab5a8/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/73555409-47d8-443e-9ca1-8cf9745ab5a8/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no suplanta retiro del Técnico",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: retiro sin foto rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"One or more validation errors occurred.\",\"status\":400,\"errors\":{\"Foto\":[\"The Foto field is required.\"]}}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: imagen inválida no cambia custodia",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Archivo de foto inválido.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Peso inválido de AFR-000009: usa gramos brutos entre tara y tara más capacidad.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000009",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: intentos inválidos no despachan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Técnico retira con peso y fotografía",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: OT en proceso de despacho y actor correcto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: reintento del retiro no duplica custodia ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El identificador del despacho ya se utilizó con otros datos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000009",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cilindro bajo custodia con el peso físico de salida"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "None GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/f270820c-73b6-4b5d-a42c-ea1e6449b80e/foto",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Autorizador espera aprobación de Bodega para fotos de salida",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/f270820c-73b6-4b5d-a42c-ea1e6449b80e/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega consulta foto de salida exacta"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/cilindros-disponibles",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: retirados dejan de estar disponibles"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico PUT ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cambio sin foto de terreno rechazado",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Adjunta al menos una foto del pesaje del cilindro instalado.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/confirmar?version=1",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/fotos",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/confirmar?version=2",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El borrador cambió antes de confirmar. Revísalo otra vez.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/confirmar?version=3",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cambio registrado y OT en terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/fotos/c84052f5-d650-427c-9e8d-593b209ee7f2",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La revisión de fotografías del Autorizador se habilita después de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega espera devolución informada por Técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar la devolución del cilindro antes de confirmar su recepción.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/informar-entrega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/incidencias",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/incidencias/1541b572-4f5a-4c35-8bb5-d95b14d908b0/resolver",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Bodega debe aprobar los cilindros y sus pesos antes de la revisión del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no aprueba antes del término técnico",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"El técnico debe informar el término antes de la aprobación de Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/termino-tecnico",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: término enviado primero a Bodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no aprueba con retirado pendiente",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Bodega debe confirmar los envases retirados antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/revision-autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Primero Bodega debe confirmar y aprobar los cilindros y sus pesos.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/aprobar-bodega",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: recepción conserva ambos pesos sin sobrescribir terreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: peso de recepción confirmado no se sobrescribe",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La recepción ya está confirmada con otro peso. No se sobrescribe.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no aprueba con reserva sin devolver",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Quedan envases de esta OT sin instalar ni devolver. Resuelve sus entregas antes de aprobar o cerrar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/recepciones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/aprobar-bodega",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que revisaste los cilindros, pesos y fotos antes de aprobar.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/aprobar-bodega",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: aprobación de Bodega habilita Autorizador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no cierra sin revisión de fotos del Autorizador",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Falta la aprobación de Bodega o la revisión de fotos y registro del Autorizador.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: revisión espera resolución de incidencias",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Revisa las incidencias antes de aprobar el registro.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/incidencias/1541b572-4f5a-4c35-8bb5-d95b14d908b0/resolver",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/operaciones/6d9413ff-e99b-495e-9614-c5b72f5ccfa9/fotos/c84052f5-d650-427c-9e8d-593b209ee7f2",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/73555409-47d8-443e-9ca1-8cf9745ab5a8/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/entregas/f270820c-73b6-4b5d-a42c-ea1e6449b80e/foto",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/revision-autorizador",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"Confirma que comparaste las fotografías con los registros de despacho, terreno y Bodega.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/revision-autorizador",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: actor y orden de las revisiones correctos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/cerrar",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cierre con las dos revisiones registradas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tecnico POST ordenes-trabajo/3242bb9e-6685-44ec-9f0d-48548981d17f/incidencias",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"La OT ya está cerrada.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000007",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000008",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros/AFR-000009",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET refrigerantes",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tres refrigerantes, nueve cilindros y tres OT, sin duplicados de reintentos"
+    }
+  ],
+  "casos": [
+    {
+      "caso": 1,
+      "ot_id": "d484760a-e61d-4158-80fe-2eb8f354ba05",
+      "ot_codigo": "OT-000001",
+      "cilindros_iniciales": [
+        {
+          "id": 1,
+          "codigo": "AFR-000001",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-0",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 11000,
+          "taraGr": 1100,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:41.626871+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3100,
+            "fecha": "2026-10-26T00:21:41.626871+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 1",
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 3100,
+            "fecha": "2026-10-26T00:21:41.626871+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 2000
+        },
+        {
+          "id": 2,
+          "codigo": "AFR-000002",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-1",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 13000,
+          "taraGr": 1300,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:41.6346576+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5100,
+            "fecha": "2026-10-26T00:21:41.6346576+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5100,
+            "fecha": "2026-10-26T00:21:41.6346576+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 3800
+        },
+        {
+          "id": 3,
+          "codigo": "AFR-000003",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-2",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 15000,
+          "taraGr": 1500,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:41.6380905+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7100,
+            "fecha": "2026-10-26T00:21:41.6380905+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7100,
+            "fecha": "2026-10-26T00:21:41.6380905+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 5600
+        }
+      ],
+      "ot_final": {
+        "id": "d484760a-e61d-4158-80fe-2eb8f354ba05",
+        "codigo": "OT-000001",
+        "sucursal": "Sucursal prueba terreno 1",
+        "direccion": "Dirección simulada 1",
+        "descripcion": "Prueba 1 retiro técnico con foto, terreno y doble revisión",
+        "tecnicoEmail": "tecnico@afrisan.example",
+        "estado": "Cerrada",
+        "autorizador": "autorizador@afrisan.example",
+        "fecha": "2026-10-26T00:21:41.6508979+00:00",
+        "detalle": [
+          {
+            "refrigeranteId": 1,
+            "refrigerante": "R134A-BB482C",
+            "grSolicitados": 8000,
+            "grAutorizados": 7000
+          }
+        ],
+        "cilindrosARetirar": [
+          "AFR-000001"
+        ],
+        "entregas": [
+          {
+            "codigo": "AFR-000002",
+            "refrigerante": "R134A-BB482C",
+            "taraGr": 1300,
+            "capacidadGr": 13000,
+            "pesoBrutoGr": 5090,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:41.8214898+00:00",
+            "estado": "Instalado",
+            "pesoRecepcionGr": null,
+            "usuarioRecepcion": null,
+            "fechaRecepcion": null,
+            "id": "85dce329-0212-4e3c-8db0-68cb45fe6ea6",
+            "fotoDespacho": {
+              "id": "0c4e24e7-4cc7-460d-8269-da249344df1c",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000002",
+              "nombre": "caso-1-Despacho-AFR-000002.png",
+              "contentType": "image/png",
+              "bytes": 7788,
+              "fecha": "2026-10-26T00:21:41.8214898+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          },
+          {
+            "codigo": "AFR-000003",
+            "refrigerante": "R134A-BB482C",
+            "taraGr": 1500,
+            "capacidadGr": 15000,
+            "pesoBrutoGr": 7090,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:41.9280215+00:00",
+            "estado": "Devuelto",
+            "pesoRecepcionGr": 7090,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:42.1942467+00:00",
+            "id": "2e0fdcfd-fd74-4c13-bd98-4f29c3a322c9",
+            "fotoDespacho": {
+              "id": "0fb01d7a-fbee-4f89-bac8-28b883717a4d",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000003",
+              "nombre": "caso-1-Despacho-AFR-000003.png",
+              "contentType": "image/png",
+              "bytes": 7767,
+              "fecha": "2026-10-26T00:21:41.9280215+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          }
+        ],
+        "operaciones": [
+          {
+            "id": "983e8049-7e37-4ba4-9fbe-44c9ab466c6a",
+            "version": 4,
+            "tipo": "Reemplazo",
+            "codigoRetirado": "AFR-000001",
+            "codigoInstalado": "AFR-000002",
+            "pesoRetiradoGr": 1200,
+            "pesoInstaladoGr": 5000,
+            "observacion": "Prueba sintética de cambio físico",
+            "estado": "Registrada",
+            "fotos": [
+              {
+                "id": "eedf7b9d-9adb-4584-b6e0-4448fc7e4476",
+                "grupo": "Retirado",
+                "codigoCilindro": "AFR-000001",
+                "nombre": "caso-1-Retirado-AFR-000001.png",
+                "contentType": "image/png",
+                "bytes": 7380,
+                "fecha": "2026-10-26T00:21:41.9979847+00:00",
+                "usuario": "tecnico@afrisan.example"
+              },
+              {
+                "id": "4828f556-2cac-46ec-a25b-49906feb802e",
+                "grupo": "Instalado",
+                "codigoCilindro": "AFR-000002",
+                "nombre": "caso-1-Instalado-AFR-000002.png",
+                "contentType": "image/png",
+                "bytes": 7321,
+                "fecha": "2026-10-26T00:21:42.0342268+00:00",
+                "usuario": "tecnico@afrisan.example"
+              }
+            ],
+            "actualizada": "2026-10-26T00:21:42.0421491+00:00",
+            "entregaInformada": true,
+            "recibidoBodega": true,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:42.1582984+00:00",
+            "pesoRecepcionGr": 1200,
+            "observacionRecepcion": "Peso corroborado por Bodega."
+          }
+        ],
+        "incidencias": [
+          {
+            "id": "9d572264-dc7e-44ef-9d4f-bd2014c36ff7",
+            "operacionId": "983e8049-7e37-4ba4-9fbe-44c9ab466c6a",
+            "tipo": "Incidencia",
+            "motivo": "SIMULADO: control adicional de pesaje del caso 1.",
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:42.1158208+00:00",
+            "respuesta": "Registro y pesajes revisados después de la aprobación de Bodega.",
+            "revisor": "autorizador@afrisan.example",
+            "fechaRevision": "2026-10-26T00:21:42.2369771+00:00"
+          }
+        ],
+        "historial": [
+          {
+            "fecha": "2026-10-26T00:21:41.6525007+00:00",
+            "accion": "OT autorizada",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Pedido manual de revisión, técnico y cilindros a retirar registrados. No es integración Defontana."
+          },
+          {
+            "fecha": "2026-10-26T00:21:41.822888+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000002: 5090 g. Foto 0c4e24e7-4cc7-460d-8269-da249344df1c."
+          },
+          {
+            "fecha": "2026-10-26T00:21:41.9280385+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000003: 7090 g. Foto 0fb01d7a-fbee-4f89-bac8-28b883717a4d."
+          },
+          {
+            "fecha": "2026-10-26T00:21:41.9745514+00:00",
+            "accion": "Borrador guardado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "983e8049-7e37-4ba4-9fbe-44c9ab466c6a"
+          },
+          {
+            "fecha": "2026-10-26T00:21:41.9980028+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Retirado: AFR-000001 / eedf7b9d-9adb-4584-b6e0-4448fc7e4476"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.0342372+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Instalado: AFR-000002 / 4828f556-2cac-46ec-a25b-49906feb802e"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.0421529+00:00",
+            "accion": "Trabajo físico registrado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Reemplazo: AFR-000001 → AFR-000002"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.0841459+00:00",
+            "accion": "Devolución informada por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000001"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.1159445+00:00",
+            "accion": "Incidencia",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "SIMULADO: control adicional de pesaje del caso 1."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.1355292+00:00",
+            "accion": "Término técnico informado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Trabajo finalizado; entregado a revisión de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.1583036+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000001: 1200 g. Peso corroborado por Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.1943151+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000003: 7090 g. "
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.2236723+00:00",
+            "accion": "Aprobación de Bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "Cilindros, pesos y fotos revisados por Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.2370032+00:00",
+            "accion": "Revisión de incidencia",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Registro y pesajes revisados después de la aprobación de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.2531584+00:00",
+            "accion": "Revisión de fotos y registro por Autorizador",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.2574632+00:00",
+            "accion": "Cierre administrativo",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Autorizador verificó el trabajo y las recepciones."
+          }
+        ],
+        "observacionTermino": "Trabajo finalizado; entregado a revisión de Bodega.",
+        "aprobacionBodega": {
+          "usuario": "bodega@afrisan.example",
+          "fecha": "2026-10-26T00:21:42.2236174+00:00",
+          "observacion": "Cilindros, pesos y fotos revisados por Bodega."
+        },
+        "revisionAutorizador": {
+          "usuario": "autorizador@afrisan.example",
+          "fecha": "2026-10-26T00:21:42.2531578+00:00",
+          "observacion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+        }
+      },
+      "cilindros_finales": [
+        {
+          "id": 1,
+          "codigo": "AFR-000001",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-0",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 11000,
+          "taraGr": 1100,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:41.626871+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3100,
+            "fecha": "2026-10-26T00:21:41.626871+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 1200,
+            "fecha": "2026-10-26T00:21:42.158295+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 1200,
+            "fecha": "2026-10-26T00:21:42.158295+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 100
+        },
+        {
+          "id": 2,
+          "codigo": "AFR-000002",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-1",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 13000,
+          "taraGr": 1300,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:41.6346576+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5100,
+            "fecha": "2026-10-26T00:21:41.6346576+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 1",
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:42.0421441+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000001"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:42.0421441+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000001"
+          },
+          "contenidoSegunPesajeGr": 3700
+        },
+        {
+          "id": 3,
+          "codigo": "AFR-000003",
+          "numeroSerie": "TER-20261025-212141-bb482c-1-2",
+          "refrigeranteId": 1,
+          "refrigeranteCodigo": "R134A-BB482C",
+          "refrigeranteNombre": "R134A prueba de terreno",
+          "capacidadGr": 15000,
+          "taraGr": 1500,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:41.6380905+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7100,
+            "fecha": "2026-10-26T00:21:41.6380905+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 7090,
+            "fecha": "2026-10-26T00:21:42.1938897+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7090,
+            "fecha": "2026-10-26T00:21:42.1938897+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 5590
+        }
+      ]
+    },
+    {
+      "caso": 2,
+      "ot_id": "ba1aa72f-2ba6-4729-989b-6e1efa87ef4b",
+      "ot_codigo": "OT-000002",
+      "cilindros_iniciales": [
+        {
+          "id": 4,
+          "codigo": "AFR-000004",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-0",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 12000,
+          "taraGr": 1200,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:42.2943302+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3200,
+            "fecha": "2026-10-26T00:21:42.2943302+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 2",
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 3200,
+            "fecha": "2026-10-26T00:21:42.2943302+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 2000
+        },
+        {
+          "id": 5,
+          "codigo": "AFR-000005",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-1",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 14000,
+          "taraGr": 1400,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.2981645+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5200,
+            "fecha": "2026-10-26T00:21:42.2981645+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5200,
+            "fecha": "2026-10-26T00:21:42.2981645+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 3800
+        },
+        {
+          "id": 6,
+          "codigo": "AFR-000006",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-2",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 16000,
+          "taraGr": 1600,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.3035233+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7200,
+            "fecha": "2026-10-26T00:21:42.3035233+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7200,
+            "fecha": "2026-10-26T00:21:42.3035233+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 5600
+        }
+      ],
+      "ot_final": {
+        "id": "ba1aa72f-2ba6-4729-989b-6e1efa87ef4b",
+        "codigo": "OT-000002",
+        "sucursal": "Sucursal prueba terreno 2",
+        "direccion": "Dirección simulada 2",
+        "descripcion": "Prueba 2 retiro técnico con foto, terreno y doble revisión",
+        "tecnicoEmail": "tecnico@afrisan.example",
+        "estado": "Cerrada",
+        "autorizador": "autorizador@afrisan.example",
+        "fecha": "2026-10-26T00:21:42.3093987+00:00",
+        "detalle": [
+          {
+            "refrigeranteId": 2,
+            "refrigerante": "R410A-BB482C",
+            "grSolicitados": 9000,
+            "grAutorizados": 8000
+          }
+        ],
+        "cilindrosARetirar": [
+          "AFR-000004"
+        ],
+        "entregas": [
+          {
+            "codigo": "AFR-000005",
+            "refrigerante": "R410A-BB482C",
+            "taraGr": 1400,
+            "capacidadGr": 14000,
+            "pesoBrutoGr": 5180,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:42.3611871+00:00",
+            "estado": "Instalado",
+            "pesoRecepcionGr": null,
+            "usuarioRecepcion": null,
+            "fechaRecepcion": null,
+            "id": "630dcf15-a0bc-463b-9534-70b525356778",
+            "fotoDespacho": {
+              "id": "4ecabdcf-9f4a-4ae3-93f9-1bfc4536145e",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000005",
+              "nombre": "caso-2-Despacho-AFR-000005.png",
+              "contentType": "image/png",
+              "bytes": 7845,
+              "fecha": "2026-10-26T00:21:42.3611871+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          },
+          {
+            "codigo": "AFR-000006",
+            "refrigerante": "R410A-BB482C",
+            "taraGr": 1600,
+            "capacidadGr": 16000,
+            "pesoBrutoGr": 7180,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:42.4557717+00:00",
+            "estado": "Devuelto",
+            "pesoRecepcionGr": 7180,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:42.7086103+00:00",
+            "id": "996d4d18-536d-4151-89a7-ef3a5f79e10e",
+            "fotoDespacho": {
+              "id": "baae553a-cbb2-4f42-a57c-5142269deef3",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000006",
+              "nombre": "caso-2-Despacho-AFR-000006.png",
+              "contentType": "image/png",
+              "bytes": 7956,
+              "fecha": "2026-10-26T00:21:42.4557717+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          }
+        ],
+        "operaciones": [
+          {
+            "id": "b75c5704-3fa8-4601-b53e-22f85c16bc6d",
+            "version": 4,
+            "tipo": "Reemplazo",
+            "codigoRetirado": "AFR-000004",
+            "codigoInstalado": "AFR-000005",
+            "pesoRetiradoGr": 1400,
+            "pesoInstaladoGr": 5000,
+            "observacion": "Prueba sintética de cambio físico",
+            "estado": "Registrada",
+            "fotos": [
+              {
+                "id": "98c1ce1a-1765-41e2-9f58-5918d0172987",
+                "grupo": "Retirado",
+                "codigoCilindro": "AFR-000004",
+                "nombre": "caso-2-Retirado-AFR-000004.png",
+                "contentType": "image/png",
+                "bytes": 7513,
+                "fecha": "2026-10-26T00:21:42.5473381+00:00",
+                "usuario": "tecnico@afrisan.example"
+              },
+              {
+                "id": "345bb02a-7636-4403-ad85-d0fa559a6070",
+                "grupo": "Instalado",
+                "codigoCilindro": "AFR-000005",
+                "nombre": "caso-2-Instalado-AFR-000005.png",
+                "contentType": "image/png",
+                "bytes": 7336,
+                "fecha": "2026-10-26T00:21:42.5887448+00:00",
+                "usuario": "tecnico@afrisan.example"
+              }
+            ],
+            "actualizada": "2026-10-26T00:21:42.5977812+00:00",
+            "entregaInformada": true,
+            "recibidoBodega": true,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:42.6585908+00:00",
+            "pesoRecepcionGr": 1450,
+            "observacionRecepcion": "Diferencia simulada de 50 g visible para revisión."
+          }
+        ],
+        "incidencias": [
+          {
+            "id": "b561d4f4-136b-4c17-84c4-334aedf279e3",
+            "operacionId": "b75c5704-3fa8-4601-b53e-22f85c16bc6d",
+            "tipo": "Incidencia",
+            "motivo": "SIMULADO: control adicional de pesaje del caso 2.",
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:42.623714+00:00",
+            "respuesta": "Registro y pesajes revisados después de la aprobación de Bodega.",
+            "revisor": "autorizador@afrisan.example",
+            "fechaRevision": "2026-10-26T00:21:42.7364965+00:00"
+          }
+        ],
+        "historial": [
+          {
+            "fecha": "2026-10-26T00:21:42.3094268+00:00",
+            "accion": "OT autorizada",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Pedido manual de revisión, técnico y cilindros a retirar registrados. No es integración Defontana."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.3612035+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000005: 5180 g. Foto 4ecabdcf-9f4a-4ae3-93f9-1bfc4536145e."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.4557828+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000006: 7180 g. Foto baae553a-cbb2-4f42-a57c-5142269deef3."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.5260534+00:00",
+            "accion": "Borrador guardado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "b75c5704-3fa8-4601-b53e-22f85c16bc6d"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.5473464+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Retirado: AFR-000004 / 98c1ce1a-1765-41e2-9f58-5918d0172987"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.5887489+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Instalado: AFR-000005 / 345bb02a-7636-4403-ad85-d0fa559a6070"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.5977827+00:00",
+            "accion": "Trabajo físico registrado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Reemplazo: AFR-000004 → AFR-000005"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.618407+00:00",
+            "accion": "Devolución informada por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000004"
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.6237146+00:00",
+            "accion": "Incidencia",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "SIMULADO: control adicional de pesaje del caso 2."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.6382641+00:00",
+            "accion": "Término técnico informado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Trabajo finalizado; entregado a revisión de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.6585941+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000004: 1450 g. Diferencia simulada de 50 g visible para revisión."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.7086127+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000006: 7180 g. "
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.7188431+00:00",
+            "accion": "Aprobación de Bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "Cilindros, pesos y fotos revisados por Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.736498+00:00",
+            "accion": "Revisión de incidencia",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Registro y pesajes revisados después de la aprobación de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.7663517+00:00",
+            "accion": "Revisión de fotos y registro por Autorizador",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.7756347+00:00",
+            "accion": "Cierre administrativo",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Autorizador verificó el trabajo y las recepciones."
+          }
+        ],
+        "observacionTermino": "Trabajo finalizado; entregado a revisión de Bodega.",
+        "aprobacionBodega": {
+          "usuario": "bodega@afrisan.example",
+          "fecha": "2026-10-26T00:21:42.7188427+00:00",
+          "observacion": "Cilindros, pesos y fotos revisados por Bodega."
+        },
+        "revisionAutorizador": {
+          "usuario": "autorizador@afrisan.example",
+          "fecha": "2026-10-26T00:21:42.7663509+00:00",
+          "observacion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+        }
+      },
+      "cilindros_finales": [
+        {
+          "id": 4,
+          "codigo": "AFR-000004",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-0",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 12000,
+          "taraGr": 1200,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.2943302+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3200,
+            "fecha": "2026-10-26T00:21:42.2943302+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 1450,
+            "fecha": "2026-10-26T00:21:42.6585851+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 1450,
+            "fecha": "2026-10-26T00:21:42.6585851+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 250
+        },
+        {
+          "id": 5,
+          "codigo": "AFR-000005",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-1",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 14000,
+          "taraGr": 1400,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:42.2981645+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5200,
+            "fecha": "2026-10-26T00:21:42.2981645+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 2",
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:42.5977769+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000002"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:42.5977769+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000002"
+          },
+          "contenidoSegunPesajeGr": 3600
+        },
+        {
+          "id": 6,
+          "codigo": "AFR-000006",
+          "numeroSerie": "TER-20261025-212141-bb482c-2-2",
+          "refrigeranteId": 2,
+          "refrigeranteCodigo": "R410A-BB482C",
+          "refrigeranteNombre": "R410A prueba de terreno",
+          "capacidadGr": 16000,
+          "taraGr": 1600,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.3035233+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7200,
+            "fecha": "2026-10-26T00:21:42.3035233+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 7180,
+            "fecha": "2026-10-26T00:21:42.7086067+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7180,
+            "fecha": "2026-10-26T00:21:42.7086067+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 5580
+        }
+      ]
+    },
+    {
+      "caso": 3,
+      "ot_id": "3242bb9e-6685-44ec-9f0d-48548981d17f",
+      "ot_codigo": "OT-000003",
+      "cilindros_iniciales": [
+        {
+          "id": 7,
+          "codigo": "AFR-000007",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-0",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 13000,
+          "taraGr": 1300,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:42.8325777+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3300,
+            "fecha": "2026-10-26T00:21:42.8325777+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 3",
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 3300,
+            "fecha": "2026-10-26T00:21:42.8325777+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 2000
+        },
+        {
+          "id": 8,
+          "codigo": "AFR-000008",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-1",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 15000,
+          "taraGr": 1500,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.8389332+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5300,
+            "fecha": "2026-10-26T00:21:42.8389332+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5300,
+            "fecha": "2026-10-26T00:21:42.8389332+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 3800
+        },
+        {
+          "id": 9,
+          "codigo": "AFR-000009",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-2",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 17000,
+          "taraGr": 1700,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.8496002+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7300,
+            "fecha": "2026-10-26T00:21:42.8496002+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": null,
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7300,
+            "fecha": "2026-10-26T00:21:42.8496002+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "contenidoSegunPesajeGr": 5600
+        }
+      ],
+      "ot_final": {
+        "id": "3242bb9e-6685-44ec-9f0d-48548981d17f",
+        "codigo": "OT-000003",
+        "sucursal": "Sucursal prueba terreno 3",
+        "direccion": "Dirección simulada 3",
+        "descripcion": "Prueba 3 retiro técnico con foto, terreno y doble revisión",
+        "tecnicoEmail": "tecnico@afrisan.example",
+        "estado": "Cerrada",
+        "autorizador": "autorizador@afrisan.example",
+        "fecha": "2026-10-26T00:21:42.857375+00:00",
+        "detalle": [
+          {
+            "refrigeranteId": 3,
+            "refrigerante": "R404A-BB482C",
+            "grSolicitados": 10000,
+            "grAutorizados": 9000
+          }
+        ],
+        "cilindrosARetirar": [
+          "AFR-000007"
+        ],
+        "entregas": [
+          {
+            "codigo": "AFR-000008",
+            "refrigerante": "R404A-BB482C",
+            "taraGr": 1500,
+            "capacidadGr": 15000,
+            "pesoBrutoGr": 5270,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:42.9468902+00:00",
+            "estado": "Instalado",
+            "pesoRecepcionGr": null,
+            "usuarioRecepcion": null,
+            "fechaRecepcion": null,
+            "id": "73555409-47d8-443e-9ca1-8cf9745ab5a8",
+            "fotoDespacho": {
+              "id": "ad53c3d4-227d-4e71-98b8-876c9366be70",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000008",
+              "nombre": "caso-3-Despacho-AFR-000008.png",
+              "contentType": "image/png",
+              "bytes": 8029,
+              "fecha": "2026-10-26T00:21:42.9468902+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          },
+          {
+            "codigo": "AFR-000009",
+            "refrigerante": "R404A-BB482C",
+            "taraGr": 1700,
+            "capacidadGr": 17000,
+            "pesoBrutoGr": 7270,
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:43.1042417+00:00",
+            "estado": "Devuelto",
+            "pesoRecepcionGr": 7270,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:43.4238081+00:00",
+            "id": "f270820c-73b6-4b5d-a42c-ea1e6449b80e",
+            "fotoDespacho": {
+              "id": "3ba09c1b-7ac1-40e2-b568-ce61cafe69d0",
+              "grupo": "Despacho",
+              "codigoCilindro": "AFR-000009",
+              "nombre": "caso-3-Despacho-AFR-000009.png",
+              "contentType": "image/png",
+              "bytes": 7913,
+              "fecha": "2026-10-26T00:21:43.1042417+00:00",
+              "usuario": "tecnico@afrisan.example"
+            }
+          }
+        ],
+        "operaciones": [
+          {
+            "id": "6d9413ff-e99b-495e-9614-c5b72f5ccfa9",
+            "version": 4,
+            "tipo": "Reemplazo",
+            "codigoRetirado": "AFR-000007",
+            "codigoInstalado": "AFR-000008",
+            "pesoRetiradoGr": 1600,
+            "pesoInstaladoGr": 5000,
+            "observacion": "Prueba sintética de cambio físico",
+            "estado": "Registrada",
+            "fotos": [
+              {
+                "id": "c84052f5-d650-427c-9e8d-593b209ee7f2",
+                "grupo": "Retirado",
+                "codigoCilindro": "AFR-000007",
+                "nombre": "caso-3-Retirado-AFR-000007.png",
+                "contentType": "image/png",
+                "bytes": 7660,
+                "fecha": "2026-10-26T00:21:43.2381791+00:00",
+                "usuario": "tecnico@afrisan.example"
+              },
+              {
+                "id": "9bd06fff-3a73-4912-8615-172b04c50153",
+                "grupo": "Instalado",
+                "codigoCilindro": "AFR-000008",
+                "nombre": "caso-3-Instalado-AFR-000008.png",
+                "contentType": "image/png",
+                "bytes": 7472,
+                "fecha": "2026-10-26T00:21:43.2651148+00:00",
+                "usuario": "tecnico@afrisan.example"
+              }
+            ],
+            "actualizada": "2026-10-26T00:21:43.2856218+00:00",
+            "entregaInformada": true,
+            "recibidoBodega": true,
+            "usuarioRecepcion": "bodega@afrisan.example",
+            "fechaRecepcion": "2026-10-26T00:21:43.3917128+00:00",
+            "pesoRecepcionGr": 1600,
+            "observacionRecepcion": "Peso corroborado por Bodega."
+          }
+        ],
+        "incidencias": [
+          {
+            "id": "1541b572-4f5a-4c35-8bb5-d95b14d908b0",
+            "operacionId": "6d9413ff-e99b-495e-9614-c5b72f5ccfa9",
+            "tipo": "Incidencia",
+            "motivo": "SIMULADO: control adicional de pesaje del caso 3.",
+            "usuario": "tecnico@afrisan.example",
+            "fecha": "2026-10-26T00:21:43.323914+00:00",
+            "respuesta": "Registro y pesajes revisados después de la aprobación de Bodega.",
+            "revisor": "autorizador@afrisan.example",
+            "fechaRevision": "2026-10-26T00:21:43.4751661+00:00"
+          }
+        ],
+        "historial": [
+          {
+            "fecha": "2026-10-26T00:21:42.8574043+00:00",
+            "accion": "OT autorizada",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Pedido manual de revisión, técnico y cilindros a retirar registrados. No es integración Defontana."
+          },
+          {
+            "fecha": "2026-10-26T00:21:42.9469093+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000008: 5270 g. Foto ad53c3d4-227d-4e71-98b8-876c9366be70."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.1042635+00:00",
+            "accion": "Retiro de bodega por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000009: 7270 g. Foto 3ba09c1b-7ac1-40e2-b568-ce61cafe69d0."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.2114443+00:00",
+            "accion": "Borrador guardado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "6d9413ff-e99b-495e-9614-c5b72f5ccfa9"
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.2381978+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Retirado: AFR-000007 / c84052f5-d650-427c-9e8d-593b209ee7f2"
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.2651204+00:00",
+            "accion": "Evidencia adjunta",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Instalado: AFR-000008 / 9bd06fff-3a73-4912-8615-172b04c50153"
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.2856231+00:00",
+            "accion": "Trabajo físico registrado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Reemplazo: AFR-000007 → AFR-000008"
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.31557+00:00",
+            "accion": "Devolución informada por técnico",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "AFR-000007"
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.3239148+00:00",
+            "accion": "Incidencia",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "SIMULADO: control adicional de pesaje del caso 3."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.3501763+00:00",
+            "accion": "Término técnico informado",
+            "usuario": "tecnico@afrisan.example",
+            "descripcion": "Trabajo finalizado; entregado a revisión de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.3917156+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000007: 1600 g. Peso corroborado por Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.423811+00:00",
+            "accion": "Recepción oficial de bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "AFR-000009: 7270 g. "
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.4404617+00:00",
+            "accion": "Aprobación de Bodega",
+            "usuario": "bodega@afrisan.example",
+            "descripcion": "Cilindros, pesos y fotos revisados por Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.4751668+00:00",
+            "accion": "Revisión de incidencia",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Registro y pesajes revisados después de la aprobación de Bodega."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.5132658+00:00",
+            "accion": "Revisión de fotos y registro por Autorizador",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+          },
+          {
+            "fecha": "2026-10-26T00:21:43.5277832+00:00",
+            "accion": "Cierre administrativo",
+            "usuario": "autorizador@afrisan.example",
+            "descripcion": "Autorizador verificó el trabajo y las recepciones."
+          }
+        ],
+        "observacionTermino": "Trabajo finalizado; entregado a revisión de Bodega.",
+        "aprobacionBodega": {
+          "usuario": "bodega@afrisan.example",
+          "fecha": "2026-10-26T00:21:43.4404612+00:00",
+          "observacion": "Cilindros, pesos y fotos revisados por Bodega."
+        },
+        "revisionAutorizador": {
+          "usuario": "autorizador@afrisan.example",
+          "fecha": "2026-10-26T00:21:43.513265+00:00",
+          "observacion": "Fotografías comparadas con el registro de salida, terreno y recepción."
+        }
+      },
+      "cilindros_finales": [
+        {
+          "id": 7,
+          "codigo": "AFR-000007",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-0",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 13000,
+          "taraGr": 1300,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.8325777+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 3300,
+            "fecha": "2026-10-26T00:21:42.8325777+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 1600,
+            "fecha": "2026-10-26T00:21:43.3917084+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 1600,
+            "fecha": "2026-10-26T00:21:43.3917084+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 300
+        },
+        {
+          "id": 8,
+          "codigo": "AFR-000008",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-1",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 15000,
+          "taraGr": 1500,
+          "estado": "Instalado",
+          "fechaRegistro": "2026-10-26T00:21:42.8389332+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 5300,
+            "fecha": "2026-10-26T00:21:42.8389332+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Sucursal",
+          "sucursal": "Sucursal prueba terreno 3",
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:43.2856167+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000003"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 5000,
+            "fecha": "2026-10-26T00:21:43.2856167+00:00",
+            "usuario": "tecnico@afrisan.example",
+            "observacion": "Instalación física en OT-000003"
+          },
+          "contenidoSegunPesajeGr": 3500
+        },
+        {
+          "id": 9,
+          "codigo": "AFR-000009",
+          "numeroSerie": "TER-20261025-212141-bb482c-3-2",
+          "refrigeranteId": 3,
+          "refrigeranteCodigo": "R404A-BB482C",
+          "refrigeranteNombre": "R404A prueba de terreno",
+          "capacidadGr": 17000,
+          "taraGr": 1700,
+          "estado": "Disponible",
+          "fechaRegistro": "2026-10-26T00:21:42.8496002+00:00",
+          "pesajeInicial": {
+            "pesoBrutoGr": 7300,
+            "fecha": "2026-10-26T00:21:42.8496002+00:00",
+            "usuario": "Bodega Demo",
+            "observacion": null
+          },
+          "ubicacion": "Bodega",
+          "sucursal": null,
+          "tecnico": null,
+          "ultimoPesaje": {
+            "pesoBrutoGr": 7270,
+            "fecha": "2026-10-26T00:21:43.4238027+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "pesajeRegistrado": {
+            "pesoBrutoGr": 7270,
+            "fecha": "2026-10-26T00:21:43.4238027+00:00",
+            "usuario": "bodega@afrisan.example",
+            "observacion": "Recepción de envase retirado"
+          },
+          "contenidoSegunPesajeGr": 5570
+        }
+      ]
+    }
+  ],
+  "cantidad_comprobaciones": 274,
+  "instancia": "86da61efde184269bd57a0ae77c2e2a6"
+}

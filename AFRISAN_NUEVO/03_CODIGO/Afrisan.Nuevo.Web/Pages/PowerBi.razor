@@ -1,0 +1,123 @@
+@page "/power-bi"
+@attribute [Authorize(Roles = RolesBi.Consulta)]
+@inject InventarioClient Api
+@inject SesionService Sesion
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using Microsoft.JSInterop
+@using System.Globalization
+
+<PageTitle>Power BI · AFRISAN</PageTitle>
+<div class="page-heading">
+    <div><span class="eyebrow">INFORMACIÓN PARA GESTIÓN</span><h1>Power BI</h1><p>Inventario, órdenes y trabajo en terreno.</p></div>
+    <button class="btn primary" disabled="@(cargando || descargando || !persistente)" @onclick="Descargar">@(descargando ? "Preparando paquete…" : "Descargar paquete Power BI")</button>
+</div>
+@if(error is not null){<div class="notice error" role="alert">@error</div>}
+@if(mensaje is not null){<div class="notice success" role="status">@mensaje</div>}
+@if(!persistente)
+{
+    <div class="notice info">Este módulo necesita la conexión PostgreSQL. Abre la instalación con registros persistentes.</div>
+}
+else
+{
+    <section class="panel bi-report" aria-labelledby="titulo-informe">
+        <div class="section-heading"><h2 id="titulo-informe">Informe de Power BI</h2><span class="stage-pill">@(config?.Configurado == true ? "CONFIGURADO" : "PENDIENTE DE PUBLICACIÓN")</span></div>
+        @if(config?.Configurado == true)
+        {
+            <p class="muted">Microsoft solicitará tu cuenta y comprobará el acceso al informe. Los filtros de la vista previa inferior se aplican solo a esa vista.</p>
+            <p><a class="btn secondary" href="@config.AbrirUrl" target="_blank" rel="noopener noreferrer">Abrir en Power BI ↗</a></p>
+            <iframe title="Informe operativo AFRISAN en Power BI" src="@config.EmbedUrl" class="bi-frame" allowfullscreen="true" referrerpolicy="no-referrer"></iframe>
+            <p class="muted">Si no carga o el navegador bloquea el inicio de sesión, usa «Abrir en Power BI».</p>
+        }
+        else if(cargando){<p role="status">Consultando configuración…</p>}
+        else
+        {
+            <p>El módulo está preparado. Falta crear y publicar el informe en Power BI.</p>
+            <ol class="bi-steps"><li>Descarga el paquete y descomprímelo en una carpeta privada.</li><li>Abre Power BI Desktop y sigue LEEME.md: incluye consultas, medidas y tema AFRISAN.</li><li>Publica el informe y configura su identificador en el servidor para verlo aquí.</li></ol>
+            <p class="muted">El paquete incluye los registros completos al momento de descargarlo. Su actualización es manual.</p>
+        }
+    </section>
+    <div class="section-heading mt"><h2>Vista previa operativa</h2><span class="muted">Consulta directa de AFRISAN</span></div>
+    <p class="muted">Esta vista usa la base actual. El informe publicado tendrá su propia fecha de actualización.</p>
+    <section class="panel" aria-label="Filtros de la vista previa">
+        <div class="filter-bar">
+            <div><label for="bi-desde">Desde</label><input id="bi-desde" type="date" @bind="desde" disabled="@cargando" /></div>
+            <div><label for="bi-hasta">Hasta</label><input id="bi-hasta" type="date" @bind="hasta" disabled="@cargando" /></div>
+            <div><label for="bi-sucursal">Sucursal</label><select id="bi-sucursal" @bind="sucursalId" disabled="@cargando"><option value="">Todas</option>@foreach(var x in sucursales){<option value="@x.Id">@x.Nombre</option>}</select></div>
+            <div><label for="bi-refrigerante">Refrigerante</label><select id="bi-refrigerante" @bind="refrigeranteId" disabled="@cargando"><option value="">Todos</option>@foreach(var x in refrigerantes){<option value="@x.Id">@x.Nombre</option>}</select></div>
+            <div><label for="bi-tecnico">Técnico</label><select id="bi-tecnico" @bind="tecnicoId" disabled="@cargando"><option value="">Todos</option>@foreach(var x in tecnicos){<option value="@x.Id">@x.Nombre</option>}</select></div>
+        </div>
+        <div class="form-actions"><button class="btn subtle" disabled="@cargando" @onclick="Limpiar">Restablecer</button><button class="btn primary" disabled="@cargando" @onclick="Cargar">@(cargando ? "Consultando…" : "Aplicar filtros / Actualizar")</button></div>
+    </section>
+    @if(resumen is not null)
+    {
+        <p class="muted bi-cut" role="status">Corte: @resumen.GeneradoUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss") · Período: @resumen.Desde.ToString("dd/MM/yyyy") al @resumen.Hasta.ToString("dd/MM/yyyy") (Chile).</p>
+        <div class="metric-grid" aria-busy="@cargando">
+            <div class="metric"><span>Cilindros al corte</span><strong>@resumen.Cilindros</strong><small>@resumen.SinPesaje sin pesaje · no usa filtro de fecha</small></div>
+            <div class="metric"><span>OT abiertas</span><strong>@resumen.OrdenesAbiertas</strong><small>Creadas en el período · @resumen.OrdenesCerradas cerradas</small></div>
+            <div class="metric"><span>Kg en cilindros instalados</span><strong>@Numero(resumen.KgInstalados)</strong><small>Operaciones confirmadas en el período</small></div>
+            <div class="metric"><span>Retirados pendientes</span><strong>@resumen.RetiradosPendientes</strong><small>Reemplazos confirmados en el período, aún sin recepción</small></div>
+            <div class="metric"><span>Incidencias abiertas</span><strong>@resumen.IncidenciasAbiertas</strong><small>Registradas en el período, aún sin revisión</small></div>
+        </div>
+        <div class="bi-chart-grid">
+            @Grafico("Inventario por estado",resumen.InventarioPorEstado,"cilindros")
+            @Grafico("Órdenes por estado",resumen.OrdenesPorEstado,"OT")
+            @Grafico("Kg instalados por refrigerante",resumen.InstaladosPorRefrigerante,"kg")
+        </div>
+        <div class="notice info mt">Los kilos representan el contenido neto medido al instalar el cilindro. Los estados y pendientes corresponden al corte actual. Para revisar todos los pendientes históricos, amplía el período.</div>
+    }
+    else if(cargando){<p role="status">Cargando indicadores…</p>}
+}
+
+@code {
+    private PowerBiConfiguracionResponse? config;
+    private BiResumenResponse? resumen;
+    private BiOpcionResponse[] sucursales=[],refrigerantes=[],tecnicos=[];
+    private DateTime? desde,hasta;
+    private int? sucursalId,tecnicoId;
+    private long? refrigeranteId;
+    private bool cargando,descargando;
+    private string? error,mensaje;
+    private bool persistente=>Sesion.Entorno?.Modo=="PostgreSQL";
+    private static string Numero(decimal n)=>n.ToString("N2",CultureInfo.GetCultureInfo("es-CL"));
+    protected override Task OnInitializedAsync()=>persistente?Cargar():Task.CompletedTask;
+    private async Task Cargar()
+    {
+        if(cargando)return;
+        cargando=true;error=null;mensaje=null;
+        try
+        {
+            if(desde>hasta)throw new InvalidOperationException("La fecha inicial debe ser anterior o igual a la final.");
+            var conf=Api.PowerBiConfiguracionAsync();
+            var datos=Api.PowerBiResumenAsync(desde,hasta,sucursalId,refrigeranteId,tecnicoId);
+            await Task.WhenAll(conf,datos);
+            config=await conf;resumen=await datos;
+            desde=resumen.Desde.ToDateTime(TimeOnly.MinValue);hasta=resumen.Hasta.ToDateTime(TimeOnly.MinValue);
+            sucursales=resumen.Sucursales;refrigerantes=resumen.Refrigerantes;tecnicos=resumen.Tecnicos;
+        }
+        catch(Exception ex){error=Formato.Error(ex);resumen=null;}
+        finally{cargando=false;}
+    }
+    private Task Limpiar(){desde=null;hasta=null;sucursalId=null;refrigeranteId=null;tecnicoId=null;return Cargar();}
+    private async Task Descargar()
+    {
+        if(descargando)return;
+        descargando=true;error=null;mensaje=null;
+        try
+        {
+            var bytes=await Api.PowerBiPaqueteAsync();
+            using var stream=new MemoryStream(bytes);
+            using var referencia=new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("afrisanBi.descargar",$"AFRISAN_PowerBI_{DateTime.UtcNow:yyyyMMdd_HHmmss}.zip",referencia);
+            mensaje="Paquete descargado con todos los registros. Descomprímelo y abre LEEME.md para crear el informe.";
+        }
+        catch(Exception ex){error=Formato.Error(ex);}
+        finally{descargando=false;}
+    }
+    private RenderFragment Grafico(string titulo,BiGrupoResponse[] grupos,string unidad)=>@<section class="panel bi-chart"><h3>@titulo</h3>
+        @if(grupos.Length==0){<p class="muted">Sin registros para estos filtros.</p>}
+        else
+        {
+            <ul aria-label="@titulo">@foreach(var g in grupos){<li><div><span>@g.Nombre</span><strong>@Numero(g.Valor) @unidad</strong></div><meter min="0" max="@Math.Max(1m,grupos.Max(x=>x.Valor))" value="@g.Valor" aria-label="@($"{g.Nombre}: {Numero(g.Valor)} {unidad}")">@g.Valor</meter></li>}</ul>
+        }
+    </section>;
+}

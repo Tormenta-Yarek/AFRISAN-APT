@@ -1,0 +1,45 @@
+@page "/ordenes"
+@attribute [Authorize]
+@inject TrabajoLocalService Local
+@inject SesionService Sesion
+
+<PageTitle>Órdenes de trabajo · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">REEMPLAZO FÍSICO DE CILINDROS</span><h1>@(Sesion.Sesion?.Rol == "Tecnico" ? "Mis órdenes de trabajo" : "Órdenes de trabajo")</h1><p>Cada OT identifica una sucursal, un técnico y el pedido por refrigerante.</p></div>
+    @if (Sesion.Sesion?.Rol == "Autorizador") { <a class="btn primary" href="ordenes/nueva">+ Preparar OT de revisión</a> }
+</div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+@if (Local.ConsultaOffline) { <div class="notice warning">Consulta local sin conexión. La lista corresponde a la última información guardada, no al estado actual del servidor.</div> }
+<section class="panel"><div class="filter-bar"><div><label for="buscar-ot">Buscar código o sucursal</label><input id="buscar-ot" @bind="busqueda" @bind:event="oninput" /></div><button class="btn secondary" @onclick="Cargar" disabled="@cargando">Actualizar</button></div>
+    @if (cargando) { <p class="loading" role="status">Consultando órdenes…</p> }
+    else if (error is not null) { <p>No se obtuvo una consulta actualizada.</p> }
+    else if (!Filtradas.Any()) { <div class="empty-state"><h2>No hay OT para mostrar</h2><p>@(Sesion.Sesion?.Rol == "Tecnico" ? "El Autorizador debe asignarte un trabajo antes de registrar cambios. Abre tus OT con conexión para disponer de su copia local." : "El Autorizador puede preparar una OT manual para revisar este recorrido. No se crean ejemplos automáticamente.")</p></div> }
+    else { <div class="table-wrap"><table><thead><tr><th>OT / sucursal</th><th>Técnico</th><th>Estado</th><th>Operaciones</th><th>Detalle</th></tr></thead><tbody>
+        @foreach (var ot in Filtradas) { <tr @key="ot.Id"><td><strong>@ot.Codigo</strong><small class="cell-note">@ot.Sucursal</small></td><td>@ot.TecnicoEmail</td><td><span class="badge @(ot.Estado == "Cerrada" ? "success" : "pending")">@Formato.Estado(ot.Estado)</span></td><td>@ot.Operaciones.Count(o => o.Estado == "Registrada") registradas</td><td><a class="table-link" href="@($"ordenes/{ot.Id}")">Abrir →</a></td></tr> }
+    </tbody></table></div> }
+</section>
+@if (Sesion.Sesion?.Rol == "Tecnico")
+{
+    <section class="panel mt"><div class="panel-heading"><h2>Borradores y fotos en este dispositivo</h2><button class="btn secondary" disabled="@(ocupado || Local.Sincronizando)" @onclick="Sincronizar">Sincronizar pendientes</button></div>
+        <p class="muted">@(borradores.Count(b => b.Pendiente)) pendientes. Se conservan por usuario en este navegador, incluso al cerrar sesión.</p>
+        @if (Local.Mensaje is not null) { <div class="notice info" role="status">@Local.Mensaje</div> }
+        @foreach (var b in borradores.Where(b => b.Pendiente || b.Error is not null)) { <div class="draft-summary"><strong>@b.Datos.Tipo · @b.Datos.CodigoInstalado</strong><p>@(b.Error ?? "Pendiente de envío a la API.")</p><a href="@($"ordenes/{b.OtId}/operacion/{b.Datos.Id}")">Abrir borrador</a></div> }
+    </section>
+}
+
+@code {
+    private OtResponse[] ordenes = [];
+    private BorradorLocal[] borradores = [];
+    private string busqueda = "";
+    private bool cargando, ocupado;
+    private string? error;
+    private IEnumerable<OtResponse> Filtradas => ordenes.Where(o => o.Codigo.Contains(busqueda, StringComparison.OrdinalIgnoreCase) || o.Sucursal.Contains(busqueda, StringComparison.OrdinalIgnoreCase));
+    protected override Task OnInitializedAsync() => Cargar();
+    private async Task Cargar()
+    {
+        cargando = true; error = null;
+        try { ordenes = await Local.OrdenesAsync(); if (Sesion.Sesion?.Rol == "Tecnico") borradores = await Local.BorradoresAsync(); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { cargando = false; }
+    }
+    private async Task Sincronizar() { ocupado = true; try { await Local.SincronizarAsync(); await Cargar(); } catch (Exception ex) { error = Formato.Error(ex); } finally { ocupado = false; } }
+}

@@ -1,0 +1,198 @@
+@page "/ordenes/{Id:guid}"
+@attribute [Authorize]
+@inject InventarioClient Api
+@inject TrabajoLocalService Local
+@inject SesionService Sesion
+
+<PageTitle>Trabajo asignado · AFRISAN</PageTitle>
+<a href="ordenes" class="back-link">← Órdenes de trabajo</a>
+@if (cargando) { <h1>Trabajo asignado</h1><p role="status">Consultando OT…</p> }
+else if (ot is null) { <h1>No se pudo consultar la OT</h1><div class="notice error">@error</div><button class="btn secondary" @onclick="Cargar">Reintentar</button> }
+else
+{
+    <div class="page-heading"><div><span class="eyebrow">@ot.Sucursal</span><h1>@ot.Codigo</h1><p>@ot.Direccion · @ot.Descripcion</p><p>Técnico asignado: <strong>@ot.TecnicoEmail</strong></p></div><span class="badge large @(ot.Estado == "Cerrada" ? "success" : "pending")">@Formato.Estado(ot.Estado)</span></div>
+    @if (error is not null) { <div class="notice error" role="alert">@error</div> }
+    @if (mensaje is not null) { <div class="notice success" role="status">@mensaje</div> }
+    @if (Local.ConsultaOffline) { <div class="notice warning">Copia local. Los cambios y fotografías pueden guardarse en este dispositivo y enviarse cuando vuelva la conexión.</div> }
+    <div class="notice info">Esta revisión registra envases y pesajes. Todavía no evalúa los límites semanales/mensuales de la sucursal ni calcula emisiones a partir de una entrega.</div>
+    <div class="split-grid">
+        <section class="panel"><h2>Pedido y autorización</h2><div class="table-wrap"><table><thead><tr><th>Refrigerante</th><th>Solicitado</th><th>Autorizado</th></tr></thead><tbody>@foreach (var l in ot.Detalle) { <tr><td>@l.Refrigerante</td><td>@Formato.Gramos(l.GrSolicitados)</td><td>@Formato.Gramos(l.GrAutorizados)</td></tr> }</tbody></table></div><p class="field-help">Estos importes de masa son del pedido. No son límites semanales/mensuales ni una medición de consumo o emisiones.</p><h3>Cilindros previstos para retiro</h3><p>@(ot.CilindrosARetirar.Length == 0 ? "Sin retiros previstos: pedido para agregados." : string.Join(", ", ot.CilindrosARetirar))</p></section>
+        <section class="panel"><h2>Retiro de bodega por el técnico</h2>
+            @if (ot.Entregas.Length == 0) { <p class="muted">El técnico todavía no ha registrado cilindros retirados.</p> }
+            @foreach (var e in ot.Entregas) {
+                <article class="operation-card"><strong>@e.Codigo</strong> · @e.Refrigerante<br /><small>@Formato.Gramos(e.PesoBrutoGr) bruto de salida · @e.Fecha.ToLocalTime().ToString("dd/MM HH:mm") · @Formato.Estado(e.Estado)<br />Retirado por @e.Usuario</small>
+                    @if (e.PesoRecepcionGr is not null) { <p>Recepción sin uso: @Formato.Gramos(e.PesoRecepcionGr) · @e.UsuarioRecepcion</p> }
+                    @if (e.FotoDespacho is not null && PuedeVerFotos) { <button class="btn secondary mt" disabled="@ocupado" @onclick="() => MostrarFotoDespacho(e)">Ver foto de salida de @e.Codigo</button> }
+                </article>
+            }
+            @if (EsTecnico && Editable)
+            {
+                <p>Selecciona un cilindro del refrigerante encargado en esta OT. Pésalo y adjunta la foto antes de llevártelo.</p>
+                <label for="entrega-codigo">Cilindro a retirar de bodega</label><select id="entrega-codigo" @bind="codigoEntrega" @bind:after="CambiarCilindroRetiro" disabled="@ocupado"><option value="">Selecciona un cilindro disponible</option>@foreach (var c in disponiblesBodega) { <option value="@c.Codigo">@c.Codigo — @c.RefrigeranteCodigo — @Formato.Gramos(c.ContenidoSegunPesajeGr) de gas</option> }</select>
+                @if (disponiblesBodega.Length == 0) { <p class="field-help">No hay cilindros disponibles en Bodega para este pedido. Bodega debe registrar y pesar los envases. Actualiza la OT después.</p> }
+                <label for="entrega-peso">Peso bruto de salida (g)</label><InputNumber id="entrega-peso" @bind-Value="pesoEntrega" @bind-Value:after="CambiarPesoRetiro" min="0" step="1" disabled="@ocupado" />
+                <label for="entrega-foto">Foto de la balanza al retirar de bodega</label><InputFile @key="archivoRetiroKey" id="entrega-foto" OnChange="CargarFotoDespacho" accept="image/jpeg,image/png,image/webp" capture="environment" disabled="@(ocupado || string.IsNullOrWhiteSpace(codigoEntrega))" />
+                @if (fotoDespacho is not null) { <div class="photo-grid"><figure><img src="@($"data:{fotoDespacho.ContentType};base64,{fotoDespacho.Base64}")" alt="Foto del peso de salida de bodega" /><figcaption>@fotoDespacho.Nombre</figcaption></figure></div> }
+                <p class="field-help">Al confirmar, el cilindro queda en proceso de despacho y bajo tu custodia. Se requiere conexión para registrar el retiro.</p>
+                <button class="btn primary mt" disabled="@(ocupado || Local.ConsultaOffline || fotoDespacho is null || pesoEntrega is null || string.IsNullOrWhiteSpace(codigoEntrega))" @onclick="Entregar">Confirmar retiro e iniciar despacho</button>
+            }
+        </section>
+    </div>
+    <button class="btn secondary mt" disabled="@ocupado" @onclick="Cargar">Actualizar estado de la OT</button>
+    @if (EsAutorizador && ot.AprobacionBodega is null) { <div class="notice warning">La revisión de fotos y registro se habilita cuando Bodega confirma los cilindros, sus pesos y aprueba el trabajo.</div> }
+    <section class="panel mt"><div class="panel-heading"><h2>Cambios y agregados</h2>@if (EsTecnico && Editable && ot.Entregas.Any(e => e.Estado == "EnProcesoDespacho")) { <a class="btn primary" href="@($"ordenes/{Id}/operacion/{Guid.NewGuid()}")">+ Registrar trabajo físico</a> }</div>
+        @if (ot.Operaciones.Length == 0) { <p class="muted">No hay operaciones recibidas por la API. Los borradores locales se muestran debajo.</p> }
+        @foreach (var op in ot.Operaciones)
+        {
+            <article class="operation-card"><div class="panel-heading"><h3>@op.Tipo · @op.Estado</h3><span class="badge neutral">@op.Fotos.Length fotos</span></div><p><strong>Retirado:</strong> @(op.CodigoRetirado ?? "No aplica") · @Formato.Gramos(op.PesoRetiradoGr)<br /><strong>Instalado:</strong> @(op.CodigoInstalado ?? "Pendiente") · @Formato.Gramos(op.PesoInstaladoGr)</p>
+                @if (!string.IsNullOrWhiteSpace(op.Observacion)) { <p>@op.Observacion</p> }
+                <div class="form-actions">
+                    @if (EsTecnico && op.Estado == "Borrador" && Editable) { <a class="btn secondary" href="@($"ordenes/{Id}/operacion/{op.Id}")">Continuar borrador</a> }
+                    @if (op.Fotos.Length > 0 && PuedeVerFotos) { <button class="btn secondary" @onclick="() => MostrarFotos(op)" disabled="@ocupado">Ver evidencias</button> }
+                    @if (EsTecnico && op.Estado == "Registrada" && op.Tipo == "Reemplazo" && !op.EntregaInformada && !op.RecibidoBodega) { <button class="btn secondary" disabled="@ocupado" @onclick="() => InformarEntrega(op.Id)">Informar entrega del retirado en bodega</button> }
+                </div>
+                @if (op.Tipo == "Reemplazo" && op.Estado == "Registrada") { <p class="field-help">@(op.RecibidoBodega ? $"Recibido por {op.UsuarioRecepcion} el {op.FechaRecepcion?.ToLocalTime():dd/MM HH:mm}" : op.EntregaInformada ? "El técnico informó devolución. Falta recepción oficial de bodega." : "Pendiente de recepción del cilindro retirado.")</p> }
+                @if (op.PesoRecepcionGr is not null) { <p><strong>Peso confirmado por Bodega:</strong> @Formato.Gramos(op.PesoRecepcionGr). Diferencia con terreno: @Formato.Gramos(op.PesoRecepcionGr - op.PesoRetiradoGr).</p>@if (!string.IsNullOrWhiteSpace(op.ObservacionRecepcion)) { <p>@op.ObservacionRecepcion</p> } }
+            </article>
+        }
+        @if (EsTecnico)
+        {
+            @foreach (var b in borradores.Where(b => b.OtId == Id && b.Pendiente)) { <div class="notice warning"><strong>Borrador local: @b.Datos.Tipo</strong><p>@(b.Error ?? "Fotos/datos pendientes de sincronización.")</p><a href="@($"ordenes/{Id}/operacion/{b.Datos.Id}")">Abrir borrador local →</a></div> }
+            <button class="btn secondary" disabled="@ocupado" @onclick="Sincronizar">Sincronizar y actualizar</button>
+        }
+    </section>
+    @if (fotosVisibles.Count > 0) { <section class="panel mt"><h2>Evidencias del trabajo seleccionado</h2><div class="photo-grid">@foreach (var f in fotosVisibles) { <figure><img src="@f.Url" alt="@($"Pesaje {f.Info.Grupo} de {f.Info.CodigoCilindro}")" /><figcaption>@f.Info.Grupo · @f.Info.CodigoCilindro<br />@f.Info.Nombre</figcaption></figure> }</div><button class="btn subtle" @onclick="() => fotosVisibles.Clear()">Ocultar fotos</button></section> }
+    @if (EsBodega && ot.AprobacionBodega is null && ot.Estado != "Cerrada")
+    {
+        <section class="panel mt"><h2>Recepción oficial de bodega</h2><p class="muted">Recibe el envase retirado de sucursal o un cilindro entregado que no se utilizó.</p><div class="form-grid"><div><label for="recepcion-codigo">Código recibido</label><select id="recepcion-codigo" @bind="codigoRecepcion"><option value="">Selecciona un envase pendiente</option>@foreach (var codigo in RecepcionesPendientes) { <option value="@codigo">@codigo</option> }</select></div><div><label for="recepcion-peso">Peso bruto recibido (g)</label><InputNumber id="recepcion-peso" @bind-Value="pesoRecepcion" min="0" step="1" /></div></div><label for="recepcion-nota">Observación</label><textarea id="recepcion-nota" @bind="notaRecepcion" maxlength="1000"></textarea><button class="btn primary mt" disabled="@ocupado" @onclick="Recibir">Confirmar recepción física</button></section>
+    }
+    @if ((EsTecnico || EsBodega) && ot.AprobacionBodega is null && ot.Estado != "Cerrada")
+    {
+        <section class="panel mt"><h2>Incidencia o solicitud de rectificación</h2><div class="form-grid"><div><label for="incidencia-tipo">Tipo</label><select id="incidencia-tipo" @bind="tipoIncidencia"><option>Incidencia</option><option value="Rectificacion">Solicitud de rectificación</option></select></div><div><label for="incidencia-operacion">Trabajo relacionado (opcional)</label><select id="incidencia-operacion" @bind="operacionIncidencia"><option value="">Toda la OT</option>@foreach (var op in ot.Operaciones) { <option value="@op.Id">@op.Tipo · @op.CodigoInstalado</option> }</select></div></div><label for="incidencia-motivo">Hechos / motivo de corrección</label><textarea id="incidencia-motivo" @bind="motivoIncidencia" maxlength="2000"></textarea><button class="btn secondary mt" @onclick="Incidencia" disabled="@ocupado">Enviar para revisión</button><p class="field-help">Conserva el registro original. El Autorizador revisa; el técnico no sobrescribe ni borra los pesajes confirmados.</p></section>
+    }
+    <section class="panel mt"><h2>Revisión de incidencias</h2>
+        @foreach (var pendiente in incidenciasLocales.Where(i => i.OtId == Id && i.Pendiente)) { <div class="notice warning"><strong>@pendiente.Datos.Tipo guardada en este dispositivo</strong><p>@pendiente.Datos.Motivo</p><p>@(pendiente.Error ?? "Pendiente de enviar a la API. No equivale a una revisión del Autorizador.")</p></div> }
+        @if (ot.Incidencias.Length == 0) { <p class="muted">Sin incidencias registradas.</p> }
+        @foreach (var inc in ot.Incidencias) { <article class="operation-card"><strong>@inc.Tipo</strong><p>@inc.Motivo</p><small>@inc.Usuario · @inc.Fecha.ToLocalTime().ToString("dd/MM HH:mm")</small>@if (inc.Respuesta is not null) { <div class="notice info"><strong>Revisión: @inc.Revisor</strong><p>@inc.Respuesta</p></div> } else if (EsAutorizador && ot.AprobacionBodega is not null) { <label>Conclusión de revisión</label><textarea @bind="respuestas[inc.Id]" maxlength="2000"></textarea><button class="btn secondary mt" disabled="@ocupado" @onclick="() => Resolver(inc.Id)">Registrar conclusión</button> } else { <p class="field-help">Pendiente de aprobación de Bodega y revisión del Autorizador.</p> }</article> }
+    </section>
+    @if (EsTecnico && Editable)
+    {
+        <section class="panel mt"><h2>Informar término del trabajo</h2><p>Envía el trabajo a Bodega para confirmar los cilindros y sus pesos. Después de su aprobación revisa el Autorizador.</p><label for="termino-nota">Observaciones y pendientes</label><textarea id="termino-nota" @bind="notaTermino" maxlength="2000"></textarea><button class="btn primary mt" disabled="@ocupado" @onclick="Terminar">Enviar trabajo a revisión de Bodega</button></section>
+    }
+    @if (ot.ObservacionTermino is not null) { <div class="notice info"><strong>Informe técnico</strong><p>@ot.ObservacionTermino</p></div> }
+    @if (ot.AprobacionBodega is { } aprobacion) { <div class="notice success"><strong>Aprobado por Bodega:</strong> @aprobacion.Usuario · @aprobacion.Fecha.ToLocalTime().ToString("dd/MM HH:mm")<p>@aprobacion.Observacion</p></div> }
+    @if (EsBodega && ot.Estado == "PendienteBodega")
+    {
+        <section class="panel mt"><h2>Aprobación de Bodega</h2><p>Revisa las fotos de salida y de terreno, los códigos y los pesos recibidos. Deben estar recibidos todos los envases pendientes.</p><label class="check-label"><input type="checkbox" @bind="confirmoBodega" /> Confirmo los cilindros, sus pesos y las evidencias de este trabajo</label><label for="revision-bodega-nota">Observación de Bodega</label><textarea id="revision-bodega-nota" @bind="notaBodega" maxlength="2000"></textarea><button class="btn primary mt" disabled="@(ocupado || !confirmoBodega)" @onclick="AprobarBodega">Aprobar y enviar al Autorizador</button></section>
+    }
+    @if (ot.RevisionAutorizador is { } revision) { <div class="notice success"><strong>Fotos y registro revisados:</strong> @revision.Usuario · @revision.Fecha.ToLocalTime().ToString("dd/MM HH:mm")<p>@revision.Observacion</p></div> }
+    @if (EsAutorizador && ot.Estado == "PendienteRevision")
+    {
+        <section class="panel mt"><h2>Revisión del Autorizador</h2>
+            @if (ot.RevisionAutorizador is null) { <p>Bodega ya aprobó. Compara las fotos del despacho y del cambio con los pesos y los registros de recepción.</p><label class="check-label"><input type="checkbox" @bind="confirmoAutorizador" /> Revisé las fotos y su correspondencia con los registros</label><label for="revision-autorizador-nota">Conclusión del Autorizador</label><textarea id="revision-autorizador-nota" @bind="notaAutorizador" maxlength="2000"></textarea><button class="btn primary mt" disabled="@(ocupado || !confirmoAutorizador)" @onclick="RevisarAutorizador">Aprobar fotos y registro</button> }
+            else { <p>Las revisiones de Bodega y del Autorizador están registradas.</p><button class="btn primary" disabled="@ocupado" @onclick="Cerrar">Verificar y cerrar OT</button> }
+        </section>
+    }
+    <details class="panel mt"><summary>Historial de la OT</summary><ol class="timeline mt">@foreach (var e in ot.Historial) { <li><span>@e.Fecha.ToLocalTime().ToString("dd/MM HH:mm") · @e.Usuario</span><strong>@e.Accion</strong><p>@e.Descripcion</p></li> }</ol></details>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private OtResponse? ot;
+    private CilindroResponse[] disponiblesBodega = [];
+    private BorradorLocal[] borradores = [];
+    private IncidenciaLocal[] incidenciasLocales = [];
+    private bool cargando = true, ocupado;
+    private string? error, mensaje;
+    private string codigoEntrega = "", codigoRecepcion = "", notaRecepcion = "", motivoIncidencia = "", tipoIncidencia = "Incidencia", operacionIncidencia = "", notaTermino = "";
+    private long? pesoRecepcion, pesoEntrega;
+    private Guid idRetiro = Guid.NewGuid(), archivoRetiroKey = Guid.NewGuid();
+    private FotoPesajeRequest? fotoDespacho;
+    private bool confirmoBodega, confirmoAutorizador;
+    private string notaBodega = "", notaAutorizador = "";
+    private readonly Dictionary<Guid, string> respuestas = [];
+    private readonly List<(FotoResponse Info, string Url)> fotosVisibles = [];
+    private string[] RecepcionesPendientes => ot is null ? [] : ot.Operaciones.Where(o => o.Estado == "Registrada" && o.Tipo == "Reemplazo" && o.EntregaInformada && !o.RecibidoBodega).Select(o => o.CodigoRetirado!).Concat(ot.Entregas.Where(e => e.Estado == "EnProcesoDespacho").Select(e => e.Codigo)).Distinct().ToArray();
+    private bool EsTecnico => Sesion.Sesion?.Rol == "Tecnico";
+    private bool EsBodega => Sesion.Sesion?.Rol == "Bodega";
+    private bool EsAutorizador => Sesion.Sesion?.Rol == "Autorizador";
+    private bool Editable => ot?.Estado is "Asignada" or "EnProcesoDespacho" or "EnTerreno";
+    private bool PuedeVerFotos => !EsAutorizador || ot?.AprobacionBodega is not null;
+    protected override Task OnParametersSetAsync() => Cargar();
+    private async Task Cargar()
+    {
+        cargando = true; error = null; fotosVisibles.Clear();
+        try { ot = await Local.OrdenAsync(Id); if (EsTecnico) { disponiblesBodega = Editable && !Local.ConsultaOffline ? await Api.DisponiblesOtAsync(Id) : []; borradores = await Local.BorradoresAsync(); incidenciasLocales = await Local.IncidenciasAsync(); } foreach (var i in ot.Incidencias) respuestas.TryAdd(i.Id, ""); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { cargando = false; }
+    }
+    private async Task Ejecutar(Func<Task> accion)
+    {
+        if (ocupado) return;
+        ocupado = true; error = null; mensaje = null;
+        try { await accion(); await Cargar(); mensaje ??= "Operación registrada. Revisa el estado actualizado de la OT."; }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+    private void CambiarCilindroRetiro() { idRetiro = Guid.NewGuid(); archivoRetiroKey = Guid.NewGuid(); fotoDespacho = null; pesoEntrega = null; }
+    private void CambiarPesoRetiro() => idRetiro = Guid.NewGuid();
+    private async Task CargarFotoDespacho(InputFileChangeEventArgs args)
+    {
+        if (ocupado) return;
+        ocupado = true; error = null; fotoDespacho = null;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(codigoEntrega)) throw new InvalidOperationException("Selecciona primero el cilindro que retiras.");
+            var archivo = args.File;
+            if (archivo.ContentType is not ("image/jpeg" or "image/png" or "image/webp")) throw new InvalidOperationException("Usa una foto JPEG, PNG o WebP.");
+            await using var lectura = archivo.OpenReadStream(4 * 1024 * 1024);
+            using var memoria = new MemoryStream(); await lectura.CopyToAsync(memoria);
+            fotoDespacho = new() { Id = Guid.NewGuid(), Nombre = archivo.Name.Length > 150 ? archivo.Name[..150] : archivo.Name,
+                ContentType = archivo.ContentType, Base64 = Convert.ToBase64String(memoria.ToArray()) };
+            idRetiro = Guid.NewGuid();
+        }
+        catch (Exception ex) { error = ex.Message; }
+        finally { ocupado = false; }
+    }
+    private Task Entregar() => Ejecutar(async () => {
+        if (pesoEntrega is null || fotoDespacho is null) throw new InvalidOperationException("Ingresa el peso de salida y adjunta la foto de la balanza.");
+        await Api.EntregarAsync(Id, new() { IdOperacion = idRetiro, Codigo = codigoEntrega, PesoBrutoGr = pesoEntrega.Value, Foto = fotoDespacho });
+        codigoEntrega = ""; CambiarCilindroRetiro(); mensaje = "Retiro registrado: cilindro en proceso de despacho, con tu peso y fotografía de salida.";
+    });
+    private Task Recibir() => Ejecutar(async () => { if (pesoRecepcion is null) throw new InvalidOperationException("Ingresa el peso recibido."); await Api.RecibirAsync(Id, new() { Codigo = codigoRecepcion, PesoBrutoGr = pesoRecepcion.Value, Observacion = notaRecepcion }); codigoRecepcion = ""; pesoRecepcion = null; notaRecepcion = ""; });
+    private Task AprobarBodega() => Ejecutar(async () => { await Api.AprobarBodegaAsync(Id, new() { ConfirmoRevision = confirmoBodega, Observacion = notaBodega }); confirmoBodega = false; });
+    private Task RevisarAutorizador() => Ejecutar(async () => { await Api.RevisarAutorizadorAsync(Id, new() { ConfirmoRevision = confirmoAutorizador, Observacion = notaAutorizador }); confirmoAutorizador = false; });
+    private Task InformarEntrega(Guid operacion) => Ejecutar(async () => { await Api.InformarEntregaAsync(Id, operacion); });
+    private Task Sincronizar() => Ejecutar(async () => { await Local.SincronizarAsync(); });
+    private Task Incidencia() => Ejecutar(async () =>
+    {
+        if (motivoIncidencia.Trim().Length < 5) throw new InvalidOperationException("Describe el motivo con al menos cinco caracteres.");
+        var datos = new CrearIncidenciaRequest { Id = Guid.NewGuid(), Tipo = tipoIncidencia, OperacionId = Guid.TryParse(operacionIncidencia, out var op) ? op : null, Motivo = motivoIncidencia };
+        if (EsTecnico)
+        {
+            await Local.GuardarIncidenciaAsync(Id, datos); await Local.SincronizarAsync();
+            mensaje = (await Local.IncidenciasAsync()).Any(i => i.Datos.Id == datos.Id && i.Pendiente)
+                ? "Incidencia conservada en este dispositivo, pendiente de sincronizar o resolver un conflicto."
+                : "Incidencia recibida por la API para revisión del Autorizador.";
+        }
+        else await Api.IncidenciaAsync(Id, datos);
+        motivoIncidencia = "";
+    });
+    private Task Resolver(Guid incidencia) => Ejecutar(async () => { await Api.ResolverAsync(Id, incidencia, new() { Respuesta = respuestas[incidencia] }); });
+    private Task Terminar() => Ejecutar(async () => { await Local.SincronizarAsync(); if ((await Local.BorradoresAsync()).Any(b => b.OtId == Id && b.Pendiente)) throw new InvalidOperationException("Hay borradores o fotos pendientes de enviar. Resuélvelos antes del término técnico."); await Api.TerminarAsync(Id, new() { Observacion = notaTermino }); });
+    private Task Cerrar() => Ejecutar(async () => { await Api.CerrarOtAsync(Id); });
+    private async Task MostrarFotos(OperacionResponse op)
+    {
+        ocupado = true; error = null; fotosVisibles.Clear();
+        try { foreach (var f in op.Fotos) fotosVisibles.Add((f, await Api.FotoAsync(Id, op.Id, f))); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+    private async Task MostrarFotoDespacho(EntregaResponse entrega)
+    {
+        ocupado = true; error = null; fotosVisibles.Clear();
+        try { fotosVisibles.Add((entrega.FotoDespacho!, await Api.FotoDespachoAsync(Id, entrega))); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { ocupado = false; }
+    }
+}

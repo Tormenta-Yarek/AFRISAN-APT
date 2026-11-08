@@ -1,0 +1,20 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="route">
+            <AuthorizeRouteView RouteData="route" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized Context="auth">
+                    @if (auth.User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="notice error"><h1>Acceso restringido</h1><p>Tu rol no tiene acceso a esta pantalla.</p><a href="identificar">Identificar un cilindro</a></div>
+                    }
+                    else
+                    {
+                        <IrAcceso />
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="route" Selector="h1" />
+        </Found>
+        <NotFound><LayoutView Layout="@typeof(MainLayout)"><h1>Página no encontrada</h1><a href="">Volver al inicio</a></LayoutView></NotFound>
+    </Router>
+</CascadingAuthenticationState>

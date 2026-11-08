@@ -1,0 +1,9 @@
+[
+  {
+    "Name": "AFRISAN NUEVO - AMBOS",
+    "Projects": [
+      { "Path": "Afrisan.Nuevo.Api\\Afrisan.Nuevo.Api.csproj", "Action": "Start", "DebugTarget": "http" },
+      { "Path": "Afrisan.Nuevo.Web\\Afrisan.Nuevo.Web.csproj", "Action": "Start", "DebugTarget": "http" }
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+@page "/inventario"
+@attribute [Authorize(Roles = Roles.Lectura)]
+@inject InventarioClient Api
+@inject SesionService Sesion
+
+<PageTitle>Inventario · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">PN-02 / CONSULTA</span><h1>Inventario de cilindros</h1><p>Identificación, refrigerante y última lectura de balanza de cada envase.</p></div>
+    @if (Sesion.PuedeRegistrar) { <a class="btn primary" href="cilindros/nuevo">+ Registrar cilindro</a> }
+</div>
+@if (error is not null) { <div class="notice error" role="alert">@error</div> }
+<section class="panel">
+    <div class="filter-bar">
+        <div class="search-field"><label for="buscar">Buscar código o serie</label><input id="buscar" @bind="busqueda" @bind:event="oninput" placeholder="Ej.: AFR-000001" /></div>
+        <div><label for="filtro-gas">Refrigerante</label><select id="filtro-gas" @bind="gas"><option value="">Todos los refrigerantes</option>@foreach (var tipo in items.GroupBy(c => c.RefrigeranteId).Select(g => g.First()).OrderBy(c => c.RefrigeranteCodigo)) { <option value="@tipo.RefrigeranteId">@tipo.RefrigeranteCodigo</option> }</select></div>
+        <div><label for="filtro-ubicacion">Ubicación</label><select id="filtro-ubicacion" @bind="ubicacion"><option value="Bodega">Bodega</option><option value="Sucursal">Sucursales</option><option value="Tecnico">Con técnico</option><option value="">Todas las ubicaciones</option></select></div>
+        <div><label for="filtro-estado">Estado</label><select id="filtro-estado" @bind="estado"><option value="">Todos los estados</option><option value="Disponible">Disponible</option><option value="PendientePesaje">Pendiente de pesaje</option><option value="Vacio">Vacío</option><option value="Instalado">Instalado en sucursal</option><option value="EnProcesoDespacho">En proceso de despacho</option><option value="RetiradoPendienteRecepcion">Retirado / pendiente de bodega</option></select></div>
+        <button class="btn secondary" @onclick="Limpiar">Limpiar</button><button class="btn subtle" disabled="@cargando" @onclick="Cargar">Actualizar</button>
+    </div>
+    @if (cargando) { <p class="loading" role="status">Consultando el inventario…</p> }
+    else if (error is not null) { <div class="empty-state"><h2>No hay una consulta actualizada</h2><p>Reintenta cuando la API esté disponible.</p></div> }
+    else if (items.Length == 0) { <div class="empty-state"><span class="empty-symbol">▤</span><h2>Tu inventario comienza aquí</h2><p>Registra primero un refrigerante y después el cilindro que lo contiene.</p><a class="btn secondary" href="refrigerantes">Abrir catálogo de refrigerantes</a></div> }
+    else if (!Filtrados.Any()) { <div class="empty-state"><h2>Sin coincidencias</h2><p>Prueba otro código o limpia los filtros.</p></div> }
+    else
+    {
+        <div class="table-wrap"><table><caption>@Filtrados.Count() de @items.Length cilindros · Todos los pesos se muestran en gramos</caption>
+            <thead><tr><th>Cilindro</th><th>Refrigerante</th><th>Capacidad / tara</th><th>Último peso bruto</th><th>Contenido según pesaje</th><th>Estado</th><th>Detalle</th></tr></thead>
+            <tbody>@foreach (var c in Filtrados)
+            { <tr @key="c.Id"><td><strong>@c.Codigo</strong><small class="cell-note">@(c.NumeroSerie ?? "Sin número de serie") · @c.Ubicacion @(c.Sucursal is null ? "" : $"({c.Sucursal})")</small></td><td><span class="gas-tag">@c.RefrigeranteCodigo</span></td><td>@Formato.Gramos(c.CapacidadGr)<small class="cell-note">Tara: @Formato.Gramos(c.TaraGr)</small></td><td>@Formato.Gramos(c.PesajeRegistrado?.PesoBrutoGr)<small class="cell-note">@(c.PesajeRegistrado?.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Lectura pendiente")</small></td><td>@(c.ContenidoSegunPesajeGr.HasValue ? Formato.Gramos(c.ContenidoSegunPesajeGr) : "—")</td><td><span class="badge @Formato.Estilo(c.Estado)">@Formato.Estado(c.Estado)</span></td><td><a class="table-link" href="@($"cilindros/{c.Codigo}")" aria-label="@($"Ver cilindro {c.Codigo}")">Ver →</a></td></tr> }
+            </tbody></table></div>
+    }
+</section>
+<p class="fine-print">El contenido se calcula con el último pesaje registrado. Esta entrega aún no registra consumos en terreno.</p>
+
+@code {
+    private CilindroResponse[] items = [];
+    private string busqueda = "", gas = "", estado = "", ubicacion = "Bodega";
+    private bool cargando = true;
+    private string? error;
+    private IEnumerable<CilindroResponse> Filtrados => items.Where(c => (ubicacion == "" || c.Ubicacion == ubicacion) && (gas == "" || c.RefrigeranteId.ToString() == gas)
+        && (estado == "" || c.Estado == estado) && (c.Codigo.Contains(busqueda.Trim(), StringComparison.OrdinalIgnoreCase)
+        || (c.NumeroSerie?.Contains(busqueda.Trim(), StringComparison.OrdinalIgnoreCase) ?? false)));
+    protected override Task OnInitializedAsync() => Cargar();
+    private void Limpiar() { busqueda = ""; gas = ""; estado = ""; ubicacion = "Bodega"; }
+    private async Task Cargar()
+    {
+        cargando = true; error = null;
+        try { items = await Api.CilindrosAsync(); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { cargando = false; }
+    }
+}

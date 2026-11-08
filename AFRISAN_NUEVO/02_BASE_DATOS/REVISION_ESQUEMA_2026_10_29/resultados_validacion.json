@@ -1,0 +1,695 @@
+{
+  "tipo": "PostgreSQL embebido PGlite, aislado y sin Supabase",
+  "fecha_inicio_utc": "2026-10-29T22:35:20.827Z",
+  "archivo_sql": "AFRISAN_NUEVO\\02_BASE_DATOS\\REVISION_ESQUEMA_2026_10_29\\01_AFRISAN_Corregida.sql",
+  "estado": "CORRECTO",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Auditoria"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: BajaCilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: CertificadosCilindros"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: CertificadosDisposicion"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Cilindros"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Cliente"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Costos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: CustodiaActual"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: DetalleOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: EstimacionEmisiones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: EventoOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: EvidenciaPesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: HistorialCilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Incidencia"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: LimiteSucursal"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: LimiteSucursalHistorial"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: MedicionLimite"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: MedicionLimiteOperaciones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: OperacionTerreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: OrdenTrabajo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: PreciosRefrigerantes"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: RecepcionBodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Refrigerantes"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: RetiroPrevisto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: RevisionExceso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: RevisionOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Rol"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Sucursales"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Tabla vacía al instalar: Usuario"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El esquema anterior conserva su información"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reinstalar se detiene sin reemplazar datos",
+      "detalle": "schema \"afrisan_actual\" already exists"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "anon no puede leer usuarios"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Todas las tablas tienen RLS habilitado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Rol Autorizador admitido"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: custodia y estado de despacho automáticos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no confirmar cambio sin fotos",
+      "detalle": "Falta foto del instalado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no anticipar devolución en borrador",
+      "detalle": "La devolución se informa después de confirmar el cambio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: retirado e instalado cambian a sus ubicaciones correctas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: foto posterior a confirmación rechazada",
+      "detalle": "No se agregan fotos a pesajes confirmados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: recibir exige devolución informada",
+      "detalle": "Falta devolución informada del retirado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Autorizador no revisa antes de Bodega",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no aprueba retirados pendientes",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no fabricar metadatos de revisión con respuesta nula",
+      "detalle": "Incidencia fuera de etapa"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: recibe retirado que nunca fue despachado en esta OT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: Bodega no aprueba reserva sin devolver",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: revisión espera incidencias resueltas",
+      "detalle": "Incidencias sin revisar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cerrar exige revisión final del Autorizador",
+      "detalle": "Faltan revisiones/gestión de incidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: cierre con las dos revisiones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: ambos pesos conservados y diferencia visible"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: no reescribir el peso confirmado",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: Pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1: revisiones inmutables",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: RevisionOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: custodia y estado de despacho automáticos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no confirmar cambio sin fotos",
+      "detalle": "Falta foto del instalado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no anticipar devolución en borrador",
+      "detalle": "La devolución se informa después de confirmar el cambio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: retirado e instalado cambian a sus ubicaciones correctas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: foto posterior a confirmación rechazada",
+      "detalle": "No se agregan fotos a pesajes confirmados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: recibir exige devolución informada",
+      "detalle": "Falta devolución informada del retirado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Autorizador no revisa antes de Bodega",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no aprueba retirados pendientes",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no fabricar metadatos de revisión con respuesta nula",
+      "detalle": "Incidencia fuera de etapa"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: recibe retirado que nunca fue despachado en esta OT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: Bodega no aprueba reserva sin devolver",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: revisión espera incidencias resueltas",
+      "detalle": "Incidencias sin revisar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cerrar exige revisión final del Autorizador",
+      "detalle": "Faltan revisiones/gestión de incidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: cierre con las dos revisiones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: ambos pesos conservados y diferencia visible"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: no reescribir el peso confirmado",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: Pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 2: revisiones inmutables",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: RevisionOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no suplanta el retiro del Técnico",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Técnico ajeno no despacha",
+      "detalle": "OT de otro técnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: despacho sin foto rechazado",
+      "detalle": "Adjuntar entre una y ocho fotos del peso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: despacho con peso inválido rechazado",
+      "detalle": "Peso fuera de tara/capacidad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: reintento idéntico no duplica despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: mismo UUID con otro peso rechazado",
+      "detalle": "UUID usado con otra solicitud"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cilindro ya en custodia no se despacha otra vez",
+      "detalle": "duplicate key value violates unique constraint \"EvidenciaPesaje_pkey\""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: custodia y estado de despacho automáticos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no confirmar cambio sin fotos",
+      "detalle": "Falta foto del instalado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no anticipar devolución en borrador",
+      "detalle": "La devolución se informa después de confirmar el cambio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: retirado e instalado cambian a sus ubicaciones correctas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: foto posterior a confirmación rechazada",
+      "detalle": "No se agregan fotos a pesajes confirmados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: recibir exige devolución informada",
+      "detalle": "Falta devolución informada del retirado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Autorizador no revisa antes de Bodega",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no aprueba retirados pendientes",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no fabricar metadatos de revisión con respuesta nula",
+      "detalle": "Incidencia fuera de etapa"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: recibe retirado que nunca fue despachado en esta OT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: Bodega no aprueba reserva sin devolver",
+      "detalle": "Hay cilindros sin instalar ni devolver"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: revisión espera incidencias resueltas",
+      "detalle": "Incidencias sin revisar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cerrar exige revisión final del Autorizador",
+      "detalle": "Faltan revisiones/gestión de incidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: cierre con las dos revisiones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: ambos pesos conservados y diferencia visible"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: no reescribir el peso confirmado",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: Pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 3: revisiones inmutables",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: RevisionOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Ejecución parcial exige explicación",
+      "detalle": "Explicar ejecución parcial"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Cierre parcial libera la reserva sin fingir retiro físico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reutilización posterior no invalida el cierre de la OT anterior"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reemplazo de cilindro reutilizado completa su propio recorrido"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Límite bloqueado por Jefatura no editable por Bodega",
+      "detalle": "Jefatura mantiene bloqueada la edición por Bodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador no desbloquea decisión de Jefatura",
+      "detalle": "Actor ausente, inactivo o sin rol para esta acción"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Límites conservan cuatro versiones y el valor histórico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Exceso compara contra el límite histórico aplicado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Costo usa cantidad y tarifa explícitas"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalar cilindros no crea emisiones ficticias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "CO2e calculado solo sobre masa emitida declarada"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Lote certificado deja el cilindro fuera de servicio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Auditoría registra operaciones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Auditoría excluye hash de contraseña y versión de seguridad"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Auditoría no se borra",
+      "detalle": "El registro confirmado/histórico no se modifica ni elimina: Auditoria"
+    }
+  ],
+  "sha256_sql": "21eaa563a47f87ccfb19c43d8554e01b663953997c0f9dd07fd16a7929f0684d",
+  "motor": "PostgreSQL 18.6 (PGlite 0.5.11) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+  "tablas": 31,
+  "casos": [
+    {
+      "ot": 1,
+      "op": "9044dc6a-0734-460d-85bd-1a6a55da7f1c",
+      "branch": 1,
+      "gas": 1,
+      "old": 1,
+      "installed": 2,
+      "spare": 3
+    },
+    {
+      "ot": 2,
+      "op": "35858fca-f065-4d2c-bd69-56aca60f36e4",
+      "branch": 2,
+      "gas": 2,
+      "old": 4,
+      "installed": 5,
+      "spare": 6
+    },
+    {
+      "ot": 3,
+      "op": "0ef8e729-192a-414b-b800-871e9580388d",
+      "branch": 3,
+      "gas": 3,
+      "old": 7,
+      "installed": 8,
+      "spare": 9
+    }
+  ],
+  "cantidad_comprobaciones": 144,
+  "fecha_fin_utc": "2026-10-29T22:35:24.554Z"
+}

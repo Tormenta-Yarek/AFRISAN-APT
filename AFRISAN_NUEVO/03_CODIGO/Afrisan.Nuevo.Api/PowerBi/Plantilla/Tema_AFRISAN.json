@@ -1,0 +1,7 @@
+{
+  "name": "AFRISAN operativo",
+  "dataColors": ["#087E78", "#183442", "#55ADA4", "#D99A36", "#537D97", "#BA6571"],
+  "background": "#F3F6F8",
+  "foreground": "#183442",
+  "tableAccent": "#087E78"
+}

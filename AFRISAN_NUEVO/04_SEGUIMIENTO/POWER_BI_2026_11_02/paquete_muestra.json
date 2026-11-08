@@ -1,0 +1,29 @@
+{
+  "archivos": [
+    "Inventario.csv",
+    "Ordenes.csv",
+    "DetalleOT.csv",
+    "Operaciones.csv",
+    "Despachos.csv",
+    "Incidencias.csv",
+    "Manifiesto.json",
+    "Afrisan.pq",
+    "LEEME.md",
+    "Medidas.dax",
+    "Tema_AFRISAN.json"
+  ],
+  "manifiesto": {
+    "version": 1,
+    "generadoUtc": "2026-11-03T01:32:44.969+00:00",
+    "zonaFechas": "America/Santiago",
+    "alcance": "Corte completo de datos operativos. Los filtros de la vista previa no limitan este paquete.",
+    "filas": {
+      "Inventario": 3,
+      "Ordenes": 1,
+      "DetalleOT": 1,
+      "Operaciones": 1,
+      "Despachos": 2,
+      "Incidencias": 1
+    }
+  }
+}

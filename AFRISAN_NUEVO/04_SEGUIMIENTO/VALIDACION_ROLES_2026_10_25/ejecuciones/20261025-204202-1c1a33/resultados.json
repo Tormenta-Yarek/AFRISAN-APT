@@ -1,0 +1,185 @@
+{
+  "ejecucion": "20261025-204202-1c1a33",
+  "fecha_local": "20261025-204202",
+  "zona": "America/Santiago",
+  "tipo": "HTTP real contra API local; datos e imágenes sintéticos",
+  "estado": "FALLO",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Entorno de revisión en memoria y sin Supabase",
+      "salud": {
+        "modo": "Revision",
+        "almacenamiento": "Memoria",
+        "supabase": false
+      }
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sin sesión GET entorno",
+      "rol": null,
+      "metodo": "GET",
+      "ruta": "entorno",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Modo de revisión comprobado antes de crear ejemplos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inicio de sesión Bodega",
+      "rol": null,
+      "metodo": "POST",
+      "ruta": "sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sesión con rol correcto: Bodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inicio de sesión Autorizador",
+      "rol": null,
+      "metodo": "POST",
+      "ruta": "sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sesión con rol correcto: Autorizador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inicio de sesión Tecnico",
+      "rol": null,
+      "metodo": "POST",
+      "ruta": "sesiones",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sesión con rol correcto: Tecnico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inventario exige sesión",
+      "rol": null,
+      "metodo": "GET",
+      "ruta": "cilindros",
+      "http": 401,
+      "esperado": 401,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET cilindros",
+      "rol": "Bodega",
+      "metodo": "GET",
+      "ruta": "cilindros",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bodega GET refrigerantes",
+      "rol": "Bodega",
+      "metodo": "GET",
+      "ruta": "refrigerantes",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Autorizador GET ordenes-trabajo",
+      "rol": "Autorizador",
+      "metodo": "GET",
+      "ruta": "ordenes-trabajo",
+      "http": 200,
+      "esperado": 200
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: Bodega registra refrigerante",
+      "rol": "Bodega",
+      "metodo": "POST",
+      "ruta": "refrigerantes",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: rechaza refrigerante duplicado",
+      "rol": "Bodega",
+      "metodo": "POST",
+      "ruta": "refrigerantes",
+      "http": 409,
+      "esperado": 409,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.10\",\"title\":\"Revisa los datos de inventario\",\"status\":409,\"detail\":\"Ese refrigerante ya está registrado.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: Técnico no administra catálogo",
+      "rol": "Tecnico",
+      "metodo": "POST",
+      "ruta": "refrigerantes",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: Autorizador no administra catálogo",
+      "rol": "Autorizador",
+      "metodo": "POST",
+      "ruta": "refrigerantes",
+      "http": 403,
+      "esperado": 403,
+      "detalle": ""
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: rechaza sobrecapacidad del envase 1",
+      "rol": "Bodega",
+      "metodo": "POST",
+      "ruta": "cilindros",
+      "http": 400,
+      "esperado": 400,
+      "detalle": "{\"type\":\"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\"title\":\"Revisa los datos de inventario\",\"status\":400,\"detail\":\"El peso bruto debe estar entre la tara y la tara más la capacidad. Ingresa gramos enteros.\"}"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Caso 1 R134A: alta cilindro 1",
+      "rol": "Bodega",
+      "metodo": "POST",
+      "ruta": "cilindros",
+      "http": 201,
+      "esperado": 201
+    },
+    {
+      "resultado": "FALLO",
+      "comprobacion": "Caso 1 R134A: alta sin pesaje no inventa contenido"
+    }
+  ],
+  "casos": [
+    {
+      "caso": 1,
+      "gas": "R134A",
+      "sucursal": "Sucursal de prueba Norte",
+      "cilindros_iniciales": [],
+      "refrigerante": {
+        "id": 1,
+        "codigo": "R134A-P1C1A33",
+        "nombre": "R134A - prueba integral 1"
+      }
+    }
+  ],
+  "instancia": "d32e3441a3824e27b66abd6412382d4b",
+  "error": "Caso 1 R134A: alta sin pesaje no inventa contenido",
+  "cantidad_comprobaciones": 20
+}

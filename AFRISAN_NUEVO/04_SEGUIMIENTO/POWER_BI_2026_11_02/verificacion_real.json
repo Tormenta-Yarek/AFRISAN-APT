@@ -1,0 +1,14 @@
+{
+  "estado": "CORRECTO",
+  "soloLectura": true,
+  "generadoUtc": "2026-11-03T01:40:53.821042+00:00",
+  "fechaLocalChile": "2026-11-02",
+  "cilindros": 0,
+  "ordenes": 0,
+  "detalles": 0,
+  "operaciones": 0,
+  "despachos": 0,
+  "incidencias": 0,
+  "informeConfigurado": false,
+  "observacion": "Consultas de las seis fuentes completadas contra Supabase real con la identidad restringida existente. Sin datos operativos aún y sin informe publicado. No se modificó la base."
+}

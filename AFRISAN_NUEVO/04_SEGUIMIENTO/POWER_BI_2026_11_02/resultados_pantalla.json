@@ -1,0 +1,16 @@
+{
+  "estado": "CORRECTO",
+  "tipo": "Blazor real + API interceptada; sesión sintética local",
+  "comprobaciones": [
+    "Pantalla Blazor carga los cinco indicadores con sesión sintética",
+    "Sin informe no se carga iframe ni se finge conexión Microsoft",
+    "Gráficos operativos renderizados",
+    "Diseño de escritorio sin desbordamiento horizontal",
+    "Aplicar filtros vuelve a consultar los indicadores",
+    "Botón de paquete usa descarga autenticada y puente JS de Blazor",
+    "Diseño móvil de 390 px sin desbordamiento horizontal",
+    "Bodega no ve el menú y la ruta directa está restringida",
+    "Sin excepciones JavaScript durante carga, filtros y descarga"
+  ],
+  "cantidad_comprobaciones": 9
+}

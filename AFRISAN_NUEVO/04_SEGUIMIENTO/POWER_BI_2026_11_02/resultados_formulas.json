@@ -1,0 +1,19 @@
+{
+  "estado": "CORRECTO",
+  "cantidad": 13,
+  "comprobaciones": [
+    "El d\u00EDa predeterminado corresponde a Chile y no al d\u00EDa UTC",
+    "La operaci\u00F3n del per\u00EDodo se cuenta aunque la OT se cre\u00F3 en otro mes",
+    "Pendientes y pesos ausentes tienen significado independiente",
+    "Cada indicador aplica su fecha sin convertir inventario actual en hist\u00F3rico",
+    "Filtro por gas no hereda kilos de otro detalle de la misma OT",
+    "Filtro de sucursal en inventario usa la ubicaci\u00F3n actual",
+    "Se rechaza rango invertido",
+    "Nombres que empiezan como f\u00F3rmula se neutralizan en CSV",
+    "CSV conserva comas, comillas, Unicode y saltos de l\u00EDnea",
+    "Ausencia de medici\u00F3n se exporta vac\u00EDa y no como cero",
+    "Manifiesto conserva la cantidad de filas sin aplanar hechos",
+    "Configuraci\u00F3n impide URL p\u00FAblica como ReportId",
+    "Sin ReportId no se presenta un informe ficticio"
+  ]
+}

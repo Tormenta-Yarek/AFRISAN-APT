@@ -1,0 +1,37 @@
+@page "/"
+@attribute [Authorize(Roles = Roles.Lectura)]
+@inject InventarioClient Api
+@inject SesionService Sesion
+
+<PageTitle>Resumen · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">CONTROL DE INVENTARIO</span><h1>El punto de partida<br class="desktop-only" /> de cada cilindro.</h1><p>Primero identifica el refrigerante. Después registra el envase y su pesaje.</p></div><span class="stage-pill">ETAPA 01 / BODEGA</span></div>
+@if (error is not null) { <div class="notice error" role="alert">@error <button class="text-button" @onclick="Cargar">Reintentar</button></div> }
+<div class="metric-grid" aria-busy="@cargando">
+    <div class="metric"><span>Cilindros registrados</span><strong>@Valor(cilindros.Length)</strong><small>Envases identificados</small></div>
+    <div class="metric"><span>Disponibles en Bodega</span><strong>@Valor(cilindros.Count(c => c.Ubicacion == "Bodega" && c.Estado == "Disponible"))</strong><small>Con refrigerante según pesaje</small></div>
+    <div class="metric"><span>Pendientes de pesaje</span><strong>@Valor(cilindros.Count(c => c.PesajeRegistrado is null))</strong><small>Sin lectura inicial registrada</small></div>
+    <div class="metric"><span>Tipos de refrigerante</span><strong>@Valor(refrigerantes.Length)</strong><small>Catálogo registrado</small></div>
+</div>
+<div class="section-heading"><h2>Tu recorrido de trabajo</h2><span class="muted">Registro → Consulta</span></div>
+<div class="workflow-grid">
+    <a class="workflow-card" href="refrigerantes"><span class="step">01</span><h3>Registrar refrigerantes</h3><p>Un catálogo de tipos de gas, independiente de las cantidades que contiene cada envase.</p><span class="card-link">Abrir catálogo →</span></a>
+    <a class="workflow-card" href="@(Sesion.PuedeRegistrar ? "cilindros/nuevo" : "inventario")"><span class="step">02</span><h3>Identificar los cilindros</h3><p>Un único refrigerante, su capacidad, tara y un código QR que acompaña al envase.</p><span class="card-link">@(Sesion.PuedeRegistrar ? "Registrar cilindro →" : "Consultar cilindros →")</span></a>
+    <a class="workflow-card" href="inventario"><span class="step">03</span><h3>Consultar el inventario</h3><p>Busca por código, serie, refrigerante o estado. Revisa el último peso realmente medido.</p><span class="card-link">Ver inventario →</span></a>
+</div>
+<div class="notice info"><strong>Flujo de trabajo</strong><p>Inventario, pesajes y OT: retiro del Técnico, recepción de Bodega y revisión del Autorizador. Los límites e integraciones adicionales siguen su planificación.</p></div>
+
+@code {
+    private CilindroResponse[] cilindros = [];
+    private RefrigeranteResponse[] refrigerantes = [];
+    private bool cargando = true;
+    private string? error;
+    private string Valor(int valor) => cargando ? "…" : error is not null ? "—" : valor.ToString();
+    protected override Task OnInitializedAsync() => Cargar();
+    private async Task Cargar()
+    {
+        cargando = true; error = null;
+        try { cilindros = await Api.CilindrosAsync(); refrigerantes = await Api.RefrigerantesAsync(); }
+        catch (Exception ex) { error = Formato.Error(ex); }
+        finally { cargando = false; }
+    }
+}

@@ -1,0 +1,60 @@
+@page "/ordenes/{Id:guid}/operacion/{OperacionId:guid}"
+@attribute [Authorize(Roles = "Tecnico")]
+
+<PageTitle>Registro técnico · AFRISAN</PageTitle>
+<a class="back-link" href="@($"ordenes/{Id}")">← Volver al trabajo asignado</a>
+@if (cargando) { <h1>Registro técnico</h1><p role="status">Abriendo el borrador…</p> }
+else if (ot is null) { <h1>No se pudo abrir el trabajo</h1><div class="notice error">@error</div> }
+else if (!listo && !registrada) { <h1>No se pudo recuperar el borrador</h1><div class="notice error">@error</div><p>Los datos locales no se consideran guardados si el navegador informa un error.</p> }
+else
+{
+    <div class="page-heading"><div><span class="eyebrow">@ot.Codigo / @ot.Sucursal</span><h1>Registrar cambio físico</h1><p>Identifica cada envase y adjunta las fotos de su pesaje.</p></div><span class="badge @(registrada ? "success" : "pending")">@(registrada ? "Registrada en la API" : "Borrador")</span></div>
+    @if (error is not null) { <div class="notice error" role="alert">@error</div> }
+    @if (!registrada && listo)
+    {
+        <button type="button" class="btn subtle" @onclick="ConsultarVersion" disabled="@ocupado">Consultar versión de la API para resolver un conflicto</button>
+        @if (versionDisponible is { } baseRemota)
+        {
+            <div class="notice warning"><strong>Versión @baseRemota.Version en la API</strong><p>@baseRemota.Tipo · Retirado: @baseRemota.CodigoRetirado (@Formato.Gramos(baseRemota.PesoRetiradoGr)) · Instalado: @baseRemota.CodigoInstalado (@Formato.Gramos(baseRemota.PesoInstaladoGr)). Fotos: @baseRemota.Fotos.Length. Estado: @baseRemota.Estado.</p>
+                @if (baseRemota.Estado == "Borrador") { <button type="button" class="btn secondary" disabled="@ocupado" @onclick="UsarVersionComoBase">Conservar mis datos y usar esta versión como base</button> }
+                <p class="field-help">Esta elección es explícita: no borra mis fotos locales ni confirma el cambio. Debes sincronizar y resolver cualquier diferencia de cilindros o evidencias.</p>
+            </div>
+        }
+    }
+    @if (mensaje is not null) { <div class="notice info" role="status">@mensaje</div> }
+    @if (Local.ConsultaOffline) { <div class="notice warning">Sin conexión. Trabaja con la OT guardada. Los datos y fotos se conservarán localmente; todavía no son una confirmación del servidor.</div> }
+    @if (registrada) { <section class="panel"><p>Este cambio ya está confirmado. Para corregirlo, vuelve a la OT y solicita una rectificación al Autorizador.</p><a class="btn primary" href="@($"ordenes/{Id}")">Ver trabajo registrado</a></section> }
+    else if (ot.Estado is not ("Asignada" or "EnProcesoDespacho" or "EnTerreno")) { <div class="notice warning">La OT ya fue enviada a revisión. No se puede modificar este borrador; solicita revisión al Autorizador.</div> }
+    else
+    {
+        <EditForm EditContext="contexto" OnValidSubmit="GuardarYEnviar"><DataAnnotationsValidator /><ValidationSummary />
+            <fieldset disabled="@ocupado"><section class="panel"><div class="form-grid"><div><label for="operacion-tipo">Tipo de trabajo</label><InputSelect id="operacion-tipo" @bind-Value="form.Tipo"><option>Reemplazo</option><option>Agregado</option></InputSelect></div><div><label>Guardado local</label><p class="field-help">@estadoLocal</p></div></div></section>
+            <div class="weight-photo-grid mt">
+                @if (form.Tipo == "Reemplazo")
+                {
+                    <section class="panel"><span class="eyebrow">01 / ENVASE QUE SE RETIRA</span><h2>Cilindro retirado</h2>
+                        <label for="op-retirado">Código en la sucursal</label><InputSelect id="op-retirado" @bind-Value="form.CodigoRetirado" disabled='@fotos.Any(f => f.Grupo == "Retirado")'><option value="">Selecciona el cilindro</option>@foreach (var codigo in ot.CilindrosARetirar.Where(c => !ot.Operaciones.Any(o => o.Id != OperacionId && o.Estado == "Registrada" && o.CodigoRetirado == c))) { <option>@codigo</option> }</InputSelect>
+                        <label for="op-peso-retirado">Peso bruto del retirado (g)</label><InputNumber id="op-peso-retirado" @bind-Value="form.PesoRetiradoGr" min="0" step="1" />
+                        <div class="photo-heading"><h3>Fotos del pesaje</h3><span class="badge pending">Obligatorias</span></div>
+                        <p class="field-help">Se debe ver la lectura de balanza del envase retirado. Puedes agregar varias fotos.</p>
+                        <InputFile OnChange='e => AgregarFotos(e, "Retirado")' accept="image/jpeg,image/png,image/webp" capture="environment" multiple />
+                        <div class="photo-grid">@foreach (var foto in fotos.Where(f => f.Grupo == "Retirado")) { <figure @key="foto.Id"><img src="@($"data:{foto.ContentType};base64,{foto.Base64}")" alt="Foto del pesaje del cilindro retirado" /><figcaption>@foto.Nombre</figcaption><button class="btn subtle" type="button" @onclick="() => QuitarFoto(foto)">Quitar del borrador</button></figure> }</div>
+                    </section>
+                }
+                <section class="panel"><span class="eyebrow">@(form.Tipo == "Reemplazo" ? "02" : "01") / ENVASE QUE SE INSTALA</span><h2>Cilindro instalado</h2>
+                    <label for="op-instalado">Cilindro retirado de bodega para esta OT</label><InputSelect id="op-instalado" @bind-Value="form.CodigoInstalado" disabled='@fotos.Any(f => f.Grupo == "Instalado")'><option value="">Selecciona el cilindro</option>@foreach (var entrega in ot.Entregas.Where(e => e.Estado == "EnProcesoDespacho")) { <option value="@entrega.Codigo">@entrega.Codigo — @entrega.Refrigerante</option> }</InputSelect>
+                    <label for="op-peso-instalado">Peso bruto del instalado (g)</label><InputNumber id="op-peso-instalado" @bind-Value="form.PesoInstaladoGr" min="0" step="1" />
+                    <div class="photo-heading"><h3>Fotos del pesaje</h3><span class="badge pending">Obligatorias</span></div>
+                    <p class="field-help">Fotografía la lectura de balanza del envase de reemplazo. No reutilices la foto del retirado.</p>
+                    <InputFile OnChange='e => AgregarFotos(e, "Instalado")' accept="image/jpeg,image/png,image/webp" capture="environment" multiple />
+                    <div class="photo-grid">@foreach (var foto in fotos.Where(f => f.Grupo == "Instalado")) { <figure @key="foto.Id"><img src="@($"data:{foto.ContentType};base64,{foto.Base64}")" alt="Foto del pesaje del cilindro instalado" /><figcaption>@foto.Nombre</figcaption><button class="btn subtle" type="button" @onclick="() => QuitarFoto(foto)">Quitar del borrador</button></figure> }</div>
+                </section>
+            </div>
+            <section class="panel mt"><label for="op-observacion">Observaciones del cambio</label><InputTextArea id="op-observacion" @bind-Value="form.Observacion" maxlength="2000" rows="3" /><p class="field-help">JPEG, PNG o WebP; hasta 4 MiB por foto y 8 fotos por grupo. Estos límites técnicos no son los límites de kilos de la sucursal.</p>
+                <div class="form-actions"><button type="button" class="btn secondary" @onclick="GuardarSoloLocal">Guardar borrador local</button><button type="button" class="btn secondary" @onclick="GuardarYEnviar">Guardar y sincronizar borrador</button><button type="button" class="btn primary" @onclick="Confirmar">Confirmar cambio con evidencias</button></div>
+            </section></fieldset>
+        </EditForm>
+        <button type="button" class="btn subtle" disabled="@ocupado" @onclick="Descartar">Descartar este borrador</button>
+        <p class="fine-print">Los campos se conservan al cambiar su valor y las fotos al adjuntarlas. Comprueba el estado de guardado antes de salir. La legibilidad y correspondencia de la imagen requieren revisión humana.</p>
+    }
+}

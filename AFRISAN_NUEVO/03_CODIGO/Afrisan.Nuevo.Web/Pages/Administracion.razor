@@ -1,0 +1,49 @@
+@page "/administracion"
+@attribute [Authorize(Roles = "Administrador")]
+@inject InventarioClient Api
+<PageTitle>Administración · AFRISAN</PageTitle>
+<div class="page-heading"><div><span class="eyebrow">ADMINISTRACIÓN</span><h1>Usuarios, clientes y sucursales</h1><p>Prepara las cuentas de trabajo y los destinos de las órdenes.</p></div></div>
+@if(error is not null){<div class="notice error" role="alert">@error</div>}
+@if(mensaje is not null){<div class="notice success" role="status">@mensaje</div>}
+<div class="split-grid">
+<section class="panel"><h2>Crear usuario</h2>
+<EditForm Model="usuario" OnValidSubmit="CrearUsuario"><DataAnnotationsValidator/><ValidationSummary/>
+<fieldset disabled="@ocupado"><label>Nombre</label><InputText @bind-Value="usuario.Nombre" autocomplete="given-name"/>
+<label>Apellido</label><InputText @bind-Value="usuario.Apellido" autocomplete="family-name"/>
+<label>Correo</label><InputText @bind-Value="usuario.Correo" autocomplete="off"/>
+<label>Rol</label><InputSelect @bind-Value="usuario.Rol">@foreach(var rol in Roles.Todos){<option value="@rol">@rol</option>}</InputSelect>
+<label>Contraseña inicial (12 caracteres como mínimo)</label><InputText type="password" @bind-Value="usuario.Password" autocomplete="new-password"/>
+<div class="form-actions"><button class="btn primary" type="submit">Crear usuario</button></div></fieldset></EditForm>
+</section>
+<section class="panel"><h2>Crear cliente</h2><EditForm Model="cliente" OnValidSubmit="CrearCliente"><DataAnnotationsValidator/><ValidationSummary/>
+<fieldset disabled="@ocupado"><label>RUT del cliente</label><InputText @bind-Value="cliente.Rut" maxlength="20"/>
+<label>Razón social</label><InputText @bind-Value="cliente.Nombre" maxlength="200"/>
+<div class="form-actions"><button class="btn primary" type="submit">Crear cliente</button></div></fieldset></EditForm>
+<h2 class="mt">Crear sucursal</h2><EditForm Model="sucursal" OnValidSubmit="CrearSucursal"><DataAnnotationsValidator/><ValidationSummary/>
+<fieldset disabled="@ocupado"><label>Cliente</label><InputSelect @bind-Value="sucursal.ClienteId"><option value="0">Selecciona cliente</option>@foreach(var c in clientes){<option value="@c.Id">@c.Nombre — @c.Rut</option>}</InputSelect>
+<label>Nombre de sucursal</label><InputText @bind-Value="sucursal.Nombre" maxlength="200"/>
+<label>Dirección</label><InputText @bind-Value="sucursal.Direccion" maxlength="400"/>
+<div class="form-actions"><button class="btn primary" type="submit">Crear sucursal</button></div></fieldset></EditForm></section>
+</div>
+<section class="panel mt"><h2>Cuentas de trabajo</h2><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th></tr></thead><tbody>@foreach(var u in usuarios){<tr><td>@u.Nombre @u.Apellido</td><td>@u.Correo</td><td>@u.Rol</td><td>@(u.Activo?"Activo":"Inactivo")</td></tr>}</tbody></table></div></section>
+<section class="panel mt"><h2>Sucursales registradas</h2><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Sucursal</th><th>Dirección</th></tr></thead><tbody>@foreach(var s in sucursales){<tr><td>@s.Cliente</td><td>@s.Nombre</td><td>@s.Direccion</td></tr>}</tbody></table></div></section>
+@code {
+ private UsuarioForm usuario=new();private ClienteForm cliente=new();private SucursalForm sucursal=new();
+ private UsuarioResponse[] usuarios=[];private ClienteResponse[] clientes=[];private SucursalResponse[] sucursales=[];
+ private bool ocupado;private string? error,mensaje;
+ protected override async Task OnInitializedAsync(){try{await Cargar();}catch(Exception ex){error=Formato.Error(ex);}}
+ private async Task Cargar(){usuarios=await Api.UsuariosAsync();clientes=await Api.ClientesAsync();sucursales=await Api.SucursalesAsync();}
+ private async Task Ejecutar(Func<Task> action,string success){if(ocupado)return;ocupado=true;error=null;mensaje=null;try{await action();mensaje=success;await Cargar();}catch(Exception ex){error=Formato.Error(ex);}finally{ocupado=false;}}
+ private Task CrearUsuario()=>Ejecutar(async()=>{await Api.CrearUsuarioAsync(new(){Nombre=usuario.Nombre,Apellido=usuario.Apellido,Correo=usuario.Correo,Rol=usuario.Rol,Password=usuario.Password});usuario=new();},"Usuario creado.");
+ private Task CrearCliente()=>Ejecutar(async()=>{await Api.CrearClienteAsync(new(){Rut=cliente.Rut,Nombre=cliente.Nombre});cliente=new();},"Cliente creado.");
+ private Task CrearSucursal()=>Ejecutar(async()=>{await Api.CrearSucursalAsync(new(){ClienteId=sucursal.ClienteId,Nombre=sucursal.Nombre,Direccion=sucursal.Direccion});sucursal=new();},"Sucursal creada.");
+ private sealed class UsuarioForm {
+  [Required,StringLength(100)] public string Nombre{get;set;}="";
+  [Required,StringLength(100)] public string Apellido{get;set;}="";
+  [Required,EmailAddress] public string Correo{get;set;}="";
+  public string Rol{get;set;}="Tecnico";
+  [Required,StringLength(128,MinimumLength=12)] public string Password{get;set;}="";
+ }
+ private sealed class ClienteForm { [Required,StringLength(20)] public string Rut{get;set;}="";[Required,StringLength(200)] public string Nombre{get;set;}=""; }
+ private sealed class SucursalForm { [Range(1,int.MaxValue)] public int ClienteId{get;set;} [Required,StringLength(200)] public string Nombre{get;set;}="";[Required,StringLength(400)] public string Direccion{get;set;}=""; }
+}

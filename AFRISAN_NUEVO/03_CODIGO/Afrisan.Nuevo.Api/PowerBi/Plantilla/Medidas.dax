@@ -1,0 +1,33 @@
+// Crear cada medida por separado en Modelado > Nueva medida.
+// Si la configuración regional requiere ; como separador, sustituir las comas.
+
+Cilindros registrados = COUNTROWS(Inventario)
+
+Cilindros sin pesaje = COUNTROWS(FILTER(Inventario, ISBLANK(Inventario[KgSegunUltimoPesaje])))
+
+Cilindros disponibles bodega = CALCULATE(COUNTROWS(Inventario), Inventario[Ubicacion] = "Bodega", Inventario[Estado] = "Disponible")
+
+OT registradas = DISTINCTCOUNT(Ordenes[OtId])
+
+OT abiertas = CALCULATE(DISTINCTCOUNT(Ordenes[OtId]), KEEPFILTERS(Ordenes[Estado] <> "Cerrada"))
+
+OT cerradas = CALCULATE(DISTINCTCOUNT(Ordenes[OtId]), KEEPFILTERS(Ordenes[Estado] = "Cerrada"))
+
+Kg solicitados = SUM(DetalleOT[KgSolicitados])
+
+Kg autorizados = SUM(DetalleOT[KgAutorizados])
+
+Operaciones confirmadas = COUNTROWS(Operaciones)
+
+Kg en cilindros instalados = SUM(Operaciones[KgInstalados])
+
+Kg en cilindros retirados = SUM(Operaciones[KgRetirados])
+
+Retirados pendientes recepcion = CALCULATE(COUNTROWS(Operaciones), KEEPFILTERS(Operaciones[PendienteRecepcion] = TRUE()))
+
+Incidencias abiertas = CALCULATE(COUNTROWS(Incidencias), KEEPFILTERS(Incidencias[Abierta] = TRUE()))
+
+Despachos pendientes uso o devolucion = CALCULATE(COUNTROWS(Despachos), KEEPFILTERS(Despachos[Estado] = "EnProcesoDespacho"))
+
+// Kg en cilindros instalados corresponde al pesaje neto al instalar, NO a consumo.
+// No sumar columnas de inventario para inferir existencias históricas.

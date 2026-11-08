@@ -1,0 +1,168 @@
+{
+  "fecha_utc": "2026-11-02T23:54:22.425Z",
+  "sha256_sql": "c4f1f61069a11afc35f59438ee4bb63817581b90ce3557593027280e0c4a9c78",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Reemplazo crea 30 tablas en afrisan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reemplazo crea ocho vistas en afrisan"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se retiran los otros tres esquemas AFRISAN"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se borra la base afrisan anterior autorizada"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se conserva el dato ajeno en public"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se conserva el dato ajeno en auth"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se conserva el dato ajeno en storage"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Rol"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Usuario"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Cliente"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Sucursales"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Refrigerantes"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Cilindros"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: OrdenTrabajo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: DetalleOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: RetiroPrevisto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: EvidenciaPesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: OperacionTerreno"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: CustodiaActual"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: RecepcionBodega"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: RevisionOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Incidencia"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: HistorialCilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: EventoOT"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: LimiteSucursal"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: LimiteSucursalHistorial"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: MedicionLimite"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: MedicionLimiteOperaciones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: RevisionExceso"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: PreciosRefrigerantes"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Costos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: CertificadosDisposicion"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: CertificadosCilindros"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: Auditoria"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Instalación vacía: BajaCilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reemplazo elimina las columnas ambientales"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reemplazo elimina tabla y vista ambientales"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Un fallo revierte también la eliminación de esquemas"
+    }
+  ],
+  "estado": "CORRECTO",
+  "cantidad_comprobaciones": 40
+}

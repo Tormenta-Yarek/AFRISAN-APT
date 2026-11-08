@@ -1,0 +1,183 @@
+{
+  "board": {
+    "id": "ari:cloud:trello::board/workspace/6abf041eb9a38551b1f93e56/6ae3d5d47228f88519aa1e2f",
+    "name": "Afrisan"
+  },
+  "verified_at": "2026-10-29",
+  "cards": 21,
+  "completed": 7,
+  "checklists": 12,
+  "check_items": 36,
+  "counts": {
+    "Referencias": 2,
+    "Por hacer": 6,
+    "En curso": 2,
+    "En revisión": 1,
+    "Bloqueado": 3,
+    "Hecho": 7
+  },
+  "lists": [
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d751c00e8e39db5b33e3",
+      "name": "Referencias",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d773c4cc1c7b41fd7296",
+          "name": "[REF-01] Calendario Gantt y reglas del tablero",
+          "url": "https://trello.com/c/o9SD5Ede/1-ref-01-calendario-gantt-y-reglas-del-tablero",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d78218949641e7596878",
+          "name": "[REF-02] Hitos académicos y trazabilidad del progreso",
+          "url": "https://trello.com/c/6lJxoYBp/2-ref-02-hitos-acad%C3%A9micos-y-trazabilidad-del-progreso",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d5d47228f88519aa1e8f",
+      "name": "Por hacer",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d791a4e450706d601a97",
+          "name": "[G01] Revisar contratos persistentes y plan",
+          "url": "https://trello.com/c/mgCDu4PI/11-g01-revisar-contratos-persistentes-y-plan",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d794d45ca9469d170544",
+          "name": "[G03] Identidad real y almacenamiento privado de archivos",
+          "url": "https://trello.com/c/bk5uyCNX/13-g03-identidad-real-y-almacenamiento-privado-de-archivos",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d79690c4904fd84b0a62",
+          "name": "[G04] Pruebas de reinicio y aislamiento",
+          "url": "https://trello.com/c/CuSiXLSE/14-g04-pruebas-de-reinicio-y-aislamiento",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d79874d2cc0267f3a902",
+          "name": "[G05] Ejecutar pruebas sin red y cámara",
+          "url": "https://trello.com/c/Iaii2OXG/15-g05-ejecutar-pruebas-sin-red-y-c%C3%A1mara",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d7a09d3b55de21620670",
+          "name": "[G09] pruebas de aceptación de usuarios y documentación de cierre",
+          "url": "https://trello.com/c/NO182Tk2/19-g09-pruebas-de-aceptaci%C3%B3n-de-usuarios-y-documentaci%C3%B3n-de-cierre",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d7a3eec8ec7362380710",
+          "name": "[F3-01] Preparar presentación, defensa y transferencia",
+          "url": "https://trello.com/c/ewWzGARi/21-f3-01-preparar-presentaci%C3%B3n-defensa-y-transferencia",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d5d47228f88519aa1e90",
+      "name": "En curso",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d7931933fbcd8f5bffe3",
+          "name": "[G02] Persistencia del flujo y transacciones",
+          "url": "https://trello.com/c/trW8VO30/12-g02-persistencia-del-flujo-y-transacciones",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d7a2b6c40e64e3b58e0a",
+          "name": "[H-LOCAL] Completar los borradores locales y la sincronización",
+          "url": "https://trello.com/c/oS6NBHk0/20-h-local-completar-los-borradores-locales-y-la-sincronizaci%C3%B3n",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d75f21028f2679374ac3",
+      "name": "En revisión",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d790accfe6fda486d287",
+          "name": "[SUP-01] Verificar la instalación y el acceso autenticado a Supabase",
+          "url": "https://trello.com/c/WIE45Cnr/10-sup-01-verificar-la-instalaci%C3%B3n-y-el-acceso-autenticado-a-supabase",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d76041788df5e1120ef5",
+      "name": "Bloqueado",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d79b7fbe29682a8e8bc1",
+          "name": "[G06] Límites y reglas acordadas",
+          "url": "https://trello.com/c/8K25UMVJ/16-g06-l%C3%ADmites-y-reglas-acordadas",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d79cde9d9f237e7eb736",
+          "name": "[G07] Defontana y certificados",
+          "url": "https://trello.com/c/E4pZ9rqv/17-g07-defontana-y-certificados",
+          "complete": false
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d79e0e70b6f7ccb766f3",
+          "name": "[G08] Power BI y datos de control",
+          "url": "https://trello.com/c/S1h3DmiS/18-g08-power-bi-y-datos-de-control",
+          "complete": false
+        }
+      ]
+    },
+    {
+      "id": "ari:cloud:trello::list/workspace/6abf041eb9a38551b1f93e56/6ae3d5d47228f88519aa1e91",
+      "name": "Hecho",
+      "cards": [
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d7835e1cf0f02fd2bad4",
+          "name": "[H-NEGOCIO] Documentar el flujo vigente y la arquitectura base",
+          "url": "https://trello.com/c/wSPcBmmp/3-h-negocio-documentar-el-flujo-vigente-y-la-arquitectura-base",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d78534ff2d6b86de002f",
+          "name": "[H-PROTOTIPO] Implementar el prototipo de inventario y OT en memoria",
+          "url": "https://trello.com/c/34b0FyLu/4-h-prototipo-implementar-el-prototipo-de-inventario-y-ot-en-memoria",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d786d29a1b659ee8dc14",
+          "name": "[H-FLUJO] Ajustar el retiro, terreno y aprobaciones en memoria",
+          "url": "https://trello.com/c/aV2Ozg23/5-h-flujo-ajustar-el-retiro-terreno-y-aprobaciones-en-memoria",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d788edc4ac4065afe77a",
+          "name": "[H-PRUEBAS] Verificar tres recorridos y un caso desde las pantallas",
+          "url": "https://trello.com/c/DpF7H5s4/6-h-pruebas-verificar-tres-recorridos-y-un-caso-desde-las-pantallas",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d78ad054b31aad2cb072",
+          "name": "[H-SQL] Corregir el modelo SQL y aprobar la validación local",
+          "url": "https://trello.com/c/mo2ogjyc/7-h-sql-corregir-el-modelo-sql-y-aprobar-la-validaci%C3%B3n-local",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d78b066dd2a6253ee457",
+          "name": "[H-DOC] Actualizar el paquete académico en español",
+          "url": "https://trello.com/c/qfZ7hKBq/8-h-doc-actualizar-el-paquete-acad%C3%A9mico-en-espa%C3%B1ol",
+          "complete": true
+        },
+        {
+          "id": "ari:cloud:trello::card/workspace/6abf041eb9a38551b1f93e56/6ae3d78ecc0b9b1078311191",
+          "name": "[H-LIMPIEZA] Dejar la solución local apuntando a la aplicación nueva",
+          "url": "https://trello.com/c/dRizFjU5/9-h-limpieza-dejar-la-soluci%C3%B3n-local-apuntando-a-la-aplicaci%C3%B3n-nueva",
+          "complete": true
+        }
+      ]
+    }
+  ]
+}

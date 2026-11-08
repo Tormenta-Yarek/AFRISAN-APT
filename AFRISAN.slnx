@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Contratos/Afrisan.Nuevo.Contratos.csproj" />
+  <Project Path="AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Api/Afrisan.Nuevo.Api.csproj" />
+  <Project Path="AFRISAN_NUEVO/03_CODIGO/Afrisan.Nuevo.Web/Afrisan.Nuevo.Web.csproj" />
+</Solution>

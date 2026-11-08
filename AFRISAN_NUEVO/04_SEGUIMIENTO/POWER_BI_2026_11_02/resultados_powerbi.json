@@ -1,0 +1,320 @@
+{
+  "fecha_utc": "2026-11-03T01:32:35.752Z",
+  "tipo": "API .NET 8 + PostgreSQL embebido aislado por TCP",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Administrador inicial creado con contraseña por stdin, sin cuentas demo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Entorno público sin cuentas ni contraseña de demostración"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET usuarios: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/configuracion: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/configuracion: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/configuracion: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/configuracion: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/paquete: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/paquete: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/paquete: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/paquete: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sin informe publicado no se simula configuración"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Base vacía produce indicadores vacíos reales"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Jefatura tiene acceso al resumen"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete privado descargado sin caché"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "CSV vacío conserva cabeceras importables"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen?desde=2026-11-03&hasta=2026-11-02: HTTP 400"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen?sucursalId=-1: HTTP 400"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET power-bi/resumen?desde=no-es-fecha: HTTP 400"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET usuarios: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST usuarios: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST cilindros: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Peso inválido revierte el alta completa del cilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento de creación de OT no duplica"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El técnico ajeno no lista OT de otro usuario"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento del retiro no duplica despacho ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/entregas: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Borradores y despachos no se cuentan como instalaciones"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/operaciones/28db4163-5f94-4692-88b8-cf926d57376c/confirmar?version=1: HTTP 400"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento de foto conserva la versión y no duplica"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "PUT ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/operaciones: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Confirmación persiste pesajes, archivos y cambio físico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Kg netos confirmados y retiro pendiente contados una sola vez"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Agrupación por refrigerante conserva kilos sin multiplicar detalles"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Filtros de sucursal, refrigerante y técnico combinados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sucursal ajena al conjunto no mezcla datos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inventario es actual y no finge un histórico por fecha"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Incidencia pendiente aparece en el indicador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete privado descargado sin caché"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete omite motivos libres de incidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/operaciones/28db4163-5f94-4692-88b8-cf926d57376c/fotos: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/revision-autorizador: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Revisión de incidencia actualiza el indicador"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Recorrido Técnico → Bodega → Autorizador cerrado en PostgreSQL"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Recepción y cierre cambian pendientes sin duplicar kilos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete privado descargado sin caché"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete conserva granos separados de OT, detalle, operación y despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "CSV mantiene pesajes de instalación y recepción diferenciados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Paquete incluye Power Query, DAX, tema y guía"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Plantilla contempla nulos y tema JSON válido"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Exportación no contiene credenciales, correos ni referencias privadas de fotos"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Consultas BI no escriben hechos ni auditoría"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inserción segura construida solo desde GUID y dominio Microsoft fijo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Indicadores persisten después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Se rechaza URL pública o arbitraria como identificador de informe"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/8a0b453b-45ce-4a5e-abae-50246e4e48f9/operaciones/28db4163-5f94-4692-88b8-cf926d57376c/fotos/13434497-7e88-40d8-9223-c9a39a9907a9: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La OT y los pesos de terreno/recepción sobreviven al reinicio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Identidad de instalación estable después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inventario conservado después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Fotografía privada íntegra después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bloqueo por intentos fallidos conservado después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La identidad no es superusuario ni puede crear roles/bases o eludir RLS"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sin permisos sobre costos fuera de este incremento"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La identidad no puede borrar ni editar auditoría"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El permiso para bloquear Pesaje no permite reescribirlo: el trigger lo rechaza"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "RLS permanece habilitado después de la actualización"
+    }
+  ],
+  "estado": "CORRECTO",
+  "cantidad_comprobaciones": 78
+}

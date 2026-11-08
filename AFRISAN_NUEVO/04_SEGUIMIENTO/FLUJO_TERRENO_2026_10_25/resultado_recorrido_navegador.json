@@ -1,0 +1,180 @@
+{
+  "resultado": "CORRECTO",
+  "alcance": "OT-000004 creada y completada mediante formularios del navegador; verificación HTTP final",
+  "ot": {
+    "id": "f1f7976f-a2b1-437b-89e4-7520ded57b3c",
+    "codigo": "OT-000004",
+    "sucursal": "Sucursal prueba terreno 3",
+    "direccion": "Dirección simulada 3",
+    "descripcion": "Prueba visual: retiro técnico, cambio y revisión Bodega antes de Autorizador",
+    "tecnicoEmail": "tecnico@afrisan.example",
+    "estado": "Cerrada",
+    "autorizador": "autorizador@afrisan.example",
+    "fecha": "2026-10-26T00:22:46.730343+00:00",
+    "detalle": [
+      {
+        "refrigeranteId": 3,
+        "refrigerante": "R404A-BB482C",
+        "grSolicitados": 1500,
+        "grAutorizados": 1500
+      }
+    ],
+    "cilindrosARetirar": [
+      "AFR-000008"
+    ],
+    "entregas": [
+      {
+        "codigo": "AFR-000007",
+        "refrigerante": "R404A-BB482C",
+        "taraGr": 1300,
+        "capacidadGr": 13000,
+        "pesoBrutoGr": 1600,
+        "usuario": "tecnico@afrisan.example",
+        "fecha": "2026-10-26T00:25:01.2246166+00:00",
+        "estado": "Instalado",
+        "pesoRecepcionGr": null,
+        "usuarioRecepcion": null,
+        "fechaRecepcion": null,
+        "id": "ac1d9fa6-bb32-44cb-9d3b-bbf823966448",
+        "fotoDespacho": {
+          "id": "51505fa5-d68d-4cd0-a3aa-ece210e5e5c8",
+          "grupo": "Despacho",
+          "codigoCilindro": "AFR-000007",
+          "nombre": "ui-despacho.png",
+          "contentType": "image/png",
+          "bytes": 8154,
+          "fecha": "2026-10-26T00:25:01.2246166+00:00",
+          "usuario": "tecnico@afrisan.example"
+        }
+      }
+    ],
+    "operaciones": [
+      {
+        "id": "0428ff83-7286-4787-bf4e-bf3b0096bf8c",
+        "version": 4,
+        "tipo": "Reemplazo",
+        "codigoRetirado": "AFR-000008",
+        "codigoInstalado": "AFR-000007",
+        "pesoRetiradoGr": 1700,
+        "pesoInstaladoGr": 1550,
+        "observacion": null,
+        "estado": "Registrada",
+        "fotos": [
+          {
+            "id": "3b54b4fa-79b4-472b-9be0-07713084f935",
+            "grupo": "Retirado",
+            "codigoCilindro": "AFR-000008",
+            "nombre": "ui-retirado.png",
+            "contentType": "image/png",
+            "bytes": 7919,
+            "fecha": "2026-10-26T00:26:03.430714+00:00",
+            "usuario": "tecnico@afrisan.example"
+          },
+          {
+            "id": "26bdf955-4df6-40e2-bca6-841fbb0229a5",
+            "grupo": "Instalado",
+            "codigoCilindro": "AFR-000007",
+            "nombre": "ui-instalado.png",
+            "contentType": "image/png",
+            "bytes": 7933,
+            "fecha": "2026-10-26T00:26:03.4469034+00:00",
+            "usuario": "tecnico@afrisan.example"
+          }
+        ],
+        "actualizada": "2026-10-26T00:26:03.4624016+00:00",
+        "entregaInformada": true,
+        "recibidoBodega": true,
+        "usuarioRecepcion": "bodega@afrisan.example",
+        "fechaRecepcion": "2026-10-26T00:26:43.8769436+00:00",
+        "pesoRecepcionGr": 1700,
+        "observacionRecepcion": ""
+      }
+    ],
+    "incidencias": [],
+    "historial": [
+      {
+        "fecha": "2026-10-26T00:22:46.7307057+00:00",
+        "accion": "OT autorizada",
+        "usuario": "autorizador@afrisan.example",
+        "descripcion": "Pedido manual de revisión, técnico y cilindros a retirar registrados. No es integración Defontana."
+      },
+      {
+        "fecha": "2026-10-26T00:25:01.2246674+00:00",
+        "accion": "Retiro de bodega por técnico",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "AFR-000007: 1600 g. Foto 51505fa5-d68d-4cd0-a3aa-ece210e5e5c8."
+      },
+      {
+        "fecha": "2026-10-26T00:26:03.4068549+00:00",
+        "accion": "Borrador guardado",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "0428ff83-7286-4787-bf4e-bf3b0096bf8c"
+      },
+      {
+        "fecha": "2026-10-26T00:26:03.4307195+00:00",
+        "accion": "Evidencia adjunta",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "Retirado: AFR-000008 / 3b54b4fa-79b4-472b-9be0-07713084f935"
+      },
+      {
+        "fecha": "2026-10-26T00:26:03.4469117+00:00",
+        "accion": "Evidencia adjunta",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "Instalado: AFR-000007 / 26bdf955-4df6-40e2-bca6-841fbb0229a5"
+      },
+      {
+        "fecha": "2026-10-26T00:26:03.4624024+00:00",
+        "accion": "Trabajo físico registrado",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "Reemplazo: AFR-000008 → AFR-000007"
+      },
+      {
+        "fecha": "2026-10-26T00:26:11.8643263+00:00",
+        "accion": "Devolución informada por técnico",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": "AFR-000008"
+      },
+      {
+        "fecha": "2026-10-26T00:26:15.1554913+00:00",
+        "accion": "Término técnico informado",
+        "usuario": "tecnico@afrisan.example",
+        "descripcion": ""
+      },
+      {
+        "fecha": "2026-10-26T00:26:43.8769472+00:00",
+        "accion": "Recepción oficial de bodega",
+        "usuario": "bodega@afrisan.example",
+        "descripcion": "AFR-000008: 1700 g. "
+      },
+      {
+        "fecha": "2026-10-26T00:26:57.259506+00:00",
+        "accion": "Aprobación de Bodega",
+        "usuario": "bodega@afrisan.example",
+        "descripcion": ""
+      },
+      {
+        "fecha": "2026-10-26T00:27:30.0931848+00:00",
+        "accion": "Revisión de fotos y registro por Autorizador",
+        "usuario": "autorizador@afrisan.example",
+        "descripcion": ""
+      },
+      {
+        "fecha": "2026-10-26T00:27:34.1483518+00:00",
+        "accion": "Cierre administrativo",
+        "usuario": "autorizador@afrisan.example",
+        "descripcion": "Autorizador verificó el trabajo y las recepciones."
+      }
+    ],
+    "observacionTermino": "",
+    "aprobacionBodega": {
+      "usuario": "bodega@afrisan.example",
+      "fecha": "2026-10-26T00:26:57.2595055+00:00",
+      "observacion": ""
+    },
+    "revisionAutorizador": {
+      "usuario": "autorizador@afrisan.example",
+      "fecha": "2026-10-26T00:27:30.0931842+00:00",
+      "observacion": ""
+    }
+  }
+}

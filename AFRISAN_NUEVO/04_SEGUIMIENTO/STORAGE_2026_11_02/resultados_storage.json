@@ -1,0 +1,228 @@
+{
+  "fecha_utc": "2026-11-03T01:04:51.527Z",
+  "tipo": "API .NET 8 + PostgreSQL embebido aislado por TCP",
+  "comprobaciones": [
+    {
+      "resultado": "OK",
+      "comprobacion": "Administrador inicial creado con contraseña por stdin, sin cuentas demo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Entorno público sin cuentas ni contraseña de demostración"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET usuarios: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET usuarios: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST usuarios: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST cilindros: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Peso inválido revierte el alta completa del cilindro"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento de creación de OT no duplica"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El técnico ajeno no lista OT de otro usuario"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento del retiro no duplica despacho ni foto"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/entregas: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/confirmar?version=1: HTTP 400"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Reintento de foto conserva la versión y no duplica"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "PUT ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Confirmación persiste pesajes, archivos y cambio físico"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/fotos: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/revision-autorizador: HTTP 409"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Recorrido Técnico → Bodega → Autorizador cerrado en PostgreSQL"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/fotos/c79f791b-a884-4b85-8613-5962e833ee97: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La OT y los pesos de terreno/recepción sobreviven al reinicio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Identidad de instalación estable después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Inventario conservado después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Fotografía privada íntegra después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST sesiones: HTTP 401"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bloqueo por intentos fallidos conservado después de reiniciar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Una clave pública no puede activar Storage privado"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Una caída de Storage impide activar la migración"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El fallo de copia no guarda el proveedor nuevo"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Copias locales y prueba de privacidad verificadas antes de activar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Repetir la migración no duplica ni sobrescribe evidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La migración activa el proveedor solo después de verificar"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El objeto temporal de diagnóstico se elimina sin borrar evidencias"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La prueba anónima no envía la clave del servidor"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Foto histórica leída desde la nube con originales locales retirados"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/fotos/c79f791b-a884-4b85-8613-5962e833ee97: HTTP 403"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/fotos/c79f791b-a884-4b85-8613-5962e833ee97: HTTP 503"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "GET ordenes-trabajo/40f29f0d-bac4-4dda-9eee-f4f5e6d1b522/operaciones/4c4f30cf-1fc9-45ad-94e8-ffe0b076e6d4/fotos/c79f791b-a884-4b85-8613-5962e833ee97: HTTP 503"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Bucket público y archivo alterado se rechazan sin servir la fotografía"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "POST ordenes-trabajo/b046fdc6-2d79-4bbf-b24c-b69f65162ac9/entregas: HTTP 503"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La caída de Storage no confirma despacho ni pesaje"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Subida en nube y reintento no duplican el despacho"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Las nuevas fotos de nube no se guardan en disco"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Storage conserva las fotografías después de otro reinicio"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La identidad no es superusuario ni puede crear roles/bases o eludir RLS"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "Sin permisos sobre costos fuera de este incremento"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "La identidad no puede borrar ni editar auditoría"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "El permiso para bloquear Pesaje no permite reescribirlo: el trigger lo rechaza"
+    },
+    {
+      "resultado": "OK",
+      "comprobacion": "RLS permanece habilitado después de la actualización"
+    }
+  ],
+  "estado": "CORRECTO",
+  "cantidad_comprobaciones": 55
+}

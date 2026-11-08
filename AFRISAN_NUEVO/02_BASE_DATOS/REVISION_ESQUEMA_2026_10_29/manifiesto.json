@@ -1,0 +1,16 @@
+{
+  "fecha_revision": "2026-10-29",
+  "original": {
+    "archivo": "00_Esquema_Original_Recibido.sql",
+    "sha256": "313aa150d9a662e9eaeaaf94a8901e3c1e49acf3290db5895cdb334164142630"
+  },
+  "fuente": {
+    "archivo": "04_Crear_Afrisan_Contexto_Actual.sql",
+    "sha256": "3a0054a01b8f33cf95864ee754228680ac203862e1a6704eeaeb3b6b99685edb"
+  },
+  "entrega": {
+    "archivo": "01_AFRISAN_Corregida.sql",
+    "sha256": "21eaa563a47f87ccfb19c43d8554e01b663953997c0f9dd07fd16a7929f0684d"
+  },
+  "nota": "La entrega conserva íntegro el instalador vigente, precedido por comentarios de identificación. No ejecuta ni migra bases existentes."
+}

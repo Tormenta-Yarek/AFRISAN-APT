@@ -1,0 +1,18 @@
+# Artefactos de compilacion .NET
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+
+# Archivos temporales de Office y sistema
+~$*
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store
+
+# Secretos locales y variables de entorno
+.env
+.env.*
+appsettings.Development.local.json
